@@ -327,9 +327,19 @@ async function generateSeed() {
         const { bip39, HDKey, btc } = window.BtcMath;
         
         const seedBytes = await bip39.mnemonicToSeed(mnemonic);
-        const hdkey = HDKey.fromMasterSeed(seedBytes);
         
+        // Apply SLIP-132 Magic Bytes so wallets know which script type to generate
         const pathType = document.getElementById('derivation-path').value;
+        const slip132 = {
+            '84': { private: 0x04b2430c, public: 0x04b24746 }, // zpub (Native SegWit)
+            '49': { private: 0x049d7878, public: 0x049d7cb2 }, // ypub (Nested SegWit)
+            '44': { private: 0x0488ade4, public: 0x0488b21e }, // xpub (Legacy)
+            '86': { private: 0x0488ade4, public: 0x0488b21e }  // xpub (Taproot standard)
+        };
+        
+        // Generate the root key using the correct version bytes
+        const hdkey = HDKey.fromMasterSeed(seedBytes, slip132[pathType]);
+        
         const basePath = `m/${pathType}'/0'/0'`;
         const accountNode = hdkey.derive(basePath);
         
