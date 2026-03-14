@@ -83,7 +83,9 @@
   /* Print */
   @media print {
       body { background: white; color: black; }
-      nav, .warning, .controls, .dice-area, .btn, .module-status, .action-buttons, .qr-reveal-hint { display: none !important; }
+      nav, .warning, .dice-area, .btn, .module-status, .action-buttons, .qr-reveal-hint { display: none !important; }
+      .controls { background: transparent !important; border: none !important; padding: 0 !important; margin-bottom: 20px !important; }
+      #xpub-output-val { color: black !important; font-size: 1rem !important; margin-bottom: 15px !important; }
       .card { border: none; box-shadow: none; padding: 0; }
       .result-box { display: block; border: 2px solid black !important; background: transparent; }
       .address-table th { background: #eee !important; color: black !important; }
