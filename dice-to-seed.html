@@ -129,6 +129,10 @@
         <option value="44">Legacy (BIP44) - 1...</option>
       </select>
     </div>
+    <div class="control-group">
+      <label>Optional Passphrase</label>
+      <input type="text" id="passphrase-input" placeholder="Leave blank for default wallet">
+    </div>
   </div>
 
   <div class="dice-area">
@@ -377,7 +381,9 @@ async function generateSeed() {
         
         const { bip39, HDKey, btc } = window.BtcMath;
         
-        const seedBytes = await bip39.mnemonicToSeed(mnemonic);
+        // Grab optional passphrase from the new input field
+        const passphrase = document.getElementById('passphrase-input').value;
+        const seedBytes = await bip39.mnemonicToSeed(mnemonic, passphrase);
         
         // Apply SLIP-132 Magic Bytes so wallets know which script type to generate
         const pathType = document.getElementById('derivation-path').value;
