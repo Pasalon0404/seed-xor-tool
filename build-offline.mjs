@@ -22,6 +22,7 @@ const pages = [
     'threats.html',
     'xor-vs-multisig.html',
     'descriptor.html',
+    'secure-notes.html',
 ];
 
 async function buildOfflineSuite() {
