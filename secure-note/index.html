@@ -78,7 +78,7 @@
 <body>
 
 <nav>
-  <a href="index.html" class="nav-brand">SafeKeep<span>Bitcoin</span></a>
+  <a href="../index.html" class="nav-brand">SafeKeep<span>Bitcoin</span></a>
 </nav>
 
 <div class="container">
@@ -175,6 +175,26 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('decrypt-status').style.display = 'none';
         }
     });
+
+    // --- NEW: Auto-Import Draft Note from other tools ---
+    const draftNote = sessionStorage.getItem('safeKeepDraftNote') || localStorage.getItem('safeKeepDraftNote');
+    if (draftNote) {
+        document.getElementById('editor').innerHTML = draftNote;
+        
+        // Clear the storage so it doesn't auto-paste next time
+        sessionStorage.removeItem('safeKeepDraftNote');
+        localStorage.removeItem('safeKeepDraftNote');
+        
+        // Show a friendly success message
+        const statusBox = document.getElementById('encrypt-status');
+        statusBox.className = 'status success';
+        statusBox.innerText = '✅ Wallet data successfully imported!';
+        setTimeout(() => { 
+            statusBox.style.display = 'none'; 
+            statusBox.innerText = '';
+        }, 5000);
+    }
+    // ---------------------------------------------------
 });
 
 function generateDefaultFilename() {

@@ -277,9 +277,9 @@ function exportToNote() {
     const plainText = noteHtml.replace(/<[^>]+>/g, '\n').replace(/\n\s*\n/g, '\n');
     navigator.clipboard.writeText(plainText).then(() => {
         alert("Data copied to clipboard!\n\nOpening Encrypted Note Tool...");
-        window.open('secure-notes.html', '_blank');
+        window.open('../secure-note/index.html', '_blank');
     }).catch(err => {
-        window.open('secure-notes.html', '_blank');
+        window.open('../secure-note/index.html', '_blank');
     });
 }
 
