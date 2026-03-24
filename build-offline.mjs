@@ -13,6 +13,7 @@ const pages = [
     'bip85/index.html',
     'descriptor/index.html',
     'dice/index.html',
+    'entropy-tool/index.html',
     'guide-cypherpunk/index.html',
     'guide-recovery/index.html',
     'guide-threats/index.html',
@@ -20,6 +21,7 @@ const pages = [
     'passphrase/index.html',
     'secure-note/index.html',
     'seedxor/index.html',
+    'seedqr/index.html',
     'signer/index.html'
 ];
 
