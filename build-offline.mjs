@@ -22,7 +22,9 @@ const pages = [
     'secure-note/index.html',
     'seedxor/index.html',
     'seedqr/index.html',
-    'signer/index.html'
+    'signer/index.html',
+    'transmit-tool/index.html',
+    'receive-tool/index.html'
 ];
 
 async function buildOfflineSuite() {
