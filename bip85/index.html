@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BIP-85 Child Seed</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 500'%3E%3Cpath d='M 250 25 L 75 75 L 75 250 C 75 375 175 450 250 475 C 325 450 425 375 425 250 L 425 75 Z' fill='%23f7931a' /%3E%3Cg transform='translate(250, 250) rotate(14) scale(0.6) translate(-244, -244)' fill='%23ffffff'%3E%3Cpath d='M336.8,240.8c22.4-17.6,36.8-45.6,36.8-76v-3.2c0-52-41.6-95.2-93.6-96.8V21.6c0-12-9.6-21.6-21.6-21.6c-12,0-21.6,9.6-21.6,21.6v43.2h-20V21.6c0-12-9.6-21.6-21.6-21.6s-21.6,9.6-21.6,21.6v43.2h-52.8c-12,0-21.6,9.6-21.6,21.6s9.6,21.6,21.6,21.6h53.6v0.8c-0.8,2.4-1.6,4.8-1.6,7.2v258.4H120c-12,0-21.6,9.6-21.6,21.6s9.6,21.6,21.6,21.6h52.8v48.8c0,12,9.6,21.6,21.6,21.6c12,0,21.6-9.6,21.6-21.6v-49.6c52-1.6,93.6-44.8,93.6-96.8v-3.2C373.6,286.4,359.2,258.4,336.8,240.8z M330.4,320c0,29.6-24,53.6-53.6,53.6h-59.2V116c0-2.4-0.8-4.8-1.6-7.2V108h60.8c29.6,0,53.6,24,53.6,53.6v3.2c0,29.6-24,53.6-53.6,53.6c-12,0-21.6,9.6-21.6,21.6v0.8v0.8c0,12,9.6,21.6,21.6,21.6c29.6,0,53.6,24,53.6,53.6V320z'/%3E%3C/g%3E%3C/svg%3E">
+<title>BIP-85 Child Seed — SafeKeepBitcoin</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 500'%3E%3Cpath d='M 250 25 L 75 75 L 75 250 C 75 375 175 450 250 475 C 325 450 425 375 425 250 L 425 75 Z' fill='%23f7931a' /%3E%3Cg transform='translate(250, 250) rotate(14) scale(0.6) translate(-244, -244)' fill='%23ffffff'%3E%3Cpath d='M336.8,240.8c22.4-17.6,36.8-45.6,36.8-76v-3.2c0-52-41.6-95.2-93.6-96.8V21.6c0-12-9.6-21.6-21.6-21.6c-12,0-21.6,9.6-21.6,21.6v43.2h-20V21.6c0-12-9.6-21.6-21.6-21.6s-21.6,9.6-21.6,21.6v43.2h-52.8c-12,0-21.6,9.6-21.6,21.6s9.6,21.6,21.6,21.6h53.6v0.8c-0.8,2.4-1.6,4.8-1.6,7.2v258.4H120c-12,0-21.6,9.6-21.6,21.6s9.6,21.6,21.6,21.6h52.8v48.8c0,12,9.6,21.6,21.6,21.6s21.6-9.6,21.6-21.6v-48.8h20.8v48.8c0,12,9.6,21.6,21.6,21.6c12,0,21.6-9.6,21.6-21.6v-49.6c52-1.6,93.6-44.8,93.6-96.8v-3.2C373.6,286.4,359.2,258.4,336.8,240.8z M330.4,320c0,29.6-24,53.6-53.6,53.6h-59.2V116c0-2.4-0.8-4.8-1.6-7.2V108h60.8c29.6,0,53.6,24,53.6,53.6v3.2c0,29.6-24,53.6-53.6,53.6c-12,0-21.6,9.6-21.6,21.6v0.8v0.8c0,12,9.6,21.6,21.6,21.6c29.6,0,53.6,24,53.6,53.6V320z'/%3E%3C/g%3E%3C/svg%3E">
 
 <script>
   if (localStorage.getItem('safekeepTheme') === 'light') {
@@ -12,249 +12,231 @@
   }
 </script>
 
+<link rel="stylesheet" href="../shared/design-system.css">
+<script type="module" src="./bip85.js"></script>
+
 <style>
-  /* --- Theme Variables --- */
-  :root {
-    --bg: #0f0f0f;
-    --card: #161616;
-    --card2: #1c1c1c;
-    --border: #2a2a2a;
-    --orange: #f7931a;
-    --teal: #03dac6;
-    --red: #cf6679;
-    --muted: #888;
-    --text: #e0e0e0;
-    --mono: 'Courier New', Courier, monospace;
-    --input-bg: #2c2c2c;
+  /* Tool-specific overrides only — everything else comes from design-system.css */
+
+  /* Autocomplete dropdown for seed input */
+  .skb-autocomplete-list {
+    position: absolute;
+    top: 100%; left: 0; right: 0;
+    background: var(--skb-bg-secondary);
+    border: 1px solid var(--skb-border);
+    border-radius: var(--skb-radius-sm);
+    max-height: 150px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: none;
+    box-shadow: var(--skb-shadow);
   }
-  [data-theme="light"] {
-    --bg: #f5f5f7;
-    --card: #ffffff;
-    --card2: #f0f0f0;
-    --border: #cccccc;
-    --text: #121212;
-    --muted: #555555;
-    --teal: #018786;
-    --red: #b00020;
-    --input-bg: #e0e0e0;
-    --orange: #d87c14;
+  .skb-autocomplete-item {
+    padding: 6px 10px;
+    cursor: pointer;
+    font-family: var(--skb-mono);
+    font-size: 0.82rem;
+    color: var(--skb-text);
+    border-bottom: 1px solid var(--skb-border);
+    transition: background var(--skb-transition);
+  }
+  .skb-autocomplete-item:last-child { border-bottom: none; }
+  .skb-autocomplete-item:hover,
+  .skb-autocomplete-item.active-suggestion {
+    background: var(--skb-secondary);
+    color: #000;
+    font-weight: bold;
   }
 
-  /* --- Base Styles --- */
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, sans-serif; line-height: 1.6; transition: background-color 0.3s ease, color 0.3s ease; }
-  nav { background: var(--card); border-bottom: 1px solid var(--border); padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
-  .nav-brand { font-weight: 800; font-size: 1.15rem; color: var(--text); text-decoration: none; }
-  .nav-brand span { color: var(--orange); }
-
-  .container { max-width: 850px; margin: 0 auto; padding: 0 1rem 3rem; }
-  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.8); margin-bottom: 25px; }
-  [data-theme="light"] .card { box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-  h1 { text-align: center; color: var(--text); text-transform: uppercase; letter-spacing: 2px; font-size: 1.5rem; margin-bottom: 5px;}
-  .subtitle { text-align: center; color: var(--muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
-  .warning { background: rgba(207,102,121,0.08); border: 1px dashed var(--red); border-radius: 6px; padding: 12px; font-size: 0.85rem; color: var(--red); text-align: center; margin-bottom: 2rem; }
-
-  /* --- Form & Controls --- */
-  .controls { display: flex; gap: 15px; flex-wrap: wrap; background: var(--card2); padding: 15px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 20px; }
-  .control-group { flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 5px; }
-  .control-group label { font-size: 0.85rem; font-weight: bold; color: var(--muted); text-transform: uppercase; letter-spacing: 1px;}
-  select, input { background: var(--bg); color: var(--text); border: 1px solid var(--border); padding: 10px; border-radius: 6px; font-size: 1rem; width: 100%; transition: border-color 0.3s ease; }
-  select:focus, input:focus { outline: none; border-color: var(--teal); }
-  .radio-group { display: flex; gap: 15px; margin-top: 10px; }
-  .radio-group label { cursor: pointer; display: flex; align-items: center; gap: 5px; font-weight: normal; }
-
-  .btn { display: block; width: 100%; padding: 15px; font-size: 1.1rem; background: var(--orange); color: #111; border: none; border-radius: 8px; cursor: pointer; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s; }
-  .btn:hover { opacity: 0.8; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(247,147,26,0.3); }
-  .btn-secondary { padding: 10px 15px; background: transparent; border: 1px solid var(--teal); color: var(--teal); border-radius: 6px; cursor: pointer; font-weight: bold; transition: all 0.2s; text-transform: uppercase; font-size: 0.85rem; }
-  .btn-secondary:hover { background: rgba(3,218,198,0.1); }
-
-  /* --- Seed Grid Input & Autocomplete --- */
-  .seed-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 15px; }
-  @media (max-width: 600px) { .seed-grid { grid-template-columns: repeat(3, 1fr); } }
-  @media (max-width: 450px) { .seed-grid { grid-template-columns: repeat(2, 1fr); } }
-
-  .word-box { display: flex; align-items: center; background: var(--input-bg); border: 1px solid var(--border); border-radius: 4px; padding: 6px 8px; position: relative; transition: border-color 0.3s ease; }
-  .word-box:focus-within { border-color: var(--orange); }
-  .word-box.invalid { border-color: var(--red); box-shadow: 0 0 5px rgba(207, 102, 121, 0.4); }
-  .word-box span { color: var(--muted); font-size: 0.8em; width: 22px; user-select: none; }
-  .word-box input { width: 100%; background: transparent; border: none; color: var(--orange); font-family: var(--mono); font-size: 15px; outline: none; }
-
-  .autocomplete-list { position: absolute; top: 100%; left: 0; right: 0; background: var(--card2); border: 1px solid var(--border); border-radius: 4px; max-height: 150px; overflow-y: auto; z-index: 1000; display: none; box-shadow: 0 8px 16px rgba(0,0,0,0.5); }
-  [data-theme="light"] .autocomplete-list { box-shadow: 0 8px 16px rgba(0,0,0,0.1); }
-  .autocomplete-item { padding: 8px 10px; cursor: pointer; font-family: var(--mono); font-size: 14px; color: var(--text); border-bottom: 1px solid var(--border); transition: background-color 0.2s; }
-  .autocomplete-item:last-child { border-bottom: none; }
-  .autocomplete-item:hover, .autocomplete-item.active-suggestion { background: var(--teal); color: #000; font-weight: bold; }
-
-  /* --- Scanner & Modals --- */
-  .scanner-container { display: none; margin-top: 15px; padding: 15px; background: #000; border-radius: 8px; border: 1px solid var(--border); text-align: center; }
-  .scanner-container > div { width: 100%; max-width: 400px; margin: 0 auto; border-radius: 8px; overflow: hidden; }
-  .scan-progress { margin-top: 10px; font-weight: bold; color: var(--teal); }
-  
-  .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; }
-  .modal-content { background: var(--card); padding: 30px; border-radius: 8px; border: 1px solid var(--border); max-width: 400px; width: 90%; color: var(--text); line-height: 1.6;}
-
-  /* --- Output Grid Styles --- */
-  .result-box { margin-top: 2rem; border: 1px solid var(--teal); border-radius: 8px; padding: 20px; background: rgba(3,218,198,0.03); }
-  .result-box h3 { color: var(--teal); margin-bottom: 15px; border-bottom: 1px solid rgba(3,218,198,0.2); padding-bottom: 10px;}
-  
-  .output-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-      text-align: left;
-      margin-bottom: 20px;
+  /* Scanner container */
+  .skb-scanner-box {
+    display: none;
+    margin-top: 12px;
+    padding: 12px;
+    background: #000;
+    border: 1px solid var(--skb-border);
+    border-radius: var(--skb-radius-md);
+    text-align: center;
   }
-  @media (max-width: 600px) { .output-grid { grid-template-columns: repeat(3, 1fr); } }
-  @media (max-width: 450px) { .output-grid { grid-template-columns: repeat(2, 1fr); } }
+  .skb-scanner-box.visible { display: block; }
+  .skb-scanner-box > div {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    border-radius: var(--skb-radius-md);
+    overflow: hidden;
+  }
 
-  .output-word-pill {
-      background: var(--input-bg);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 10px 12px;
-      display: flex;
-      align-items: center;
-      font-family: var(--mono);
-      font-size: 15px;
-      box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
-  }
-  .output-word-pill span.num {
-      color: var(--muted);
-      margin-right: 8px;
-      font-size: 0.85em;
-      user-select: none;
-  }
-  .output-word-pill span.word {
-      color: var(--orange);
-      font-weight: bold;
-      letter-spacing: 0.5px;
+  /* Print styles */
+  @media print {
+    #master-seed-card, #settings-card,
+    .skb-import-section, #scanner-container,
+    .skb-passphrase-section, .skb-result-actions,
+    .skb-qr-container:not(#print-child-qr),
+    .skb-header, .skb-breadcrumb, .skb-page-subtitle,
+    .skb-scanner-box,
+    button, .skb-btn-primary, .skb-btn-sm { display: none !important; }
+
+    #print-child-qr { display: block !important; }
+    .skb-print-only { display: block !important; font-size: 1.1rem; margin: 0.75rem 0; padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; }
+    .skb-result { border: none !important; background: transparent; padding: 0; display: block !important; }
+    .skb-page-title { font-size: 1.3rem !important; color: black !important; }
+    body { color: black !important; }
+    .skb-card-title { color: black !important; }
+    .skb-word-text { color: #333 !important; }
+    .skb-word-num { color: #666 !important; }
+    .skb-word-pill { border-color: #ccc !important; background: #f9f9f9 !important; }
   }
 </style>
-
-<script type="module" src="./bip85.js"></script>
 </head>
 <body>
 
-<div id="importModal" class="modal-overlay">
-    <div class="modal-content">
-        <h3 style="margin-top: 0; color: var(--teal); margin-bottom: 10px;">🔓 Decrypt Secure Note</h3>
-        <p style="font-size: 0.9em; margin-bottom: 15px;">Enter the password used to encrypt this <code>.skb</code> note.</p>
-        <input type="password" id="importPassword" placeholder="Enter password..." style="margin-bottom: 15px;" />
-        <div id="importError" style="color: var(--red); font-size: 0.85em; margin-bottom: 15px; display: none;"></div>
-        <div style="display: flex; gap: 10px;">
-            <button class="btn" style="padding: 10px;" onclick="window.decryptSkb()">Import</button>
-            <button class="btn" style="padding: 10px; background: transparent; border: 1px solid var(--border); color: var(--text);" onclick="document.getElementById('importModal').style.display='none'; window.pendingSkbData = null;">Cancel</button>
-        </div>
-    </div>
-</div>
+<!-- Header -->
+<header class="skb-header">
+  <a href="../index.html" class="skb-brand">SafeKeep<span>Bitcoin</span></a>
+  <div class="skb-header-actions">
+    <button class="skb-theme-btn" onclick="toggleTheme()" id="theme-btn" title="Toggle theme">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+    </button>
+  </div>
+</header>
 
-<nav>
-  <a href="../index.html" class="nav-brand">SafeKeep<span>Bitcoin</span></a>
-  <button onclick="toggleTheme()" id="theme-btn" style="background:transparent; border:none; color:var(--text); font-size:1.2rem; cursor:pointer;">☀️</button>
-</nav>
+<div class="skb-container">
+  <h1 class="skb-page-title">BIP-85 Child Seed</h1>
+  <div class="skb-page-subtitle">Deterministically derive new wallets from a single master seed</div>
 
-<div class="container">
-    <h1>BIP-85 Child Seed Generator</h1>
-    <div class="subtitle">Deterministically derive new wallets from a single master seed</div>
+  <!-- Card 1: Master Seed Input -->
+  <div class="skb-card" id="master-seed-card">
+    <div class="skb-card-title">Master Seed Input</div>
 
-    <div class="card">
-        <h3 style="border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 20px;">1. Master Entropy Input</h3>
-        
-        <div style="margin-bottom: 25px; padding: 15px; background: rgba(3, 218, 198, 0.05); border: 1px solid var(--teal); border-radius: 6px;">
-            <h4 style="margin-top: 0; color: var(--teal); margin-bottom: 10px;">⚡ Quick Import Master Seed</h4>
-            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                <label class="btn-secondary" style="display: inline-block;">
-                    <input type="file" id="skbInput" accept=".skb" onchange="window.handleSkbUpload(event)" style="display:none;" />
-                    📥 Import from Note (.skb)
-                </label>
-                <button type="button" class="btn-secondary" onclick="window.toggleScanner()">📷 Scan from QR</button>
-            </div>
-            <span style="display: block; font-size: 0.85em; color: var(--muted); margin-top: 8px;">Auto-fills the grid and passphrase</span>
-        </div>
-
-        <div id="scanner-container" class="scanner-container">
-            <div id="reader"></div>
-            <div class="scan-progress">Awaiting Seed Phrase QR Code...</div>
-            <button type="button" onclick="window.toggleScanner()" style="margin-top: 15px; padding: 8px 15px; background: var(--red); color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Cancel Scan</button>
-        </div>
-
-        <label style="font-size: 0.85rem; font-weight: bold; color: var(--muted); text-transform: uppercase;">Master Seed Length</label>
-        <div class="radio-group" style="margin-bottom: 15px;">
-            <label><input type="radio" name="seedLength" value="12" checked onchange="window.updateSeedGrid()"> 12 Words</label>
-            <label><input type="radio" name="seedLength" value="24" onchange="window.updateSeedGrid()"> 24 Words</label>
-        </div>
-
-        <div id="seed-grid-container" class="seed-grid"></div>
-        
-        <div style="margin-top: 15px;">
-            <label style="font-size: 0.85rem; font-weight: bold; color: var(--muted); text-transform: uppercase;">Optional Master Passphrase</label>
-            <input type="password" id="passphrase" placeholder="Leave blank if none" autocomplete="off" style="margin-top: 5px;" />
-        </div>
+    <!-- Import options -->
+    <div class="skb-import-section" style="margin-bottom: 16px;">
+      <div class="skb-result-actions" style="flex-wrap: wrap; gap: 8px;">
+        <button class="skb-btn-sm" onclick="window.loadMasterFromFile()">Load from File</button>
+        <button class="skb-btn-sm" onclick="window.toggleScanner()">Scan QR</button>
+      </div>
+      <div id="session-seed-status" style="font-size: 0.78rem; color: var(--skb-text-dim); margin-top: 6px;"></div>
     </div>
 
-    <div class="card">
-        <h3 style="border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 20px;">2. Child Wallet Settings</h3>
-        <div class="controls">
-            <div class="control-group">
-                <label>Child Seed Length</label>
-                <select id="child-length">
-                    <option value="12" selected>12 Words</option>
-                    <option value="24">24 Words</option>
-                </select>
-            </div>
-            <div class="control-group">
-                <label>Child Index (Derivation Path)</label>
-                <input type="number" id="child-index" value="0" min="0" />
-            </div>
-        </div>
-        <button class="btn" id="btn-generate" onclick="window.generateChildSeed()">Generate Child Seed</button>
+    <!-- Scanner -->
+    <div id="scanner-container" class="skb-scanner-box">
+      <div id="reader"></div>
+      <div style="margin-top: 8px; font-weight: 600; font-size: 0.85rem; color: var(--skb-info);">Awaiting Seed Phrase QR Code...</div>
+      <button class="skb-btn-sm" style="margin-top: 10px; border-color: var(--skb-danger); color: var(--skb-danger);" onclick="window.toggleScanner()">Cancel Scan</button>
     </div>
 
-    <div class="card result-box" id="result-box" style="display: none;">
-        <h3>3. Derived Child Seed</h3>
-        <p style="font-size: 0.9em; margin-bottom: 15px; color: var(--text);">This is your new, deterministic child seed phrase. Do not lose your master seed!</p>
-        
+    <!-- Seed length toggle -->
+    <div class="skb-controls" style="margin-bottom: 12px;">
+      <div class="skb-control-group">
+        <label class="skb-label">Master Seed Length</label>
+        <div style="display: flex; gap: 16px; margin-top: 6px;">
+          <label class="skb-checkbox-group"><input type="radio" name="seedLength" value="12" checked onchange="window.updateSeedGrid()"> 12 Words</label>
+          <label class="skb-checkbox-group"><input type="radio" name="seedLength" value="24" onchange="window.updateSeedGrid()"> 24 Words</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seed input grid -->
+    <div id="seed-grid-container" class="skb-seed-grid"></div>
+
+    <!-- Passphrase section -->
+    <div class="skb-passphrase-section">
+      <div class="skb-passphrase-label" id="passphrase-label">Optional Master Passphrase (BIP-39 13th Word)</div>
+      <div class="skb-passphrase-row">
+        <input type="text" class="skb-passphrase-input" id="passphrase" placeholder="Leave blank if none" autocomplete="off">
+        <button class="skb-btn-sm" onclick="window.clearPassphrase()">Clear</button>
+      </div>
+      <div class="skb-result-actions" style="margin-top: 8px;">
+        <button class="skb-btn-sm" onclick="window.savePassphraseToFile()">Save Passphrase</button>
+        <button class="skb-btn-sm" onclick="window.loadPassphraseFromFile()">Load Passphrase</button>
+      </div>
+      <div class="skb-alert skb-alert--error" style="margin-top: 10px; font-size: 0.82rem;">
+        A passphrase creates a completely separate wallet. If you lose it, those funds are unrecoverable.
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 2: Child Wallet Settings -->
+  <div class="skb-card" id="settings-card">
+    <div class="skb-card-title">Child Wallet Settings</div>
+    <div class="skb-controls">
+      <div class="skb-control-group">
+        <label class="skb-label">Child Seed Length</label>
+        <select class="skb-select" id="child-length">
+          <option value="12" selected>12 Words</option>
+          <option value="24">24 Words</option>
+        </select>
+      </div>
+      <div class="skb-control-group">
+        <label class="skb-label">Child Index</label>
+        <input type="number" class="skb-input" id="child-index" value="0" min="0" />
+      </div>
+    </div>
+    <button class="skb-btn-primary" id="btn-generate" onclick="window.generateChildSeed()">Generate Child Seed</button>
+  </div>
+
+  <!-- Card 3: Derived Child Seed (hidden until generated) -->
+  <div id="result-box" style="display: none;">
+    <div class="skb-card">
+      <div class="skb-result">
+        <div class="skb-result-header">
+          <div class="skb-result-title">Derived Child Seed</div>
+          <div class="skb-result-actions">
+            <button class="skb-btn-sm" onclick="window.copyChildSeed()">Copy Child Seed</button>
+            <button class="skb-btn-sm" id="child-qr-btn" onclick="window.toggleChildQR()">Show QR</button>
+          </div>
+        </div>
+
         <div id="child-seed-output"></div>
-        
-        <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 20px;">
-            <button class="btn-secondary" onclick="window.copyChildSeed()">📋 Copy Child Seed</button>
-            <button class="btn-secondary" style="border-color: var(--orange); color: var(--orange);" onclick="window.exportChildToNote()">🔐 Export Child to Encrypted Note</button>
-            <button class="btn-secondary" style="border-color: var(--text); color: var(--text);" onclick="window.showChildQr()">📱 Show QR Code</button>
+
+        <div id="child-qr-container" class="skb-qr-container">
+          <canvas id="child-qr-canvas"></canvas>
         </div>
 
-        <div id="child-qr-container" style="display: none; margin-top: 20px; text-align: center; background: #fff; padding: 15px; border-radius: 8px; width: max-content; margin-left: auto; margin-right: auto; border: 3px solid var(--border);">
-            <canvas id="child-qr-canvas"></canvas>
+        <!-- Print-only child QR -->
+        <div id="print-child-qr" class="skb-print-only" style="display: none; text-align: center; margin-top: 8px;">
+          <canvas id="print-child-qr-canvas"></canvas>
         </div>
+
+        <div class="skb-result-actions" style="margin-top: 16px; flex-wrap: wrap;">
+          <button class="skb-btn-sm" onclick="window.saveChildToFile()">Save</button>
+          <button class="skb-btn-sm" onclick="window.printChildSeed()">Print</button>
+        </div>
+      </div>
+
+      <!-- Print-only: parent info + child seed verification -->
+      <div id="print-parent-info" class="skb-print-only"></div>
     </div>
+  </div>
+
+  <div class="skb-breadcrumb">
+    <a href="../index.html">&larr; SafeKeepBitcoin Home</a>
+  </div>
 </div>
 
 <script>
 // =========================================================
-// [PASTE ZONE 1]: YOUR FULL 2048 WORDLIST ARRAY
+// BIP-39 WORDLIST
 // =========================================================
 const WORDLIST = ["abandon","ability","able","about","above","absent","absorb","abstract","absurd","abuse","access","accident","account","accuse","achieve","acid","acoustic","acquire","across","act","action","actor","actress","actual","adapt","add","addict","address","adjust","admit","adult","advance","advice","aerobic","affair","afford","afraid","again","age","agent","agree","ahead","aim","air","airport","aisle","alarm","album","alcohol","alert","alien","all","alley","allow","almost","alone","alpha","already","also","alter","always","amateur","amazing","among","amount","amused","analyst","anchor","ancient","anger","angle","angry","animal","ankle","announce","annual","another","answer","antenna","antique","anxiety","any","apart","apology","appear","apple","approve","april","arch","arctic","area","arena","argue","arm","armed","armor","army","around","arrange","arrest","arrive","arrow","art","artefact","artist","artwork","ask","aspect","assault","asset","assist","assume","asthma","athlete","atom","attack","attend","attitude","attract","auction","audit","august","aunt","author","auto","autumn","average","avocado","avoid","awake","aware","away","awesome","awful","awkward","axis","baby","bachelor","bacon","badge","bag","balance","balcony","ball","bamboo","banana","banner","bar","barely","bargain","barrel","base","basic","basket","battle","beach","bean","beauty","because","become","beef","before","begin","behave","behind","believe","below","belt","bench","benefit","best","betray","better","between","beyond","bicycle","bid","bike","bind","biology","bird","birth","bitter","black","blade","blame","blanket","blast","bleak","bless","blind","blood","blossom","blouse","blue","blur","blush","board","boat","body","boil","bomb","bone","bonus","book","boost","border","boring","borrow","boss","bottom","bounce","box","boy","bracket","brain","brand","brass","brave","bread","breeze","brick","bridge","brief","bright","bring","brisk","broccoli","broken","bronze","broom","brother","brown","brush","bubble","buddy","budget","buffalo","build","bulb","bulk","bullet","bundle","bunker","burden","burger","burst","bus","business","busy","butter","buyer","buzz","cabbage","cabin","cable","cactus","cage","cake","call","calm","camera","camp","can","canal","cancel","candy","cannon","canoe","canvas","canyon","capable","capital","captain","car","carbon","card","cargo","carpet","carry","cart","case","cash","casino","castle","casual","cat","catalog","catch","category","cattle","caught","cause","caution","cave","ceiling","celery","cement","census","century","cereal","certain","chair","chalk","champion","change","chaos","chapter","charge","chase","chat","cheap","check","cheese","chef","cherry","chest","chicken","chief","child","chimney","choice","choose","chronic","chuckle","chunk","churn","cigar","cinnamon","circle","citizen","city","civil","claim","clap","clarify","claw","clay","clean","clerk","clever","click","client","cliff","climb","clinic","clip","clock","clog","close","cloth","cloud","clown","club","clump","cluster","clutch","coach","coast","coconut","code","coffee","coil","coin","collect","color","column","combine","come","comfort","comic","common","company","concert","conduct","confirm","congress","connect","consider","control","convince","cook","cool","copper","copy","coral","core","corn","correct","cost","cotton","couch","country","couple","course","cousin","cover","coyote","crack","cradle","craft","cram","crane","crash","crater","crawl","crazy","cream","credit","creek","crew","cricket","crime","crisp","critic","crop","cross","crouch","crowd","crucial","cruel","cruise","crumble","crunch","crush","cry","crystal","cube","culture","cup","cupboard","curious","current","curtain","curve","cushion","custom","cute","cycle","dad","damage","damp","dance","danger","daring","dash","daughter","dawn","day","deal","debate","debris","decade","december","decide","decline","decorate","decrease","deer","defense","define","defy","degree","delay","deliver","demand","demise","denial","dentist","deny","depart","depend","deposit","depth","deputy","derive","describe","desert","design","desk","despair","destroy","detail","detect","develop","device","devote","diagram","dial","diamond","diary","dice","diesel","diet","differ","digital","dignity","dilemma","dinner","dinosaur","direct","dirt","disagree","discover","disease","dish","dismiss","disorder","display","distance","divert","divide","divorce","dizzy","doctor","document","dog","doll","dolphin","domain","donate","donkey","donor","door","dose","double","dove","draft","dragon","drama","drastic","draw","dream","dress","drift","drill","drink","drip","drive","drop","drum","dry","duck","dumb","dune","during","dust","dutch","duty","dwarf","dynamic","eager","eagle","early","earn","earth","easily","east","easy","echo","ecology","economy","edge","edit","educate","effort","egg","eight","either","elbow","elder","electric","elegant","element","elephant","elevator","elite","else","embark","embody","embrace","emerge","emotion","employ","empower","empty","enable","enact","end","endless","endorse","enemy","energy","enforce","engage","engine","enhance","enjoy","enlist","enough","enrich","enroll","ensure","enter","entire","entry","envelope","episode","equal","equip","era","erase","erode","erosion","error","erupt","escape","essay","essence","estate","eternal","ethics","evidence","evil","evoke","evolve","exact","example","excess","exchange","excite","exclude","excuse","execute","exercise","exhaust","exhibit","exile","exist","exit","exotic","expand","expect","expire","explain","expose","express","extend","extra","eye","eyebrow","fabric","face","faculty","fade","faint","faith","fall","false","fame","family","famous","fan","fancy","fantasy","farm","fashion","fat","fatal","father","fatigue","fault","favorite","feature","february","federal","fee","feed","feel","female","fence","festival","fetch","fever","few","fiber","fiction","field","figure","file","film","filter","final","find","fine","finger","finish","fire","firm","first","fiscal","fish","fit","fitness","fix","flag","flame","flash","flat","flavor","flee","flight","flip","float","flock","floor","flower","fluid","flush","fly","foam","focus","fog","foil","fold","follow","food","foot","force","forest","forget","fork","fortune","forum","forward","fossil","foster","found","fox","fragile","frame","frequent","fresh","friend","fringe","frog","front","frost","frown","frozen","fruit","fuel","fun","funny","furnace","fury","future","gadget","gain","galaxy","gallery","game","gap","garage","garbage","garden","garlic","garment","gas","gasp","gate","gather","gauge","gaze","general","genius","genre","gentle","genuine","gesture","ghost","giant","gift","giggle","ginger","giraffe","girl","give","glad","glance","glare","glass","glide","glimpse","globe","gloom","glory","glove","glow","glue","goat","goddess","gold","good","goose","gorilla","gospel","gossip","govern","gown","grab","grace","grain","grant","grape","grass","gravity","great","green","grid","grief","grit","grocery","group","grow","grunt","guard","guess","guide","guilt","guitar","gun","gym","habit","hair","half","hammer","hamster","hand","happy","harbor","hard","harsh","harvest","hat","have","hawk","hazard","head","health","heart","heavy","hedgehog","height","hello","helmet","help","hen","hero","hidden","high","hill","hint","hip","hire","history","hobby","hockey","hold","hole","holiday","hollow","home","honey","hood","hope","horn","horror","horse","hospital","host","hotel","hour","hover","hub","huge","human","humble","humor","hundred","hungry","hunt","hurdle","hurry","hurt","husband","hybrid","ice","icon","idea","identify","idle","ignore","ill","illegal","illness","image","imitate","immense","immune","impact","impose","improve","impulse","inch","include","income","increase","index","indicate","indoor","industry","infant","inflict","inform","inhale","inherit","initial","inject","injury","inmate","inner","innocent","input","inquiry","insane","insect","inside","inspire","install","intact","interest","into","invest","invite","involve","iron","island","isolate","issue","item","ivory","jacket","jaguar","jar","jazz","jealous","jeans","jelly","jewel","job","join","joke","journey","joy","judge","juice","jump","jungle","junior","junk","just","kangaroo","keen","keep","ketchup","key","kick","kid","kidney","kind","kingdom","kiss","kit","kitchen","kite","kitten","kiwi","knee","knife","knock","know","lab","label","labor","ladder","lady","lake","lamp","language","laptop","large","later","latin","laugh","laundry","lava","law","lawn","lawsuit","layer","lazy","leader","leaf","learn","leave","lecture","left","leg","legal","legend","leisure","lemon","lend","length","lens","leopard","lesson","letter","level","liar","liberty","library","license","life","lift","light","like","limb","limit","link","lion","liquid","list","little","live","lizard","load","loan","lobster","local","lock","logic","lonely","long","loop","lottery","loud","lounge","love","loyal","lucky","luggage","lumber","lunar","lunch","luxury","lyrics","machine","mad","magic","magnet","maid","mail","main","major","make","mammal","man","manage","mandate","mango","mansion","manual","maple","marble","march","margin","marine","market","marriage","mask","mass","master","match","material","math","matrix","matter","maximum","maze","meadow","mean","measure","meat","mechanic","medal","media","melody","melt","member","memory","mention","menu","mercy","merge","merit","merry","mesh","message","metal","method","middle","midnight","milk","million","mimic","mind","minimum","minor","minute","miracle","mirror","misery","miss","mistake","mix","mixed","mixture","mobile","model","modify","mom","moment","monitor","monkey","monster","month","moon","moral","more","morning","mosquito","mother","motion","motor","mountain","mouse","move","movie","much","muffin","mule","multiply","muscle","museum","mushroom","music","must","mutual","myself","mystery","myth","naive","name","napkin","narrow","nasty","nation","nature","near","neck","need","negative","neglect","neither","nephew","nerve","nest","net","network","neutral","never","news","next","nice","night","noble","noise","nominee","noodle","normal","north","nose","notable","note","nothing","notice","novel","now","nuclear","number","nurse","nut","oak","obey","object","oblige","obscure","observe","obtain","obvious","occur","ocean","october","odor","off","offer","office","often","oil","okay","old","olive","olympic","omit","once","one","onion","online","only","open","opera","opinion","oppose","option","orange","orbit","orchard","order","ordinary","organ","orient","original","orphan","ostrich","other","outdoor","outer","output","outside","oval","oven","over","own","owner","oxygen","oyster","ozone","pact","paddle","page","pair","palace","palm","panda","panel","panic","panther","paper","parade","parent","park","parrot","party","pass","patch","path","patient","patrol","pattern","pause","pave","payment","peace","peanut","pear","peasant","pelican","pen","penalty","pencil","people","pepper","perfect","permit","person","pet","phone","photo","phrase","physical","piano","picnic","picture","piece","pig","pigeon","pill","pilot","pink","pioneer","pipe","pistol","pitch","pizza","place","planet","plastic","plate","play","please","pledge","pluck","plug","plunge","poem","poet","point","polar","pole","police","pond","pony","pool","popular","portion","position","possible","post","potato","pottery","poverty","powder","power","practice","praise","predict","prefer","prepare","present","pretty","prevent","price","pride","primary","print","priority","prison","private","prize","problem","process","produce","profit","program","project","promote","proof","property","prosper","protect","proud","provide","public","pudding","pull","pulp","pulse","pumpkin","punch","pupil","puppy","purchase","purity","purpose","purse","push","put","puzzle","pyramid","quality","quantum","quarter","question","quick","quit","quiz","quote","rabbit","raccoon","race","rack","radar","radio","rail","rain","raise","rally","ramp","ranch","random","range","rapid","rare","rate","rather","raven","raw","razor","ready","real","reason","rebel","rebuild","recall","receive","recipe","record","recycle","reduce","reflect","reform","refuse","region","regret","regular","reject","relax","release","relief","rely","remain","remember","remind","remove","render","renew","rent","reopen","repair","repeat","replace","report","require","rescue","resemble","resist","resource","response","result","retire","retreat","return","reunion","reveal","review","reward","rhythm","rib","ribbon","rice","rich","ride","ridge","rifle","right","rigid","ring","riot","ripple","risk","ritual","rival","river","road","roast","robot","robust","rocket","romance","roof","rookie","room","rose","rotate","rough","round","route","royal","rubber","rude","rug","rule","run","runway","rural","sad","saddle","sadness","safe","sail","salad","salmon","salon","salt","salute","same","sample","sand","satisfy","satoshi","sauce","sausage","save","say","scale","scan","scare","scatter","scene","scheme","school","science","scissors","scorpion","scout","scrap","screen","script","scrub","sea","search","season","seat","second","secret","section","security","seed","seek","segment","select","sell","seminar","senior","sense","sentence","series","service","session","settle","setup","seven","shadow","shaft","shallow","share","shed","shell","sheriff","shield","shift","shine","ship","shiver","shock","shoe","shoot","shop","short","shoulder","shove","shrimp","shrug","shuffle","shy","sibling","sick","side","siege","sight","sign","silent","silk","silly","silver","similar","simple","since","sing","siren","sister","situate","six","size","skate","sketch","ski","skill","skin","skirt","skull","slab","slam","sleep","slender","slice","slide","slight","slim","slogan","slot","slow","slush","small","smart","smile","smoke","smooth","snack","snake","snap","sniff","snow","soap","soccer","social","sock","soda","soft","solar","soldier","solid","solution","solve","someone","song","soon","sorry","sort","soul","sound","soup","source","south","space","spare","spatial","spawn","speak","special","speed","spell","spend","sphere","spice","spider","spike","spin","spirit","split","spoil","sponsor","spoon","sport","spot","spray","spread","spring","spy","square","squeeze","squirrel","stable","stadium","staff","stage","stairs","stamp","stand","start","state","stay","steak","steel","stem","step","stereo","stick","still","sting","stock","stomach","stone","stool","story","stove","strategy","street","strike","strong","struggle","student","stuff","stumble","style","subject","submit","subway","success","such","sudden","suffer","sugar","suggest","suit","summer","sun","sunny","sunset","super","supply","supreme","sure","surface","surge","surprise","surround","survey","suspect","sustain","swallow","swamp","swap","swarm","swear","sweet","swift","swim","swing","switch","sword","symbol","symptom","syrup","system","table","tackle","tag","tail","talent","talk","tank","tape","target","task","taste","tattoo","taxi","teach","team","tell","ten","tenant","tennis","tent","term","test","text","thank","that","theme","then","theory","there","they","thing","this","thought","three","thrive","throw","thumb","thunder","ticket","tide","tiger","tilt","timber","time","tiny","tip","tired","tissue","title","toast","tobacco","today","toddler","toe","together","toilet","token","tomato","tomorrow","tone","tongue","tonight","tool","tooth","top","topic","topple","torch","tornado","tortoise","toss","total","tourist","toward","tower","town","toy","track","trade","traffic","tragic","train","transfer","trap","trash","travel","tray","treat","tree","trend","trial","tribe","trick","trigger","trim","trip","trophy","trouble","truck","true","truly","trumpet","trust","truth","try","tube","tuition","tumble","tuna","tunnel","turkey","turn","turtle","twelve","twenty","twice","twin","twist","two","type","typical","ugly","umbrella","unable","unaware","uncle","uncover","under","undo","unfair","unfold","unhappy","uniform","unique","unit","universe","unknown","unlock","until","unusual","unveil","update","upgrade","uphold","upon","upper","upset","urban","urge","usage","use","used","useful","useless","usual","utility","vacant","vacuum","vague","valid","valley","valve","van","vanish","vapor","various","vast","vault","vehicle","velvet","vendor","venture","venue","verb","verify","version","very","vessel","veteran","viable","vibrant","vicious","victory","video","view","village","vintage","violin","virtual","virus","visa","visit","visual","vital","vivid","vocal","voice","void","volcano","volume","vote","voyage","wage","wagon","wait","walk","wall","walnut","want","warfare","warm","warrior","wash","wasp","waste","water","wave","way","wealth","weapon","wear","weasel","weather","web","wedding","weekend","weird","welcome","west","wet","whale","what","wheat","wheel","when","where","whip","whisper","wide","width","wife","wild","will","win","window","wine","wing","wink","winner","winter","wire","wisdom","wise","wish","witness","wolf","woman","wonder","wood","wool","word","work","world","worry","worth","wrap","wreck","wrestle","wrist","write","wrong","yard","year","yellow","you","young","youth","zebra","zero","zone","zoo"];
-// --- PASTE YOUR 2048 WORDS HERE ---
 
 
-// --- 1. SEED UI, AUTOCOMPLETE & SMART PASTE ---
+// =========================================================
+// 1. SEED GRID INPUT & AUTOCOMPLETE
+// =========================================================
 function closeAllLists(elmnt) {
-    const x = document.querySelectorAll('.autocomplete-list');
-    const inputs = document.querySelectorAll('.word-input');
-    for (let i = 0; i < x.length; i++) {
-        if (elmnt !== x[i] && elmnt !== inputs) x[i].parentNode.removeChild(x[i]);
-    }
+    document.querySelectorAll('.skb-autocomplete-list').forEach(list => {
+        if (elmnt !== list) list.remove();
+    });
 }
 document.addEventListener("click", e => closeAllLists(e.target));
 
 window.validateWord = function(input) {
     const val = input.value.trim().toLowerCase();
-    const wordBox = input.closest('.word-box');
+    const wordBox = input.closest('.skb-word-box');
     if (val === '') { wordBox.classList.remove('invalid'); return false; }
-    if (WORDLIST && WORDLIST.length > 0 && !WORDLIST.includes(val)) {
-        wordBox.classList.add('invalid'); return false;
-    } else {
-        wordBox.classList.remove('invalid'); return true;
-    }
+    if (!WORDLIST.includes(val)) { wordBox.classList.add('invalid'); return false; }
+    wordBox.classList.remove('invalid'); return true;
 };
 
 window.updateSeedGrid = function() {
@@ -263,16 +245,25 @@ window.updateSeedGrid = function() {
     container.innerHTML = '';
     for (let i = 1; i <= length; i++) {
         container.innerHTML += `
-            <div class="word-box">
-                <span>${i}.</span>
+            <div class="skb-word-box">
+                <span class="word-num">${i}.</span>
                 <input type="text" class="word-input" autocomplete="off">
             </div>
         `;
     }
     attachAutocompleteEvents();
+    updatePassphraseLabel();
     document.getElementById('result-box').style.display = 'none';
-    document.getElementById('child-qr-container').style.display = 'none'; // Reset QR state
 };
+
+function updatePassphraseLabel() {
+    const length = parseInt(document.querySelector('input[name="seedLength"]:checked').value);
+    const label = document.getElementById('passphrase-label');
+    if (label) {
+        const wordNum = length === 24 ? '25th' : '13th';
+        label.textContent = `Optional Master Passphrase (BIP-39 ${wordNum} Word)`;
+    }
+}
 
 function attachAutocompleteEvents() {
     const inputs = document.querySelectorAll('.word-input');
@@ -281,10 +272,10 @@ function attachAutocompleteEvents() {
             let val = this.value.toLowerCase();
             closeAllLists();
             window.validateWord(this);
-            if (!val || !WORDLIST || WORDLIST.length === 0) return false;
+            if (!val) return;
 
             let list = document.createElement("DIV");
-            list.setAttribute("class", "autocomplete-list");
+            list.setAttribute("class", "skb-autocomplete-list");
             list.style.display = "block";
             this.parentNode.appendChild(list);
 
@@ -292,7 +283,7 @@ function attachAutocompleteEvents() {
             for (let i = 0; i < WORDLIST.length; i++) {
                 if (WORDLIST[i].substr(0, val.length) === val) {
                     let item = document.createElement("DIV");
-                    item.setAttribute("class", "autocomplete-item");
+                    item.setAttribute("class", "skb-autocomplete-item");
                     item.innerHTML = "<strong>" + WORDLIST[i].substr(0, val.length) + "</strong>" + WORDLIST[i].substr(val.length) + "<input type='hidden' value='" + WORDLIST[i] + "'>";
                     item.addEventListener("click", function(e) {
                         input.value = this.getElementsByTagName("input")[0].value;
@@ -308,12 +299,12 @@ function attachAutocompleteEvents() {
         });
 
         input.addEventListener('keydown', function(e) {
-            let list = this.parentNode.querySelector('.autocomplete-list');
+            let list = this.parentNode.querySelector('.skb-autocomplete-list');
             if (list && list.style.display === 'block' && e.key === 'Tab') {
-                e.preventDefault(); 
+                e.preventDefault();
                 const firstItem = list.firstChild;
                 if (firstItem) {
-                    this.value = firstItem.getElementsByTagName("input")[0].value; 
+                    this.value = firstItem.getElementsByTagName("input")[0].value;
                     window.validateWord(this);
                     closeAllLists();
                     if (index < inputs.length - 1) inputs[index + 1].focus();
@@ -324,8 +315,8 @@ function attachAutocompleteEvents() {
         input.addEventListener('paste', function(e) {
             e.preventDefault();
             const pasteData = (e.clipboardData || window.clipboardData).getData('text');
-            const words = pasteData.trim().split(/[\s\n]+/); 
-            
+            const words = pasteData.trim().split(/[\s\n]+/);
+
             if (words.length === 24 && document.querySelector('input[name="seedLength"][value="12"]').checked) {
                 document.querySelector('input[name="seedLength"][value="24"]').checked = true;
                 window.updateSeedGrid();
@@ -362,31 +353,34 @@ function getSeedFromGrid() {
     for (let i = 0; i < inputs.length; i++) {
         const val = inputs[i].value.trim().toLowerCase();
         if (!val) throw new Error(`Word #${i+1} is missing.`);
-        if (WORDLIST && WORDLIST.length > 0 && !WORDLIST.includes(val)) throw new Error(`Word #${i+1} ("${val}") is not a valid BIP39 word.`);
+        if (!WORDLIST.includes(val)) throw new Error(`Word #${i+1} ("${val}") is not a valid BIP39 word.`);
         words.push(val);
     }
     return words.join(' ');
 }
 
-// --- 2. QR SCANNER LOGIC ---
+
+// =========================================================
+// 2. QR SCANNER
+// =========================================================
 let activeHtml5QrCode = null;
 window.toggleScanner = function() {
     const container = document.getElementById('scanner-container');
-    if (container.style.display === 'block') {
+    if (container.classList.contains('visible')) {
         if (activeHtml5QrCode) {
             activeHtml5QrCode.stop().then(() => {
                 activeHtml5QrCode.clear(); activeHtml5QrCode = null;
             }).catch(console.error);
         }
-        container.style.display = 'none';
+        container.classList.remove('visible');
     } else {
-        if (!window.Html5Qrcode) return alert("QR Scanner library not loaded. Check your Vite build.");
-        container.style.display = 'block';
+        if (!window.Html5Qrcode) return alert("QR Scanner library not loaded.");
+        container.classList.add('visible');
         activeHtml5QrCode = new window.Html5Qrcode("reader");
         activeHtml5QrCode.start(
             { facingMode: "environment" }, { fps: 10, qrbox: { width: 250, height: 250 } },
             (decodedText) => {
-                window.toggleScanner(); // Close camera
+                window.toggleScanner();
                 const words = decodedText.trim().split(/[\s\n]+/);
                 if (words.length === 24 && document.querySelector('input[name="seedLength"][value="12"]').checked) {
                     document.querySelector('input[name="seedLength"][value="24"]').checked = true;
@@ -399,78 +393,98 @@ window.toggleScanner = function() {
             },
             (err) => { /* ignore */ }
         ).catch(err => {
-            alert(`Camera access failed: ${err.message}`); container.style.display = 'none';
+            alert(`Camera access failed: ${err.message}`);
+            container.classList.remove('visible');
         });
     }
 };
 
-// --- 3. SKB IMPORT LOGIC (AES-GCM Decryption) ---
-window.pendingSkbData = null;
-function base64ToArrayBuffer(base64) {
-    const binary_string = window.atob(base64);
-    const len = binary_string.length;
-    const bytes = new Uint8Array(len);
-    for (let i = 0; i < len; i++) bytes[i] = binary_string.charCodeAt(i);
-    return bytes.buffer;
-}
 
-window.handleSkbUpload = function(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        try {
-            window.pendingSkbData = JSON.parse(e.target.result);
-            document.getElementById('importPassword').value = '';
-            document.getElementById('importModal').style.display = 'flex';
-            document.getElementById('importError').style.display = 'none';
-        } catch (err) { alert('Invalid .skb file format.'); }
-    };
-    reader.readAsText(file);
-    event.target.value = ''; 
-};
-
-window.decryptSkb = async function() {
-    const password = document.getElementById('importPassword').value;
-    if (!password || !window.pendingSkbData) return;
-
+// =========================================================
+// 3. LOAD MASTER SEED
+// =========================================================
+window.loadMasterFromFile = async function() {
+    if (!window.SeedManager) return alert('SeedManager not available.');
     try {
-        const salt = base64ToArrayBuffer(window.pendingSkbData.salt);
-        const iv = base64ToArrayBuffer(window.pendingSkbData.iv);
-        const ciphertext = base64ToArrayBuffer(window.pendingSkbData.ciphertext);
-        const enc = new TextEncoder();
-        const keyMaterial = await window.crypto.subtle.importKey("raw", enc.encode(password), { name: "PBKDF2" }, false, ["deriveBits", "deriveKey"]);
-        const key = await window.crypto.subtle.deriveKey({ name: "PBKDF2", salt: salt, iterations: 100000, hash: "SHA-256" }, keyMaterial, { name: "AES-GCM", length: 256 }, false, ["decrypt"]);
-        const decrypted = await window.crypto.subtle.decrypt({ name: "AES-GCM", iv: iv }, key, ciphertext);
-        
-        const decryptedText = new TextDecoder().decode(decrypted);
-        const payloadMatch = decryptedText.match(/\[SKB_PAYLOAD:(.*?)\]/);
-        if (!payloadMatch) throw new Error("No SafeKeep payload found in this note.");
-
-        const payload = JSON.parse(atob(payloadMatch[1].replace(/\s/g, '')));
-        if (payload.type !== "seed_export") throw new Error("Invalid payload type.");
-
-        const words = payload.seed.split(/\s+/);
-        if (words.length === 24) document.querySelector('input[name="seedLength"][value="24"]').checked = true;
-        else if (words.length === 12) document.querySelector('input[name="seedLength"][value="12"]').checked = true;
-        window.updateSeedGrid();
-
-        setTimeout(() => {
-            fillPastedWords(words, 0);
-            document.getElementById('passphrase').value = payload.passphrase || "";
-            document.getElementById('importModal').style.display = 'none';
-            window.pendingSkbData = null;
-        }, 10);
-
+        const seed = await window.SeedManager.loadSeed();
+        if (!seed) return;
+        fillMasterSeedFromData(seed);
     } catch (e) {
-        document.getElementById('importError').innerText = "Decryption failed. Incorrect password or corrupted file.";
-        document.getElementById('importError').style.display = 'block';
+        alert(e.message);
     }
 };
 
-// --- 4. BIP-85 GENERATION LOGIC ---
-// Global scope to hold raw seed for copy/export
+/**
+ * Fill the master seed grid + passphrase from a seed data object.
+ * Used by file load and session auto-load.
+ */
+function fillMasterSeedFromData(seed) {
+    const words = seed.mnemonic.trim().split(/\s+/);
+
+    // Switch grid to correct length
+    if (words.length === 24 && document.querySelector('input[name="seedLength"][value="12"]').checked) {
+        document.querySelector('input[name="seedLength"][value="24"]').checked = true;
+        window.updateSeedGrid();
+    } else if (words.length === 12 && document.querySelector('input[name="seedLength"][value="24"]').checked) {
+        document.querySelector('input[name="seedLength"][value="12"]').checked = true;
+        window.updateSeedGrid();
+    }
+
+    setTimeout(() => {
+        fillPastedWords(words, 0);
+        if (seed.passphrase) {
+            document.getElementById('passphrase').value = seed.passphrase;
+        }
+        // Update status
+        const status = document.getElementById('session-seed-status');
+        if (status && seed.label) {
+            status.textContent = `Loaded: ${seed.label}` + (seed.fingerprint ? ` (${seed.fingerprint})` : '');
+            status.style.color = 'var(--skb-secondary)';
+        } else if (status && seed.fingerprint) {
+            status.textContent = `Loaded seed ${seed.fingerprint}`;
+            status.style.color = 'var(--skb-secondary)';
+        }
+    }, 10);
+}
+
+
+// =========================================================
+// 4. PASSPHRASE MANAGEMENT
+// =========================================================
+window.clearPassphrase = function() {
+    document.getElementById('passphrase').value = '';
+};
+
+window.savePassphraseToFile = async function() {
+    const pp = document.getElementById('passphrase').value.trim();
+    if (!pp) return alert('No passphrase to save.');
+    if (!window.SeedManager) return alert('SeedManager not available.');
+    try {
+        await window.SeedManager.savePassphrase(pp, { label: '' });
+    } catch (e) {
+        alert('Save failed: ' + e.message);
+    }
+};
+
+window.loadPassphraseFromFile = async function() {
+    if (!window.SeedManager) return alert('SeedManager not available.');
+    try {
+        const result = await window.SeedManager.loadPassphrase();
+        if (!result) return;
+        document.getElementById('passphrase').value = result.passphrase;
+    } catch (e) {
+        alert(e.message);
+    }
+};
+
+
+// =========================================================
+// 5. BIP-85 GENERATION
+// =========================================================
 window.currentDerivedSeed = "";
+window.currentParentFingerprint = "";
+window.currentParentLastWord = "";
+window.currentChildFingerprint = "";
 
 window.generateChildSeed = async function() {
     try {
@@ -478,51 +492,66 @@ window.generateChildSeed = async function() {
         const passphrase = document.getElementById('passphrase').value;
         const childLength = parseInt(document.getElementById('child-length').value);
         const childIndex = parseInt(document.getElementById('child-index').value);
-        
+
         const btn = document.getElementById('btn-generate');
         btn.innerText = "Processing...";
         btn.disabled = true;
 
         await new Promise(r => setTimeout(r, 50));
 
-        // 1. Get the crypto modules from your Vite bundle
         const { bip39, HDKey, wordlist } = window.BtcMath;
 
-        // 2. Convert master seed + passphrase to a seed buffer, then to a Master Node
+        // Compute parent fingerprint + last word
+        const seedWords = masterSeed.split(' ');
+        window.currentParentLastWord = seedWords[seedWords.length - 1];
+        if (window.SeedManager) {
+            try { window.currentParentFingerprint = await window.SeedManager.computeFingerprint(masterSeed); } catch(e) {}
+        }
+
+        // Derive child seed via BIP-85
         const seedBytes = await bip39.mnemonicToSeed(masterSeed, passphrase);
         const masterNode = HDKey.fromMasterSeed(seedBytes);
-
-        // 3. Construct the official BIP-85 Derivation Path for BIP39 English
         const bip85Path = `m/83696968'/39'/0'/${childLength}'/${childIndex}'`;
-        
-        // 4. Derive the specific child node
         const childNode = masterNode.derive(bip85Path);
-
-        // 5. Per BIP-85 specs, the private key of this node IS the raw entropy.
         const entropyLength = childLength === 12 ? 16 : 32;
         const childEntropy = childNode.privateKey.slice(0, entropyLength);
-
-        // 6. Convert that raw entropy back into your new deterministic seed phrase!
         const derivedChildSeedPhrase = bip39.entropyToMnemonic(childEntropy, wordlist);
-        
+
         if (!derivedChildSeedPhrase) throw new Error("BIP-85 derivation failed.");
 
         window.currentDerivedSeed = derivedChildSeedPhrase;
 
-        // Build the HTML pill-box grid
+        // Compute child fingerprint
+        if (window.SeedManager) {
+            try { window.currentChildFingerprint = await window.SeedManager.computeFingerprint(derivedChildSeedPhrase); } catch(e) {}
+        }
+
+        // Build output grid using design system classes
         const wordsArray = derivedChildSeedPhrase.split(' ');
-        let gridHtml = '<div class="output-grid">';
+        let gridHtml = '<div class="skb-word-grid">';
         wordsArray.forEach((word, idx) => {
-            gridHtml += `
-                <div class="output-word-pill">
-                    <span class="num">${idx + 1}.</span>
-                    <span class="word">${word}</span>
-                </div>
-            `;
+            gridHtml += `<div class="skb-word-pill"><span class="skb-word-num">${idx + 1}.</span><span class="skb-word-text">${word}</span></div>`;
         });
         gridHtml += '</div>';
 
-        document.getElementById('child-qr-container').style.display = 'none'; // Reset QR if open
+        // Populate print-only parent info (fingerprint + last word only — no full seed for security)
+        const printInfo = document.getElementById('print-parent-info');
+        if (printInfo) {
+            printInfo.innerHTML = `
+                <strong>Parent Seed:</strong> Fingerprint <span style="font-family: var(--skb-mono);">${window.currentParentFingerprint}</span> — Last word: <span style="font-family: var(--skb-mono); text-transform: uppercase;">${window.currentParentLastWord}</span>
+            `;
+        }
+
+        // Generate print-only QR for child seed
+        if (window.QRCode) {
+            const printCanvas = document.getElementById('print-child-qr-canvas');
+            if (printCanvas) {
+                window.QRCode.toCanvas(printCanvas, derivedChildSeedPhrase, { width: 200, margin: 2, color: { dark: '#000', light: '#fff' } }, function(){});
+            }
+        }
+
+        document.getElementById('child-qr-container').classList.remove('visible');
+        document.getElementById('child-qr-btn').textContent = 'Show QR';
         document.getElementById('child-seed-output').innerHTML = gridHtml;
         document.getElementById('result-box').style.display = 'block';
 
@@ -534,39 +563,10 @@ window.generateChildSeed = async function() {
     }
 };
 
-// --- 5. EXPORT & QR UTILS ---
-window.showChildQr = function() {
-    const qrContainer = document.getElementById('child-qr-container');
-    const canvas = document.getElementById('child-qr-canvas');
-    
-    // Toggle visibility if already open
-    if (qrContainer.style.display === 'block') {
-        qrContainer.style.display = 'none';
-        return;
-    }
 
-    if (!window.currentDerivedSeed) return;
-    
-    // Safety check for the library
-    if (!window.QRCode) {
-        alert("QR Code library missing. Ensure 'window.QRCode = QRCode;' is in your bip85.js file.");
-        return;
-    }
-
-    window.QRCode.toCanvas(canvas, window.currentDerivedSeed, {
-        width: 250,
-        margin: 2,
-        color: { dark: '#000000', light: '#ffffff' }
-    }, function (error) {
-        if (error) {
-            console.error(error);
-            alert("Failed to generate QR code.");
-        } else {
-            qrContainer.style.display = 'block';
-        }
-    });
-};
-
+// =========================================================
+// 6. CHILD SEED OUTPUT ACTIONS
+// =========================================================
 window.copyChildSeed = function() {
     if (!window.currentDerivedSeed) return;
     navigator.clipboard.writeText(window.currentDerivedSeed).then(() => {
@@ -574,94 +574,98 @@ window.copyChildSeed = function() {
     });
 };
 
-window.exportChildToNote = function() {
-    if (!window.currentDerivedSeed) return alert("Please generate a child seed first.");
-
-    // Extract parent seed last word safely from the grid
-    let parentLastWord = "Unknown";
-    try {
-        const masterSeed = getSeedFromGrid();
-        if (masterSeed) {
-            const seedWords = masterSeed.split(' ');
-            parentLastWord = seedWords[seedWords.length - 1] || "Unknown";
-        }
-    } catch (e) {
-        console.warn("Could not extract parent seed for identifier.", e);
+window.toggleChildQR = function() {
+    const container = document.getElementById('child-qr-container');
+    const btn = document.getElementById('child-qr-btn');
+    if (container.classList.contains('visible')) {
+        container.classList.remove('visible');
+        btn.textContent = 'Show QR';
+        return;
     }
-    
-    const index = document.getElementById('child-index').value;
-    const length = document.getElementById('child-length').value;
-
-    const noteHtml = `
-        <h2>BIP-85 Child Wallet</h2>
-
-        <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 20px;">
-            <strong>Parent Seed Identifier (Last Word):</strong>
-            <span style="font-family: monospace; text-transform: uppercase; color: var(--orange); font-size: 1.1rem; border: 1px solid var(--border); padding: 4px 8px; border-radius: 4px; margin-left: 10px;">
-                ${parentLastWord}
-            </span>
-        </p>
-
-        <ul>
-            <li><strong>Derivation Index:</strong> ${index}</li>
-            <li><strong>Seed Length:</strong> ${length} words</li>
-            <li><strong>Date Created:</strong> ${new Date().toISOString().split('T')[0]}</li>
-        </ul>
-        <h3>Child Entropy</h3>
-        <p style="font-family: var(--mono); background: var(--input-bg); padding: 15px; border-radius: 5px; color: var(--teal); font-size: 1.1em;">${window.currentDerivedSeed}</p>
-        <p><em>Keep this note secure. It contains cryptographic secrets.</em></p>
-    `;
-
-    const payload = {
-        safekeep_version: "1.0",
-        type: "bip85_export",
-        seed: window.currentDerivedSeed,
-        passphrase: "",
-        parent_id: parentLastWord,
-        path: `m/83696968'/39'/${index}'/${length}'`
-    };
-
-    const b64Payload = btoa(JSON.stringify(payload));
-    const payloadHtml = `
-        <div class="skb-hidden-payload">
-            <hr style="margin-top: 30px; border: 0; border-top: 1px solid var(--border);">
-            <p style="font-family: monospace; font-size: 0.75em; color: var(--text-muted); word-break: break-all;">
-                <strong>⚙️ AUTO-FILL PAYLOAD:</strong><br>
-                [SKB_PAYLOAD:${b64Payload}]
-            </p>
-        </div>
-    `;
-
-    const combinedData = noteHtml + payloadHtml;
-
-    sessionStorage.setItem('safeKeepDraftNote', combinedData);
-    localStorage.setItem('safeKeepDraftNote', combinedData);
-    
-    const plainText = combinedData.replace(/<[^>]+>/g, '\n').replace(/\n\s*\n/g, '\n');
-    navigator.clipboard.writeText(plainText).then(() => {
-        alert("Data prepared!\n\nOpening Encrypted Note Tool...");
-        window.open('../secure-note/index.html', '_blank');
-    }).catch(err => {
-        window.open('../secure-note/index.html', '_blank');
+    if (!window.currentDerivedSeed || !window.QRCode) return;
+    const canvas = document.getElementById('child-qr-canvas');
+    window.QRCode.toCanvas(canvas, window.currentDerivedSeed, {
+        width: 250, margin: 2, color: { dark: '#000000', light: '#ffffff' }
+    }, function(error) {
+        if (!error) {
+            container.classList.add('visible');
+            btn.textContent = 'Hide QR';
+        }
     });
 };
 
-// --- 6. GLOBAL UI ---
+window.saveChildToFile = async function() {
+    if (!window.currentDerivedSeed) return alert('Please generate a child seed first.');
+    if (!window.SeedManager) return alert('SeedManager not available.');
+
+    const label = `BIP85 Child ${document.getElementById('child-index').value}`;
+
+    try {
+        const result = await window.SeedManager.saveSeed(window.currentDerivedSeed, {
+            label,
+            parentFingerprint: window.currentParentFingerprint || ''
+        });
+        if (result) {
+            const status = document.getElementById('session-seed-status');
+            if (status) {
+                status.textContent = `Child seed saved (${result.fingerprint})`;
+                status.style.color = 'var(--skb-secondary)';
+            }
+        }
+    } catch (e) {
+        alert('Save failed: ' + e.message);
+    }
+};
+
+// =========================================================
+// 7. PRINT
+
+// =========================================================
+window.printChildSeed = function() {
+    if (!window.currentDerivedSeed) return;
+
+    // Set document title for print filename
+    let printName = '';
+    if (window.currentParentFingerprint) {
+        printName = `BIP85 Child ${document.getElementById('child-index').value} from ${window.currentParentFingerprint}`;
+    } else {
+        printName = `BIP85 Child Seed`;
+    }
+    document.title = printName;
+
+    window.print();
+
+    // Restore title
+    setTimeout(() => { document.title = 'BIP-85 Child Seed — SafeKeepBitcoin'; }, 1000);
+};
+
+
+// =========================================================
+// 8. THEME & INIT
+// =========================================================
 function toggleTheme() {
     const html = document.documentElement;
     if (html.getAttribute('data-theme') === 'light') {
         html.removeAttribute('data-theme');
         localStorage.setItem('safekeepTheme', 'dark');
-        document.getElementById('theme-btn').innerText = '☀️';
     } else {
         html.setAttribute('data-theme', 'light');
         localStorage.setItem('safekeepTheme', 'light');
-        document.getElementById('theme-btn').innerText = '🌙';
     }
 }
+
 window.addEventListener('DOMContentLoaded', () => {
-    if (localStorage.getItem('safekeepTheme') === 'light') document.getElementById('theme-btn').innerText = '🌙';
     window.updateSeedGrid();
+
+    // SeedSession auto-load: if user already has an active seed in session
+    // (came from the entropy tool, etc.), auto-fill the master seed grid
+    if (window.SeedSession) {
+        window.SeedSession.init().then(sessionSeed => {
+            if (sessionSeed && sessionSeed.mnemonic) {
+                fillMasterSeedFromData(sessionSeed);
+            }
+        });
+    }
 });
 </script>
 </body>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Output Descriptor</title>
+<title>Output Descriptor — SafeKeepBitcoin</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 500'%3E%3Cpath d='M 250 25 L 75 75 L 75 250 C 75 375 175 450 250 475 C 325 450 425 375 425 250 L 425 75 Z' fill='%23f7931a' /%3E%3Cg transform='translate(250, 250) rotate(14) scale(0.6) translate(-244, -244)' fill='%23ffffff'%3E%3Cpath d='M336.8,240.8c22.4-17.6,36.8-45.6,36.8-76v-3.2c0-52-41.6-95.2-93.6-96.8V21.6c0-12-9.6-21.6-21.6-21.6c-12,0-21.6,9.6-21.6,21.6v43.2h-20V21.6c0-12-9.6-21.6-21.6-21.6s-21.6,9.6-21.6,21.6v43.2h-52.8c-12,0-21.6,9.6-21.6,21.6s9.6,21.6,21.6,21.6h53.6v0.8c-0.8,2.4-1.6,4.8-1.6,7.2v258.4H120c-12,0-21.6,9.6-21.6,21.6s9.6,21.6,21.6,21.6h52.8v48.8c0,12,9.6,21.6,21.6,21.6s21.6-9.6,21.6-21.6v-48.8h20.8v48.8c0,12,9.6,21.6,21.6,21.6c12,0,21.6-9.6,21.6-21.6v-49.6c52-1.6,93.6-44.8,93.6-96.8v-3.2C373.6,286.4,359.2,258.4,336.8,240.8z M330.4,320c0,29.6-24,53.6-53.6,53.6h-59.2V116c0-2.4-0.8-4.8-1.6-7.2V108h60.8c29.6,0,53.6,24,53.6,53.6v3.2c0,29.6-24,53.6-53.6,53.6c-12,0-21.6,9.6-21.6,21.6v0.8v0.8c0,12,9.6,21.6,21.6,21.6c29.6,0,53.6,24,53.6,53.6V320z'/%3E%3C/g%3E%3C/svg%3E">
 
 <script>
@@ -12,361 +12,355 @@
   }
 </script>
 
-<style>
-  /* --- Dark Theme (Default) --- */
-  :root {
-    --bg: #0f0f0f;
-    --card: #161616;
-    --card2: #1c1c1c;
-    --border: #2a2a2a;
-    --orange: #f7931a;
-    --teal: #03dac6;
-    --red: #cf6679;
-    --muted: #888;
-    --text: #e0e0e0;
-    --mono: 'Courier New', Courier, monospace;
-    --input-bg: #2c2c2c;
-  }
-
-  /* --- Light Theme Overrides --- */
-  [data-theme="light"] {
-    --bg: #f5f5f7;
-    --card: #ffffff;
-    --card2: #f0f0f0;
-    --border: #cccccc;
-    --text: #121212;
-    --muted: #555555;
-    --teal: #018786;
-    --red: #b00020;
-    --input-bg: #e0e0e0;
-    --orange: #d87c14;
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, sans-serif; line-height: 1.6; transition: background-color 0.3s ease, color 0.3s ease; }
-
-  /* NAV */
-  nav { background: var(--card); border-bottom: 1px solid var(--border); padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; transition: background-color 0.3s ease, border-color 0.3s ease;}
-  .nav-brand { font-weight: 800; font-size: 1.15rem; color: var(--text); text-decoration: none; }
-  .nav-brand span { color: var(--orange); }
-
-  .container { max-width: 850px; margin: 0 auto; padding: 0 1rem 3rem; }
-  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.8); margin-bottom: 25px; transition: background-color 0.3s ease, border-color 0.3s ease; }
-  [data-theme="light"] .card { box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-
-  h1 { text-align: center; color: var(--text); text-transform: uppercase; letter-spacing: 2px; font-size: 1.5rem; margin-bottom: 5px;}
-  .subtitle { text-align: center; color: var(--muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
-
-  .warning { background: rgba(207,102,121,0.08); border: 1px dashed var(--red); border-radius: 6px; padding: 12px; font-size: 0.85rem; color: var(--red); text-align: center; margin-bottom: 2rem; }
-
-  /* Form Elements */
-  .controls { display: flex; gap: 15px; flex-wrap: wrap; background: var(--card2); padding: 15px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 20px; transition: background-color 0.3s ease, border-color 0.3s ease;}
-  .control-group { flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 5px; }
-  .control-group label { font-size: 0.85rem; font-weight: bold; color: var(--muted); text-transform: uppercase; letter-spacing: 1px;}
-  select, input { background: var(--bg); color: var(--text); border: 1px solid var(--border); padding: 10px; border-radius: 6px; font-size: 1rem; width: 100%; transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;}
-  select:focus, input:focus { outline: none; border-color: var(--teal); }
-
-  /* Grid Seed Inputs */
-  .seed-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 10px; }
-  @media (max-width: 600px) { .seed-grid { grid-template-columns: repeat(3, 1fr); } }
-  @media (max-width: 450px) { .seed-grid { grid-template-columns: repeat(2, 1fr); } }
-
-  .word-box {
-      display: flex; align-items: center;
-      background: var(--input-bg); border: 1px solid var(--border);
-      border-radius: 4px; padding: 6px 8px; transition: border-color 0.3s, background-color 0.3s ease;
-      position: relative; /* REQUIRED FOR AUTOCOMPLETE POSITIONING */
-  }
-  .word-box:focus-within { border-color: var(--orange); }
-  .word-box.invalid { border-color: var(--red); box-shadow: 0 0 5px rgba(207, 102, 121, 0.4); }
-  .word-box span { color: var(--muted); font-size: 0.8em; width: 22px; user-select: none; }
-  .word-box input {
-      width: 100%; background: transparent; border: none;
-      color: var(--orange); font-family: var(--mono);
-      font-size: 15px; outline: none; padding: 0; margin: 0;
-  }
-
-  /* --- Autocomplete Dropdown Styles --- */
-  .autocomplete-list {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      right: 0;
-      background: var(--card2);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      max-height: 150px;
-      overflow-y: auto;
-      z-index: 1000;
-      display: none; 
-      box-shadow: 0 8px 16px rgba(0,0,0,0.5);
-  }
-
-  [data-theme="light"] .autocomplete-list { box-shadow: 0 8px 16px rgba(0,0,0,0.1); }
-
-  .autocomplete-item {
-      padding: 8px 10px;
-      cursor: pointer;
-      font-family: var(--mono);
-      font-size: 14px;
-      color: var(--text);
-      border-bottom: 1px solid var(--border);
-      transition: background-color 0.2s;
-  }
-
-  .autocomplete-item:last-child { border-bottom: none; }
-  .autocomplete-item:hover, .autocomplete-item.active-suggestion {
-      background: var(--teal);
-      color: #000;
-      font-weight: bold;
-  }
-
-  /* --- Scanner Styles --- */
-  .scanner-container {
-      display: none;
-      margin-top: 15px;
-      padding: 15px;
-      background: #000;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      text-align: center;
-  }
-  .scanner-container > div { width: 100%; max-width: 400px; margin: 0 auto; border-radius: 8px; overflow: hidden; }
-  .scan-progress { margin-top: 10px; font-weight: bold; color: var(--teal); }
-
-  .seed-input-block { padding-bottom: 20px; margin-bottom: 20px; border-bottom: 1px dashed var(--border); }
-  .seed-input-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-  
-  .radio-group { display: flex; gap: 15px; }
-  .radio-group label { cursor: pointer; display: flex; align-items: center; gap: 5px; color: var(--text); text-transform: none; font-weight: normal; }
-
-  .btn { display: block; width: 100%; padding: 15px; font-size: 1.1rem; background: var(--orange); color: #111; border: none; border-radius: 8px; cursor: pointer; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s;}
-  .btn:hover { background: var(--orange); opacity: 0.8; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(247,147,26,0.3); }
-
-  /* Output Area */
-  .result-box { margin-top: 2rem; border: 1px solid var(--teal); border-radius: 8px; padding: 20px; background: rgba(3,218,198,0.03); }
-  .result-box h3 { color: var(--teal); margin-bottom: 15px; border-bottom: 1px solid rgba(3,218,198,0.2); padding-bottom: 10px;}
-  
-  .descriptor-output { background: #111; font-family: var(--mono); font-size: 1rem; color: #fff; padding: 15px; border-radius: 6px; border: 1px solid var(--border); word-break: break-all; margin-bottom: 15px; min-height: 80px; overflow-x: auto; }
-  [data-theme="light"] .descriptor-output { background: #e0e0e0; color: #121212; }
-  
-  .action-buttons { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px; justify-content: flex-start; }
-  .copy-btn { padding: 8px 16px; font-size: 0.85rem; background: transparent; color: var(--teal); border: 1px solid var(--teal); border-radius: 4px; cursor: pointer; transition: all 0.2s; font-weight: bold; text-transform: uppercase; }
-  .copy-btn:hover { background: var(--teal); color: #121212; }
-
-  .qr-container { background: #ffffff; padding: 15px; border-radius: 8px; width: max-content; border: 3px solid var(--border); margin: 0 auto 20px; display: flex; flex-direction: column; align-items: center;}
-  .qr-placeholder { width: 500px; height: 500px; border: 2px dashed #ccc; display: flex; align-items: center; justify-content: center; color: #666; font-weight: bold; }
-
-  /* Print Styles */
-  @media print {
-    body { background: white; color: black; margin: 0; padding: 0; }
-    nav, .card:not(.result-box), .warning, .action-buttons { display: none !important; }
-    .card.result-box { box-shadow: none; border: none; margin: 0; padding: 0; background: transparent; }
-    
-    .descriptor-output { 
-        border: 1px solid #ccc; 
-        color: black; 
-        background: white; 
-        page-break-inside: avoid;
-        break-inside: avoid;
-    }
-    
-    .qr-container { 
-        border: none; 
-        padding: 0; 
-        margin-top: 0; 
-        page-break-inside: avoid;
-        break-inside: avoid;
-    }
-
-    #last-words-output {
-        page-break-inside: avoid;
-        break-inside: avoid;
-    }
-
-    h3, label, th, td { color: black !important; }
-  }
-</style>
-
+<link rel="stylesheet" href="../shared/design-system.css">
 <script type="module" src="./descriptor.js"></script>
 
+<style>
+  /* Tool-specific overrides only — everything else comes from design-system.css */
+
+  /* Autocomplete dropdown for seed input */
+  .skb-autocomplete-list {
+    position: absolute;
+    top: 100%; left: 0; right: 0;
+    background: var(--skb-bg-secondary);
+    border: 1px solid var(--skb-border);
+    border-radius: var(--skb-radius-sm);
+    max-height: 150px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: none;
+    box-shadow: var(--skb-shadow);
+  }
+  .skb-autocomplete-item {
+    padding: 6px 10px;
+    cursor: pointer;
+    font-family: var(--skb-mono);
+    font-size: 0.82rem;
+    color: var(--skb-text);
+    border-bottom: 1px solid var(--skb-border);
+    transition: background var(--skb-transition);
+  }
+  .skb-autocomplete-item:last-child { border-bottom: none; }
+  .skb-autocomplete-item:hover,
+  .skb-autocomplete-item.active-suggestion {
+    background: var(--skb-secondary);
+    color: #000;
+    font-weight: bold;
+  }
+
+  /* Scanner container */
+  .skb-scanner-box {
+    display: none;
+    margin-top: 12px;
+    padding: 12px;
+    background: #000;
+    border: 1px solid var(--skb-border);
+    border-radius: var(--skb-radius-md);
+    text-align: center;
+  }
+  .skb-scanner-box.visible { display: block; }
+  .skb-scanner-box > div {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    border-radius: var(--skb-radius-md);
+    overflow: hidden;
+  }
+
+  /* Cosigner block styling */
+  .cosigner-block {
+    border: 1px solid var(--skb-border);
+    border-radius: var(--skb-radius-md);
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+    background: var(--skb-bg-tertiary);
+    transition: background var(--skb-transition), border var(--skb-transition);
+  }
+  .cosigner-block:last-child { margin-bottom: 0; }
+
+  .cosigner-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+  .cosigner-label {
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--skb-text-muted);
+  }
+  .cosigner-fingerprint {
+    font-family: var(--skb-mono);
+    font-size: 0.78rem;
+    color: var(--skb-secondary);
+    font-weight: 600;
+  }
+
+  /* Input mode tabs within cosigner */
+  .input-mode-tabs {
+    display: flex;
+    gap: 0;
+    border: 1px solid var(--skb-border);
+    border-radius: var(--skb-radius-sm);
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+  .input-mode-tab {
+    flex: 1;
+    padding: 8px 12px;
+    background: var(--skb-bg-input);
+    border: none;
+    color: var(--skb-text-muted);
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: all var(--skb-transition);
+    border-right: 1px solid var(--skb-border);
+  }
+  .input-mode-tab:last-child { border-right: none; }
+  .input-mode-tab.active {
+    background: var(--skb-secondary-muted);
+    color: var(--skb-secondary);
+  }
+  .input-mode-tab:hover:not(.active) { color: var(--skb-text); }
+
+  /* xpub input area */
+  .xpub-input-area {
+    display: none;
+  }
+  .xpub-input-area.active { display: block; }
+  .seed-input-area { display: block; }
+  .seed-input-area.hidden { display: none; }
+
+  /* Descriptor output area */
+  .descriptor-output-box {
+    background: var(--skb-bg-input);
+    font-family: var(--skb-mono);
+    font-size: 0.88rem;
+    color: var(--skb-text);
+    padding: 14px;
+    border-radius: var(--skb-radius-sm);
+    border: 1px solid var(--skb-border);
+    word-break: break-all;
+    min-height: 60px;
+    line-height: 1.6;
+  }
+
+  /* Hidden class */
+  .hidden { display: none !important; }
+
+  /* Print styles */
+  @media print {
+    #config-card, #entropy-card,
+    .skb-header, .skb-breadcrumb, .skb-page-subtitle,
+    .skb-scanner-box, .cosigner-header .skb-result-actions,
+    .input-mode-tabs, .skb-passphrase-section .skb-result-actions,
+    button, .skb-btn-primary, .skb-btn-sm, .skb-btn-secondary { display: none !important; }
+
+    #print-descriptor-qr { display: block !important; }
+    .skb-print-only { display: block !important; font-size: 1rem; margin: 0.75rem 0; }
+    .skb-result { border: none !important; background: transparent; padding: 0; display: block !important; }
+    .skb-card { box-shadow: none; border: 1px solid #ccc; }
+    .skb-page-title { font-size: 1.3rem !important; color: black !important; }
+    body { color: black !important; background: white !important; }
+    .skb-card-title { color: black !important; }
+    .descriptor-output-box { background: #f5f5f5 !important; color: black !important; border-color: #ccc !important; }
+    .skb-table th { color: black !important; background: #eee !important; }
+    .skb-table td { color: black !important; }
+    .skb-qr-container { border: none !important; }
+
+    #print-backup-ref { page-break-inside: avoid; break-inside: avoid; }
+    #print-descriptor-qr { page-break-inside: avoid; break-inside: avoid; }
+  }
+</style>
 </head>
 <body>
 
-<nav>
-  <a href="../index.html" class="nav-brand">SafeKeep<span>Bitcoin</span></a>
-  <button onclick="toggleTheme()" id="theme-btn" style="background:transparent; border:none; color:var(--text); font-size:1.2rem; cursor:pointer;">
-    ☀️
-  </button>
-</nav>
+<!-- Header -->
+<header class="skb-header">
+  <a href="../index.html" class="skb-brand">SafeKeep<span>Bitcoin</span></a>
+  <div class="skb-header-actions">
+    <button class="skb-theme-btn" onclick="toggleTheme()" id="theme-btn" title="Toggle theme">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+    </button>
+  </div>
+</header>
 
-<div class="container">
-    <h1>Output Descriptor Generator</h1>
-    <div class="subtitle">Construct Watch-Only Wallets from Air-Gapped Entropy</div>
+<div class="skb-container">
+  <h1 class="skb-page-title">Output Descriptor</h1>
+  <div class="skb-page-subtitle">Build watch-only wallet descriptors from air-gapped entropy</div>
 
-    
+  <!-- Card 1: Wallet Configuration -->
+  <div class="skb-card" id="config-card">
+    <div class="skb-card-title">Wallet Configuration</div>
 
-    <div class="card">
-        <h3 style="margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 10px;">1. Wallet Configuration</h3>
-        
-        <div class="controls">
-            <div class="control-group">
-                <label>Wallet Architecture</label>
-                <select id="wallet-type" onchange="updateUIState()">
-                    <option value="single">Single Signature</option>
-                    <option value="multi">Multi-Signature</option>
-                </select>
-            </div>
-            <div class="control-group">
-                <label>Script Type</label>
-                <select id="script-type" onchange="updateUIState()">
-                    <option value="84">Native SegWit (BIP84 / bc1q)</option>
-                    <option value="86">Taproot (BIP86 / bc1p)</option>
-                    <option value="49">Nested SegWit (BIP49 / 3...)</option>
-                    <option value="44">Legacy (BIP44 / 1...)</option>
-                </select>
-            </div>
-        </div>
-
-        <div id="multisig-config" class="controls hidden" style="border-color: var(--teal); background: rgba(3, 218, 198, 0.05);">
-            <div class="control-group">
-                <label style="color: var(--teal);">Signatures Required (m)</label>
-                <select id="m-required">
-                    <option value="1">1</option>
-                    <option value="2" selected>2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                </select>
-            </div>
-            <div class="control-group">
-                <label style="color: var(--teal);">Total Cosigners (n)</label>
-                <select id="n-total" onchange="updateUIState()">
-                    <option value="2">2</option>
-                    <option value="3" selected>3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                </select>
-            </div>
-        </div>
-        
-        <div class="control-group" style="padding: 0 15px;">
-            <label>Derivation Path</label>
-            <input type="text" id="derivation-path" value="m/84'/0'/0'" style="font-family: var(--mono);" readonly>
-            <small style="color: var(--muted);">Auto-calculated based on script type (Mainnet).</small>
-        </div>
+    <div class="skb-controls">
+      <div class="skb-control-group">
+        <label class="skb-label">Wallet Architecture</label>
+        <select class="skb-select" id="wallet-type" onchange="updateUIState()">
+          <option value="single">Single Signature</option>
+          <option value="multi">Multi-Signature</option>
+        </select>
+      </div>
+      <div class="skb-control-group">
+        <label class="skb-label">Script Type</label>
+        <select class="skb-select" id="script-type" onchange="updateUIState()">
+          <option value="84">Native SegWit (BIP84 / bc1q)</option>
+          <option value="86">Taproot (BIP86 / bc1p)</option>
+          <option value="49">Nested SegWit (BIP49 / 3...)</option>
+          <option value="44">Legacy (BIP44 / 1...)</option>
+        </select>
+      </div>
     </div>
 
-    <div class="card">
-        <h3 style="margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 10px;">2. Entropy Input</h3>
-        
-        <div class="control-group" style="margin-bottom: 20px;">
-            <label>Seed Phrase Length</label>
-            <div class="radio-group">
-                <label><input type="radio" name="seedLength" value="12" checked onchange="updateUIState()"> 12 Words</label>
-                <label><input type="radio" name="seedLength" value="24" onchange="updateUIState()"> 24 Words</label>
-            </div>
-        </div>
-
-        <div id="seed-inputs-container" class="controls" style="flex-direction: column; background: transparent; padding: 0; border: none;"></div>
-        <button class="btn" id="btn-generate">Generate Descriptor</button>
+    <!-- Multisig quorum config (hidden unless multi selected) -->
+    <div id="multisig-config" class="skb-controls hidden" style="border: 1px solid rgba(3,218,198,0.2); background: var(--skb-secondary-muted); padding: 12px; border-radius: var(--skb-radius-sm);">
+      <div class="skb-control-group">
+        <label class="skb-label" style="color: var(--skb-secondary);">Signatures Required (m)</label>
+        <select class="skb-select" id="m-required">
+          <option value="1">1</option>
+          <option value="2" selected>2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
+      </div>
+      <div class="skb-control-group">
+        <label class="skb-label" style="color: var(--skb-secondary);">Total Cosigners (n)</label>
+        <select class="skb-select" id="n-total" onchange="updateUIState()">
+          <option value="2">2</option>
+          <option value="3" selected>3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+        </select>
+      </div>
     </div>
 
-    <div class="card result-box" id="result-box" style="display: none;">
-        <h3>3. Air-Gapped Export</h3>
-        
-        <div class="action-buttons" style="justify-content: center;">
-            <button class="copy-btn" id="btn-copy">📋 Copy Descriptor</button>
-            <button class="copy-btn" id="btn-download">💾 Download Descriptor (.txt)</button>
-            
-            <button class="copy-btn" id="btn-export-note" style="border-color: var(--teal); color: var(--teal);" onclick="exportDescriptorToNote()">🔐 Export to Note</button>
-            
-            <button class="copy-btn" id="btn-print" onclick="window.print()">🖨️ Print Backup</button>
-            <button class="copy-btn" id="btn-planner" style="border-color: var(--orange); color: var(--orange);" onclick="exportToPlanner()">🏗️ Export to Architecture Planner</button>
-        </div>
-        
-        <div class="qr-container">
-            <div class="qr-placeholder" id="qr-target">[ QR Renders Here ]</div>
-        </div>
+    <div class="skb-data-row" style="margin-top: 0;">
+      <div>
+        <div class="skb-data-label">Derivation Path</div>
+        <div class="skb-data-value" id="derivation-path" style="color: var(--skb-secondary);">m/84'/0'/0'</div>
+      </div>
+      <div style="font-size: 0.75rem; color: var(--skb-text-dim);">Auto-calculated · Mainnet</div>
+    </div>
+  </div>
 
-        <div id="last-words-output" style="display: none; background: rgba(3, 218, 198, 0.05); padding: 15px; border-radius: 6px; border: 1px solid var(--border); margin-bottom: 20px;">
-            <label style="font-size: 0.85rem; font-weight: bold; color: var(--teal); text-transform: uppercase; margin-bottom: 10px; display: block;">Backup Reference</label>
+  <!-- Card 2: Entropy Input -->
+  <div class="skb-card" id="entropy-card">
+    <div class="skb-card-title">Entropy Input</div>
+
+    <div class="skb-controls" style="margin-bottom: 12px;">
+      <div class="skb-control-group">
+        <label class="skb-label">Seed Phrase Length</label>
+        <div style="display: flex; gap: 16px; margin-top: 6px;">
+          <label class="skb-checkbox-group"><input type="radio" name="seedLength" value="12" checked onchange="updateUIState()"> 12 Words</label>
+          <label class="skb-checkbox-group"><input type="radio" name="seedLength" value="24" onchange="updateUIState()"> 24 Words</label>
         </div>
-
-        <label style="font-size: 0.85rem; font-weight: bold; color: var(--muted); text-transform: uppercase; margin-bottom: 5px; display: block;">Raw Output Descriptor</label>
-        <div class="descriptor-output" id="descriptor-text"></div>
-
-        <label style="font-size: 0.85rem; font-weight: bold; color: var(--muted); text-transform: uppercase; margin-top: 25px; margin-bottom: 5px; display: block;">Address Verification</label>
-        <div class="descriptor-output" id="address-output" style="padding: 15px;"></div>
+      </div>
     </div>
 
+    <div id="seed-inputs-container"></div>
+
+    <button class="skb-btn-primary" id="btn-generate">Generate Descriptor</button>
+  </div>
+
+  <!-- Card 3: Result (hidden until generated) -->
+  <div id="result-box" style="display: none;">
+    <div class="skb-card">
+      <div class="skb-result">
+        <div class="skb-result-header">
+          <div class="skb-result-title">Output Descriptor</div>
+          <div class="skb-result-actions">
+            <button class="skb-btn-sm" id="btn-copy" onclick="copyDescriptor()">Copy</button>
+            <button class="skb-btn-sm" id="btn-save" onclick="saveDescriptorToFile()">Save</button>
+            <button class="skb-btn-sm" id="btn-show-qr" onclick="toggleDescriptorQR()">Show QR</button>
+            <button class="skb-btn-sm" onclick="printDescriptor()">Print</button>
+          </div>
+        </div>
+
+        <!-- QR Code (hidden by default, toggleable) -->
+        <div id="descriptor-qr-container" class="skb-qr-container">
+          <canvas id="descriptor-qr-canvas"></canvas>
+        </div>
+
+        <!-- Print-only QR (pre-rendered for print) -->
+        <div id="print-descriptor-qr" class="skb-print-only" style="display: none; text-align: center; margin: 12px 0;">
+          <canvas id="print-qr-canvas"></canvas>
+        </div>
+
+        <!-- Print-only backup reference -->
+        <div id="print-backup-ref" class="skb-print-only" style="display: none;"></div>
+
+        <div style="margin-bottom: 12px;">
+          <div class="skb-data-label" style="margin-bottom: 6px;">Raw Output Descriptor</div>
+          <div class="descriptor-output-box" id="descriptor-text"></div>
+        </div>
+
+        <div>
+          <div class="skb-data-label" style="margin-bottom: 6px;">Address Verification (first 5 receive)</div>
+          <table class="skb-table" id="address-table">
+            <thead><tr><th>Path</th><th>Address</th></tr></thead>
+            <tbody id="address-output"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="skb-breadcrumb">
+    <a href="../index.html">&larr; SafeKeepBitcoin Home</a>
+  </div>
 </div>
 
 <script>
 // =========================================================
-// [PASTE ZONE 1]: YOUR FULL 2048 WORDLIST ARRAY
-// Replace this empty array with your full 2048 wordlist.
+// BIP-39 WORDLIST
 // =========================================================
 const WORDLIST = ["abandon","ability","able","about","above","absent","absorb","abstract","absurd","abuse","access","accident","account","accuse","achieve","acid","acoustic","acquire","across","act","action","actor","actress","actual","adapt","add","addict","address","adjust","admit","adult","advance","advice","aerobic","affair","afford","afraid","again","age","agent","agree","ahead","aim","air","airport","aisle","alarm","album","alcohol","alert","alien","all","alley","allow","almost","alone","alpha","already","also","alter","always","amateur","amazing","among","amount","amused","analyst","anchor","ancient","anger","angle","angry","animal","ankle","announce","annual","another","answer","antenna","antique","anxiety","any","apart","apology","appear","apple","approve","april","arch","arctic","area","arena","argue","arm","armed","armor","army","around","arrange","arrest","arrive","arrow","art","artefact","artist","artwork","ask","aspect","assault","asset","assist","assume","asthma","athlete","atom","attack","attend","attitude","attract","auction","audit","august","aunt","author","auto","autumn","average","avocado","avoid","awake","aware","away","awesome","awful","awkward","axis","baby","bachelor","bacon","badge","bag","balance","balcony","ball","bamboo","banana","banner","bar","barely","bargain","barrel","base","basic","basket","battle","beach","bean","beauty","because","become","beef","before","begin","behave","behind","believe","below","belt","bench","benefit","best","betray","better","between","beyond","bicycle","bid","bike","bind","biology","bird","birth","bitter","black","blade","blame","blanket","blast","bleak","bless","blind","blood","blossom","blouse","blue","blur","blush","board","boat","body","boil","bomb","bone","bonus","book","boost","border","boring","borrow","boss","bottom","bounce","box","boy","bracket","brain","brand","brass","brave","bread","breeze","brick","bridge","brief","bright","bring","brisk","broccoli","broken","bronze","broom","brother","brown","brush","bubble","buddy","budget","buffalo","build","bulb","bulk","bullet","bundle","bunker","burden","burger","burst","bus","business","busy","butter","buyer","buzz","cabbage","cabin","cable","cactus","cage","cake","call","calm","camera","camp","can","canal","cancel","candy","cannon","canoe","canvas","canyon","capable","capital","captain","car","carbon","card","cargo","carpet","carry","cart","case","cash","casino","castle","casual","cat","catalog","catch","category","cattle","caught","cause","caution","cave","ceiling","celery","cement","census","century","cereal","certain","chair","chalk","champion","change","chaos","chapter","charge","chase","chat","cheap","check","cheese","chef","cherry","chest","chicken","chief","child","chimney","choice","choose","chronic","chuckle","chunk","churn","cigar","cinnamon","circle","citizen","city","civil","claim","clap","clarify","claw","clay","clean","clerk","clever","click","client","cliff","climb","clinic","clip","clock","clog","close","cloth","cloud","clown","club","clump","cluster","clutch","coach","coast","coconut","code","coffee","coil","coin","collect","color","column","combine","come","comfort","comic","common","company","concert","conduct","confirm","congress","connect","consider","control","convince","cook","cool","copper","copy","coral","core","corn","correct","cost","cotton","couch","country","couple","course","cousin","cover","coyote","crack","cradle","craft","cram","crane","crash","crater","crawl","crazy","cream","credit","creek","crew","cricket","crime","crisp","critic","crop","cross","crouch","crowd","crucial","cruel","cruise","crumble","crunch","crush","cry","crystal","cube","culture","cup","cupboard","curious","current","curtain","curve","cushion","custom","cute","cycle","dad","damage","damp","dance","danger","daring","dash","daughter","dawn","day","deal","debate","debris","decade","december","decide","decline","decorate","decrease","deer","defense","define","defy","degree","delay","deliver","demand","demise","denial","dentist","deny","depart","depend","deposit","depth","deputy","derive","describe","desert","design","desk","despair","destroy","detail","detect","develop","device","devote","diagram","dial","diamond","diary","dice","diesel","diet","differ","digital","dignity","dilemma","dinner","dinosaur","direct","dirt","disagree","discover","disease","dish","dismiss","disorder","display","distance","divert","divide","divorce","dizzy","doctor","document","dog","doll","dolphin","domain","donate","donkey","donor","door","dose","double","dove","draft","dragon","drama","drastic","draw","dream","dress","drift","drill","drink","drip","drive","drop","drum","dry","duck","dumb","dune","during","dust","dutch","duty","dwarf","dynamic","eager","eagle","early","earn","earth","easily","east","easy","echo","ecology","economy","edge","edit","educate","effort","egg","eight","either","elbow","elder","electric","elegant","element","elephant","elevator","elite","else","embark","embody","embrace","emerge","emotion","employ","empower","empty","enable","enact","end","endless","endorse","enemy","energy","enforce","engage","engine","enhance","enjoy","enlist","enough","enrich","enroll","ensure","enter","entire","entry","envelope","episode","equal","equip","era","erase","erode","erosion","error","erupt","escape","essay","essence","estate","eternal","ethics","evidence","evil","evoke","evolve","exact","example","excess","exchange","excite","exclude","excuse","execute","exercise","exhaust","exhibit","exile","exist","exit","exotic","expand","expect","expire","explain","expose","express","extend","extra","eye","eyebrow","fabric","face","faculty","fade","faint","faith","fall","false","fame","family","famous","fan","fancy","fantasy","farm","fashion","fat","fatal","father","fatigue","fault","favorite","feature","february","federal","fee","feed","feel","female","fence","festival","fetch","fever","few","fiber","fiction","field","figure","file","film","filter","final","find","fine","finger","finish","fire","firm","first","fiscal","fish","fit","fitness","fix","flag","flame","flash","flat","flavor","flee","flight","flip","float","flock","floor","flower","fluid","flush","fly","foam","focus","fog","foil","fold","follow","food","foot","force","forest","forget","fork","fortune","forum","forward","fossil","foster","found","fox","fragile","frame","frequent","fresh","friend","fringe","frog","front","frost","frown","frozen","fruit","fuel","fun","funny","furnace","fury","future","gadget","gain","galaxy","gallery","game","gap","garage","garbage","garden","garlic","garment","gas","gasp","gate","gather","gauge","gaze","general","genius","genre","gentle","genuine","gesture","ghost","giant","gift","giggle","ginger","giraffe","girl","give","glad","glance","glare","glass","glide","glimpse","globe","gloom","glory","glove","glow","glue","goat","goddess","gold","good","goose","gorilla","gospel","gossip","govern","gown","grab","grace","grain","grant","grape","grass","gravity","great","green","grid","grief","grit","grocery","group","grow","grunt","guard","guess","guide","guilt","guitar","gun","gym","habit","hair","half","hammer","hamster","hand","happy","harbor","hard","harsh","harvest","hat","have","hawk","hazard","head","health","heart","heavy","hedgehog","height","hello","helmet","help","hen","hero","hidden","high","hill","hint","hip","hire","history","hobby","hockey","hold","hole","holiday","hollow","home","honey","hood","hope","horn","horror","horse","hospital","host","hotel","hour","hover","hub","huge","human","humble","humor","hundred","hungry","hunt","hurdle","hurry","hurt","husband","hybrid","ice","icon","idea","identify","idle","ignore","ill","illegal","illness","image","imitate","immense","immune","impact","impose","improve","impulse","inch","include","income","increase","index","indicate","indoor","industry","infant","inflict","inform","inhale","inherit","initial","inject","injury","inmate","inner","innocent","input","inquiry","insane","insect","inside","inspire","install","intact","interest","into","invest","invite","involve","iron","island","isolate","issue","item","ivory","jacket","jaguar","jar","jazz","jealous","jeans","jelly","jewel","job","join","joke","journey","joy","judge","juice","jump","jungle","junior","junk","just","kangaroo","keen","keep","ketchup","key","kick","kid","kidney","kind","kingdom","kiss","kit","kitchen","kite","kitten","kiwi","knee","knife","knock","know","lab","label","labor","ladder","lady","lake","lamp","language","laptop","large","later","latin","laugh","laundry","lava","law","lawn","lawsuit","layer","lazy","leader","leaf","learn","leave","lecture","left","leg","legal","legend","leisure","lemon","lend","length","lens","leopard","lesson","letter","level","liar","liberty","library","license","life","lift","light","like","limb","limit","link","lion","liquid","list","little","live","lizard","load","loan","lobster","local","lock","logic","lonely","long","loop","lottery","loud","lounge","love","loyal","lucky","luggage","lumber","lunar","lunch","luxury","lyrics","machine","mad","magic","magnet","maid","mail","main","major","make","mammal","man","manage","mandate","mango","mansion","manual","maple","marble","march","margin","marine","market","marriage","mask","mass","master","match","material","math","matrix","matter","maximum","maze","meadow","mean","measure","meat","mechanic","medal","media","melody","melt","member","memory","mention","menu","mercy","merge","merit","merry","mesh","message","metal","method","middle","midnight","milk","million","mimic","mind","minimum","minor","minute","miracle","mirror","misery","miss","mistake","mix","mixed","mixture","mobile","model","modify","mom","moment","monitor","monkey","monster","month","moon","moral","more","morning","mosquito","mother","motion","motor","mountain","mouse","move","movie","much","muffin","mule","multiply","muscle","museum","mushroom","music","must","mutual","myself","mystery","myth","naive","name","napkin","narrow","nasty","nation","nature","near","neck","need","negative","neglect","neither","nephew","nerve","nest","net","network","neutral","never","news","next","nice","night","noble","noise","nominee","noodle","normal","north","nose","notable","note","nothing","notice","novel","now","nuclear","number","nurse","nut","oak","obey","object","oblige","obscure","observe","obtain","obvious","occur","ocean","october","odor","off","offer","office","often","oil","okay","old","olive","olympic","omit","once","one","onion","online","only","open","opera","opinion","oppose","option","orange","orbit","orchard","order","ordinary","organ","orient","original","orphan","ostrich","other","outdoor","outer","output","outside","oval","oven","over","own","owner","oxygen","oyster","ozone","pact","paddle","page","pair","palace","palm","panda","panel","panic","panther","paper","parade","parent","park","parrot","party","pass","patch","path","patient","patrol","pattern","pause","pave","payment","peace","peanut","pear","peasant","pelican","pen","penalty","pencil","people","pepper","perfect","permit","person","pet","phone","photo","phrase","physical","piano","picnic","picture","piece","pig","pigeon","pill","pilot","pink","pioneer","pipe","pistol","pitch","pizza","place","planet","plastic","plate","play","please","pledge","pluck","plug","plunge","poem","poet","point","polar","pole","police","pond","pony","pool","popular","portion","position","possible","post","potato","pottery","poverty","powder","power","practice","praise","predict","prefer","prepare","present","pretty","prevent","price","pride","primary","print","priority","prison","private","prize","problem","process","produce","profit","program","project","promote","proof","property","prosper","protect","proud","provide","public","pudding","pull","pulp","pulse","pumpkin","punch","pupil","puppy","purchase","purity","purpose","purse","push","put","puzzle","pyramid","quality","quantum","quarter","question","quick","quit","quiz","quote","rabbit","raccoon","race","rack","radar","radio","rail","rain","raise","rally","ramp","ranch","random","range","rapid","rare","rate","rather","raven","raw","razor","ready","real","reason","rebel","rebuild","recall","receive","recipe","record","recycle","reduce","reflect","reform","refuse","region","regret","regular","reject","relax","release","relief","rely","remain","remember","remind","remove","render","renew","rent","reopen","repair","repeat","replace","report","require","rescue","resemble","resist","resource","response","result","retire","retreat","return","reunion","reveal","review","reward","rhythm","rib","ribbon","rice","rich","ride","ridge","rifle","right","rigid","ring","riot","ripple","risk","ritual","rival","river","road","roast","robot","robust","rocket","romance","roof","rookie","room","rose","rotate","rough","round","route","royal","rubber","rude","rug","rule","run","runway","rural","sad","saddle","sadness","safe","sail","salad","salmon","salon","salt","salute","same","sample","sand","satisfy","satoshi","sauce","sausage","save","say","scale","scan","scare","scatter","scene","scheme","school","science","scissors","scorpion","scout","scrap","screen","script","scrub","sea","search","season","seat","second","secret","section","security","seed","seek","segment","select","sell","seminar","senior","sense","sentence","series","service","session","settle","setup","seven","shadow","shaft","shallow","share","shed","shell","sheriff","shield","shift","shine","ship","shiver","shock","shoe","shoot","shop","short","shoulder","shove","shrimp","shrug","shuffle","shy","sibling","sick","side","siege","sight","sign","silent","silk","silly","silver","similar","simple","since","sing","siren","sister","situate","six","size","skate","sketch","ski","skill","skin","skirt","skull","slab","slam","sleep","slender","slice","slide","slight","slim","slogan","slot","slow","slush","small","smart","smile","smoke","smooth","snack","snake","snap","sniff","snow","soap","soccer","social","sock","soda","soft","solar","soldier","solid","solution","solve","someone","song","soon","sorry","sort","soul","sound","soup","source","south","space","spare","spatial","spawn","speak","special","speed","spell","spend","sphere","spice","spider","spike","spin","spirit","split","spoil","sponsor","spoon","sport","spot","spray","spread","spring","spy","square","squeeze","squirrel","stable","stadium","staff","stage","stairs","stamp","stand","start","state","stay","steak","steel","stem","step","stereo","stick","still","sting","stock","stomach","stone","stool","story","stove","strategy","street","strike","strong","struggle","student","stuff","stumble","style","subject","submit","subway","success","such","sudden","suffer","sugar","suggest","suit","summer","sun","sunny","sunset","super","supply","supreme","sure","surface","surge","surprise","surround","survey","suspect","sustain","swallow","swamp","swap","swarm","swear","sweet","swift","swim","swing","switch","sword","symbol","symptom","syrup","system","table","tackle","tag","tail","talent","talk","tank","tape","target","task","taste","tattoo","taxi","teach","team","tell","ten","tenant","tennis","tent","term","test","text","thank","that","theme","then","theory","there","they","thing","this","thought","three","thrive","throw","thumb","thunder","ticket","tide","tiger","tilt","timber","time","tiny","tip","tired","tissue","title","toast","tobacco","today","toddler","toe","together","toilet","token","tomato","tomorrow","tone","tongue","tonight","tool","tooth","top","topic","topple","torch","tornado","tortoise","toss","total","tourist","toward","tower","town","toy","track","trade","traffic","tragic","train","transfer","trap","trash","travel","tray","treat","tree","trend","trial","tribe","trick","trigger","trim","trip","trophy","trouble","truck","true","truly","trumpet","trust","truth","try","tube","tuition","tumble","tuna","tunnel","turkey","turn","turtle","twelve","twenty","twice","twin","twist","two","type","typical","ugly","umbrella","unable","unaware","uncle","uncover","under","undo","unfair","unfold","unhappy","uniform","unique","unit","universe","unknown","unlock","until","unusual","unveil","update","upgrade","uphold","upon","upper","upset","urban","urge","usage","use","used","useful","useless","usual","utility","vacant","vacuum","vague","valid","valley","valve","van","vanish","vapor","various","vast","vault","vehicle","velvet","vendor","venture","venue","verb","verify","version","very","vessel","veteran","viable","vibrant","vicious","victory","video","view","village","vintage","violin","virtual","virus","visa","visit","visual","vital","vivid","vocal","voice","void","volcano","volume","vote","voyage","wage","wagon","wait","walk","wall","walnut","want","warfare","warm","warrior","wash","wasp","waste","water","wave","way","wealth","weapon","wear","weasel","weather","web","wedding","weekend","weird","welcome","west","wet","whale","what","wheat","wheel","when","where","whip","whisper","wide","width","wife","wild","will","win","window","wine","wing","wink","winner","winter","wire","wisdom","wise","wish","witness","wolf","woman","wonder","wood","wool","word","work","world","worry","worth","wrap","wreck","wrestle","wrist","write","wrong","yard","year","yellow","you","young","youth","zebra","zero","zone","zoo"];
 
-    // ... PASTE THE 2048 WORDS HERE ...
 
-// --- AUTOCOMPLETE & VALIDATION HELPER FUNCTIONS ---
+// =========================================================
+// 1. AUTOCOMPLETE & VALIDATION
+// =========================================================
 function closeAllLists(elmnt) {
-    const x = document.querySelectorAll('.autocomplete-list');
-    const inputs = document.querySelectorAll('.word-input');
-    for (let i = 0; i < x.length; i++) {
-        if (elmnt !== x[i] && elmnt !== inputs) {
-            x[i].parentNode.removeChild(x[i]);
-        }
-    }
+    document.querySelectorAll('.skb-autocomplete-list').forEach(list => {
+        if (elmnt !== list) list.remove();
+    });
 }
-
-document.addEventListener("click", function (e) {
-    closeAllLists(e.target);
-});
+document.addEventListener("click", e => closeAllLists(e.target));
 
 window.validateWord = function(input) {
     const val = input.value.trim().toLowerCase();
-    const wordBox = input.closest('.word-box');
-    
-    if (val === '') {
-        wordBox.classList.remove('invalid');
-        return false;
-    }
-    
-    if (WORDLIST && WORDLIST.length > 0 && !WORDLIST.includes(val)) {
-        wordBox.classList.add('invalid');
-        return false;
-    } else {
-        wordBox.classList.remove('invalid');
-        return true;
-    }
+    const wordBox = input.closest('.skb-word-box');
+    if (val === '') { wordBox.classList.remove('invalid'); return false; }
+    if (!WORDLIST.includes(val)) { wordBox.classList.add('invalid'); return false; }
+    wordBox.classList.remove('invalid'); return true;
 };
 
 function attachAutocompleteEvents() {
-    // Clean up old listeners by cloning
     const allInputs = document.querySelectorAll('.word-input');
+    // Clone to remove old listeners
     allInputs.forEach(input => {
         const clone = input.cloneNode(true);
         input.parentNode.replaceChild(clone, input);
     });
 
-    const refreshedInputs = document.querySelectorAll('.word-input');
-    refreshedInputs.forEach((input, index) => {
-        
-        // 1. TYPING & AUTOCOMPLETE FILTERING
+    const inputs = document.querySelectorAll('.word-input');
+    inputs.forEach((input, index) => {
         input.addEventListener('input', function() {
             let val = this.value.toLowerCase();
             closeAllLists();
             window.validateWord(this);
-
-            if (!val || !WORDLIST || WORDLIST.length === 0) return false;
+            if (!val) return;
 
             let list = document.createElement("DIV");
-            list.setAttribute("class", "autocomplete-list");
+            list.setAttribute("class", "skb-autocomplete-list");
             list.style.display = "block";
             this.parentNode.appendChild(list);
 
@@ -374,22 +368,18 @@ function attachAutocompleteEvents() {
             for (let i = 0; i < WORDLIST.length; i++) {
                 if (WORDLIST[i].substr(0, val.length) === val) {
                     let item = document.createElement("DIV");
-                    item.setAttribute("class", "autocomplete-item");
-                    item.innerHTML = "<strong>" + WORDLIST[i].substr(0, val.length) + "</strong>";
-                    item.innerHTML += WORDLIST[i].substr(val.length);
-                    item.innerHTML += "<input type='hidden' value='" + WORDLIST[i] + "'>";
-                    
+                    item.setAttribute("class", "skb-autocomplete-item");
+                    item.innerHTML = "<strong>" + WORDLIST[i].substr(0, val.length) + "</strong>" + WORDLIST[i].substr(val.length) + "<input type='hidden' value='" + WORDLIST[i] + "'>";
                     item.addEventListener("click", function(e) {
                         input.value = this.getElementsByTagName("input")[0].value;
                         window.validateWord(input);
                         closeAllLists();
-                        // Focus next input in the SAME quorum block
-                        const nextInput = refreshedInputs[index + 1];
-                        if (nextInput && nextInput.closest('.seed-grid') === input.closest('.seed-grid')) {
+                        // Focus next input within same seed grid
+                        const nextInput = inputs[index + 1];
+                        if (nextInput && nextInput.closest('.skb-seed-grid') === input.closest('.skb-seed-grid')) {
                             nextInput.focus();
                         }
                     });
-                    
                     list.appendChild(item);
                     matches++;
                 }
@@ -397,37 +387,35 @@ function attachAutocompleteEvents() {
             if (matches > 0) list.firstChild.classList.add('active-suggestion');
         });
 
-        // 2. THE TAB KEY LOGIC
         input.addEventListener('keydown', function(e) {
-            let list = this.parentNode.querySelector('.autocomplete-list');
+            let list = this.parentNode.querySelector('.skb-autocomplete-list');
             if (list && list.style.display === 'block' && e.key === 'Tab') {
-                e.preventDefault(); 
+                e.preventDefault();
                 const firstItem = list.firstChild;
                 if (firstItem) {
-                    this.value = firstItem.getElementsByTagName("input")[0].value; 
+                    this.value = firstItem.getElementsByTagName("input")[0].value;
                     window.validateWord(this);
                     closeAllLists();
-                    // Focus next input in the SAME quorum block
-                    const nextInput = refreshedInputs[index + 1];
-                    if (nextInput && nextInput.closest('.seed-grid') === input.closest('.seed-grid')) {
+                    const nextInput = inputs[index + 1];
+                    if (nextInput && nextInput.closest('.skb-seed-grid') === input.closest('.skb-seed-grid')) {
                         nextInput.focus();
                     }
                 }
             }
         });
 
-        // 3. SMART PASTING
         input.addEventListener('paste', function(e) {
             e.preventDefault();
             const pasteData = (e.clipboardData || window.clipboardData).getData('text');
-            const words = pasteData.trim().split(/[\s\n]+/); 
-            
-            const blockIndex = parseInt(this.closest('.seed-grid').className.match(/seed-grid-(\d+)/)[1]);
+            const words = pasteData.trim().split(/[\s\n]+/);
 
-            // Auto-adjust global 12/24 words if needed
+            const gridEl = this.closest('.skb-seed-grid');
+            const blockIndex = parseInt(gridEl.dataset.blockIndex);
+
+            // Auto-adjust 12/24 if needed
             const global12 = document.querySelector('input[name="seedLength"][value="12"]');
             const global24 = document.querySelector('input[name="seedLength"][value="24"]');
-            
+
             if (words.length === 24 && global12.checked) {
                 global24.checked = true;
                 updateUIState();
@@ -440,17 +428,17 @@ function attachAutocompleteEvents() {
                 return;
             }
 
-            // Find specific index within this specific block
-            const blockInputs = document.querySelectorAll(`.seed-grid-${blockIndex} .word-input`);
+            const blockInputs = gridEl.querySelectorAll('.word-input');
             let localIndex = Array.from(blockInputs).indexOf(this);
-            
             fillPastedWords(words, blockIndex, localIndex);
         });
     });
 }
 
 function fillPastedWords(words, blockIndex, startIndex) {
-    const inputs = document.querySelectorAll(`.seed-grid-${blockIndex} .word-input`);
+    const grid = document.querySelector(`.skb-seed-grid[data-block-index="${blockIndex}"]`);
+    if (!grid) return;
+    const inputs = grid.querySelectorAll('.word-input');
     words.forEach((word, i) => {
         if (startIndex + i < inputs.length) {
             const targetInput = inputs[startIndex + i];
@@ -463,57 +451,71 @@ function fillPastedWords(words, blockIndex, startIndex) {
     closeAllLists();
 }
 
-// --- PER-QUORUM QR SCANNER LOGIC ---
+
+// =========================================================
+// 2. QR SCANNER (per-cosigner)
+// =========================================================
 let activeHtml5QrCode = null;
 let activeScannerIndex = null;
 
 window.toggleScanner = function(index) {
-    const container = document.getElementById(`scanner-container-${index}`);
-    
-    // If clicking cancel on the currently active scanner
+    const container = document.getElementById(`scanner-${index}`);
+
     if (activeScannerIndex === index && activeHtml5QrCode) {
         activeHtml5QrCode.stop().then(() => {
             activeHtml5QrCode.clear();
             activeHtml5QrCode = null;
-            container.style.display = 'none';
+            container.classList.remove('visible');
             activeScannerIndex = null;
         }).catch(console.error);
         return;
     }
 
-    // If another scanner is open, stop it first
     if (activeHtml5QrCode) {
         activeHtml5QrCode.stop().then(() => {
             activeHtml5QrCode.clear();
-            document.getElementById(`scanner-container-${activeScannerIndex}`).style.display = 'none';
+            const prevContainer = document.getElementById(`scanner-${activeScannerIndex}`);
+            if (prevContainer) prevContainer.classList.remove('visible');
             startScannerForBlock(index, container);
         }).catch(console.error);
     } else {
         startScannerForBlock(index, container);
     }
-}
+};
 
 function startScannerForBlock(index, container) {
     if (!window.Html5Qrcode) {
-        alert("Scanner library not loaded. Check your Vite build.");
+        alert("Scanner library not loaded.");
         return;
     }
-    
-    container.style.display = 'block';
+
+    container.classList.add('visible');
     activeScannerIndex = index;
     activeHtml5QrCode = new window.Html5Qrcode(`reader-${index}`);
-    
+
     activeHtml5QrCode.start(
         { facingMode: "environment" },
         { fps: 10, qrbox: { width: 250, height: 250 } },
         (decodedText) => {
-            // Success
-            window.toggleScanner(index); // Turn off camera
+            window.toggleScanner(index);
+
+            // Check if this is an xpub/xpub-like key
+            if (decodedText.match(/^[xyzXYZtuvTUV]pub[0-9A-Za-z]+$/)) {
+                // Fill xpub field
+                const xpubInput = document.getElementById(`xpub-${index}`);
+                if (xpubInput) {
+                    xpubInput.value = decodedText;
+                    // Switch to xpub mode
+                    switchInputMode(index, 'xpub');
+                }
+                return;
+            }
+
+            // Otherwise treat as seed words
             const words = decodedText.trim().split(/[\s\n]+/);
-            
             const global12 = document.querySelector('input[name="seedLength"][value="12"]');
             const global24 = document.querySelector('input[name="seedLength"][value="24"]');
-            
+
             if (words.length === 24 && global12.checked) {
                 global24.checked = true;
                 updateUIState();
@@ -529,38 +531,159 @@ function startScannerForBlock(index, container) {
         (error) => { /* ignore frame errors */ }
     ).catch(err => {
         alert(`Camera access failed: ${err.message}`);
-        container.style.display = 'none';
+        container.classList.remove('visible');
         activeScannerIndex = null;
     });
 }
 
 
-// --- CORE UI LOGIC ---
+// =========================================================
+// 3. LOAD FROM FILE / SESSION (per-cosigner)
+// =========================================================
+window.loadSeedFromFile = async function(index) {
+    if (!window.SeedManager) {
+        alert("SeedManager not available.");
+        return;
+    }
+    try {
+        const result = await window.SeedManager.loadSeed();
+        if (!result) return;
+
+        const words = result.mnemonic.trim().split(/\s+/);
+
+        // Auto-adjust seed length
+        const global12 = document.querySelector('input[name="seedLength"][value="12"]');
+        const global24 = document.querySelector('input[name="seedLength"][value="24"]');
+        if (words.length === 24 && global12.checked) {
+            global24.checked = true;
+            updateUIState();
+            setTimeout(() => {
+                fillPastedWords(words, index, 0);
+                if (result.passphrase) {
+                    const ppInput = document.getElementById(`passphrase-${index}`);
+                    if (ppInput) ppInput.value = result.passphrase;
+                }
+                updateCosignerFingerprint(index);
+            }, 10);
+        } else if (words.length === 12 && global24.checked) {
+            global12.checked = true;
+            updateUIState();
+            setTimeout(() => {
+                fillPastedWords(words, index, 0);
+                if (result.passphrase) {
+                    const ppInput = document.getElementById(`passphrase-${index}`);
+                    if (ppInput) ppInput.value = result.passphrase;
+                }
+                updateCosignerFingerprint(index);
+            }, 10);
+        } else {
+            fillPastedWords(words, index, 0);
+            if (result.passphrase) {
+                const ppInput = document.getElementById(`passphrase-${index}`);
+                if (ppInput) ppInput.value = result.passphrase;
+            }
+            updateCosignerFingerprint(index);
+        }
+    } catch (e) {
+        alert(`Could not load seed: ${e.message}`);
+    }
+};
+
+window.loadPassphraseFromFile = async function(index) {
+    if (!window.SeedManager) return;
+    try {
+        const result = await window.SeedManager.loadPassphrase();
+        if (result) {
+            const ppInput = document.getElementById(`passphrase-${index}`);
+            if (ppInput) ppInput.value = result.passphrase;
+        }
+    } catch (e) {
+        alert(`Could not load passphrase: ${e.message}`);
+    }
+};
+
+
+// =========================================================
+// 4. INPUT MODE SWITCHING (seed words vs xpub)
+// =========================================================
+window.switchInputMode = function(index, mode) {
+    const seedArea = document.getElementById(`seed-area-${index}`);
+    const xpubArea = document.getElementById(`xpub-area-${index}`);
+    const seedTab = document.getElementById(`tab-seed-${index}`);
+    const xpubTab = document.getElementById(`tab-xpub-${index}`);
+
+    if (mode === 'xpub') {
+        seedArea.classList.add('hidden');
+        xpubArea.classList.add('active');
+        seedTab.classList.remove('active');
+        xpubTab.classList.add('active');
+    } else {
+        seedArea.classList.remove('hidden');
+        xpubArea.classList.remove('active');
+        seedTab.classList.add('active');
+        xpubTab.classList.remove('active');
+    }
+};
+
+
+// =========================================================
+// 5. COSIGNER FINGERPRINT PREVIEW
+// =========================================================
+async function updateCosignerFingerprint(index) {
+    const grid = document.querySelector(`.skb-seed-grid[data-block-index="${index}"]`);
+    if (!grid) return;
+    const wordInputs = grid.querySelectorAll('.word-input');
+    const words = Array.from(wordInputs).map(inp => inp.value.trim().toLowerCase());
+    if (words.some(w => w === '' || !WORDLIST.includes(w))) return;
+
+    try {
+        const fp = await window.SeedManager.computeFingerprint(words.join(' '));
+        const fpEl = document.getElementById(`cosigner-fp-${index}`);
+        if (fpEl) fpEl.textContent = fp;
+    } catch (e) { /* silent */ }
+}
+
+
+// =========================================================
+// 6. CORE UI STATE
+// =========================================================
 function updateUIState() {
     const walletType = document.getElementById('wallet-type').value;
     const scriptType = document.getElementById('script-type').value;
     const multisigConfig = document.getElementById('multisig-config');
     const seedContainer = document.getElementById('seed-inputs-container');
     const seedLength = parseInt(document.querySelector('input[name="seedLength"]:checked').value);
-    
+
     const isMulti = walletType === 'multi';
-    
-    // Hardcode Network to Mainnet (coinType 0')
-    const coinType = "0'"; 
-    
+
+    // Taproot not available for multisig (no wallet support yet)
+    const scriptSelect = document.getElementById('script-type');
+    const taprootOption = scriptSelect.querySelector('option[value="86"]');
+    if (isMulti) {
+        taprootOption.disabled = true;
+        if (scriptType === '86') {
+            scriptSelect.value = '84';
+        }
+    } else {
+        taprootOption.disabled = false;
+    }
+
+    const activeScriptType = scriptSelect.value;
+
+    // Derivation path
+    const coinType = "0'";
     let derivationPath = "";
     if (isMulti) {
-        let scriptIndicator = "2'"; 
-        if (scriptType === '86') scriptIndicator = "3'";
-        else if (scriptType === '49') scriptIndicator = "1'";
-        else if (scriptType === '44') scriptIndicator = "0'"; 
+        let scriptIndicator = "2'"; // native segwit
+        if (activeScriptType === '49') scriptIndicator = "1'";
+        else if (activeScriptType === '44') scriptIndicator = "0'";
         derivationPath = `m/48'/${coinType}/0'/${scriptIndicator}`;
     } else {
-        derivationPath = `m/${scriptType}'/${coinType}/0'`;
+        derivationPath = `m/${activeScriptType}'/${coinType}/0'`;
     }
-    
-    document.getElementById('derivation-path').value = derivationPath;
+    document.getElementById('derivation-path').textContent = derivationPath;
 
+    // Show/hide multisig config
     if (isMulti) {
         multisigConfig.classList.remove('hidden');
     } else {
@@ -568,46 +691,87 @@ function updateUIState() {
     }
 
     const nTotal = isMulti ? parseInt(document.getElementById('n-total').value) : 1;
-    
+
+    // Build cosigner blocks
     let html = '';
     for (let i = 0; i < nTotal; i++) {
-        const label = isMulti ? `Cosigner ${i+1} Seed Phrase` : `BIP39 Seed Phrase`;
-        
-        let gridHtml = `<div class="seed-grid seed-grid-${i}">`;
+        const label = isMulti ? `Cosigner ${i + 1}` : `Seed Phrase`;
+
+        let gridHtml = `<div class="skb-seed-grid" data-block-index="${i}">`;
         for (let w = 0; w < seedLength; w++) {
             gridHtml += `
-                <div class="word-box">
-                    <span>${w+1}.</span>
+                <div class="skb-word-box">
+                    <span class="word-num">${w + 1}.</span>
                     <input type="text" class="word-input" autocomplete="off">
-                </div>
-            `;
+                </div>`;
         }
         gridHtml += `</div>`;
 
         html += `
-            <div class="controls" style="flex-direction: column; margin-bottom: 20px;">
-                <label style="font-size: 0.85rem; font-weight: bold; color: var(--muted); text-transform: uppercase;">${label}</label>
-                ${gridHtml}
-                <input type="text" id="passphrase-${i}" placeholder="Optional Passphrase (leave blank if none)" style="margin-top: 5px; margin-bottom: 10px;">
-                
-                <div class="action-buttons" style="margin-bottom: 0;">
-                    <button class="copy-btn" style="flex: 1; border-color: var(--teal); color: var(--teal);" onclick="toggleScanner(${i})">📷 Scan from QR</button>
-                    <button class="copy-btn" style="flex: 1; border-color: var(--orange); color: var(--orange);" onclick="exportToNote(${i})">🔐 Export to Note</button>
+            <div class="cosigner-block">
+                <div class="cosigner-header">
+                    <span class="cosigner-label">${label}</span>
+                    <span class="cosigner-fingerprint" id="cosigner-fp-${i}"></span>
                 </div>
-                
-                <div id="scanner-container-${i}" class="scanner-container">
+
+                <!-- Input mode tabs -->
+                <div class="input-mode-tabs">
+                    <button class="input-mode-tab active" id="tab-seed-${i}" onclick="switchInputMode(${i}, 'seed')">Seed Words</button>
+                    <button class="input-mode-tab" id="tab-xpub-${i}" onclick="switchInputMode(${i}, 'xpub')">xpub Key</button>
+                </div>
+
+                <!-- Seed words input -->
+                <div id="seed-area-${i}" class="seed-input-area">
+                    <div class="skb-result-actions" style="margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
+                        <button class="skb-btn-sm" onclick="loadSeedFromFile(${i})">Load from File</button>
+                        <button class="skb-btn-sm" onclick="toggleScanner(${i})">Scan QR</button>
+                    </div>
+
+                    ${gridHtml}
+
+                    <!-- Passphrase -->
+                    <div class="skb-passphrase-section" style="margin-top: 8px;">
+                        <div class="skb-passphrase-label">${isMulti ? `Cosigner ${i + 1} Passphrase` : 'Optional Passphrase (BIP-39)'}</div>
+                        <div class="skb-passphrase-row">
+                            <input type="text" class="skb-passphrase-input" id="passphrase-${i}" placeholder="Leave blank if none" autocomplete="off">
+                        </div>
+                        <div class="skb-result-actions" style="margin-top: 8px;">
+                            <button class="skb-btn-sm" onclick="loadPassphraseFromFile(${i})">Load Passphrase</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- xpub input (alternative) -->
+                <div id="xpub-area-${i}" class="xpub-input-area">
+                    <div class="skb-result-actions" style="margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
+                        <button class="skb-btn-sm" onclick="toggleScanner(${i})">Scan xpub QR</button>
+                    </div>
+                    <div style="margin-bottom: 6px;">
+                        <label class="skb-label">Extended Public Key</label>
+                    </div>
+                    <input type="text" class="skb-input" id="xpub-${i}" placeholder="xpub6... or zpub1... or Zpub1..." style="font-family: var(--skb-mono); font-size: 0.82rem;" autocomplete="off">
+                    <div style="margin-top: 6px;">
+                        <label class="skb-label">Master Fingerprint (optional, 8 hex chars)</label>
+                    </div>
+                    <input type="text" class="skb-input" id="xpub-fp-${i}" placeholder="e.g. 3F8A21D7 (optional)" maxlength="8" style="font-family: var(--skb-mono); width: 160px;" autocomplete="off">
+                    <div style="font-size: 0.75rem; color: var(--skb-text-dim); margin-top: 6px;">
+                        Use this mode if you already have an xpub from a hardware wallet or Sparrow. Fingerprint is optional — leave blank if unknown.
+                    </div>
+                </div>
+
+                <!-- Per-cosigner scanner -->
+                <div id="scanner-${i}" class="skb-scanner-box">
                     <div id="reader-${i}"></div>
-                    <div class="scan-progress">Awaiting Seed Phrase QR Code...</div>
-                    <button class="btn" style="background: var(--red); color: white; margin-top: 10px;" onclick="toggleScanner(${i})">Cancel Scan</button>
+                    <div style="margin-top: 8px; font-weight: 600; font-size: 0.85rem; color: var(--skb-info);">Awaiting QR Code...</div>
+                    <button class="skb-btn-sm" style="margin-top: 10px; border-color: var(--skb-danger); color: var(--skb-danger);" onclick="toggleScanner(${i})">Cancel Scan</button>
                 </div>
-            </div>
-        `;
+            </div>`;
     }
     seedContainer.innerHTML = html;
-    
-    // Attach the autocomplete and smart paste listeners to the newly rendered DOM elements
+
     attachAutocompleteEvents();
-    
+
+    // Clamp m <= n
     if (isMulti) {
         const mSelect = document.getElementById('m-required');
         const mVal = parseInt(mSelect.value);
@@ -617,14 +781,14 @@ function updateUIState() {
         });
     }
 
-    // Hide results if regenerating
+    // Hide results when config changes
     document.getElementById('result-box').style.display = 'none';
 }
 
-window.onload = () => {
-    updateUIState();
-};
 
+// =========================================================
+// 7. DESCRIPTOR CHECKSUM (BIP-380)
+// =========================================================
 function descriptorChecksum(desc) {
     const INPUT_CHARSET = "0123456789()[],'/*abcdefgh@:$%{}IJKLMNOPQRSTUVWXYZ&+-.;<=>?!^_|~ijklmnopqrstuvwxyzABCDEFGH`#\"\\ ";
     const CHECKSUM_CHARSET = "qpzry9x8gf2tvdw0s3jn54khce6mua7l";
@@ -667,123 +831,158 @@ function descriptorChecksum(desc) {
     return ret;
 }
 
+
+// =========================================================
+// 8. SLIP-132 VERSION BYTES
+// =========================================================
 const SLIP132 = {
     mainnet: {
-        '84': { public: 0x04b24746 }, 
-        '86': { public: 0x0488b21e }, 
-        '49': { public: 0x049d7cb2 }, 
-        '44': { public: 0x0488b21e }, 
-        '48_2': { public: 0x02aa7ed3 }, 
-        '48_1': { public: 0x0295b43f }  
+        '84': { public: 0x04b24746 },
+        '86': { public: 0x0488b21e },
+        '49': { public: 0x049d7cb2 },
+        '44': { public: 0x0488b21e },
+        '48_2': { public: 0x02aa7ed3 },
+        '48_1': { public: 0x0295b43f }
     }
 };
 
-let currentWalletData = null; 
+
+// =========================================================
+// 9. GENERATE DESCRIPTOR
+// =========================================================
+let currentWalletData = null;
 
 async function generateDescriptor() {
     const btn = document.getElementById('btn-generate');
     const resultBox = document.getElementById('result-box');
     const outputText = document.getElementById('descriptor-text');
     const addressOutput = document.getElementById('address-output');
-    const lastWordsOutput = document.getElementById('last-words-output');
-    
+
     if (!window.BtcMath || !window.QRCode) {
         resultBox.style.display = 'block';
-        outputText.innerHTML = '<span style="color:var(--danger)">Error: Cryptography library not loaded. Ensure your descriptor.js is compiling correctly.</span>';
+        outputText.innerHTML = '<span style="color:var(--skb-danger)">Error: Cryptography library not loaded.</span>';
         return;
     }
-    
+
     btn.disabled = true;
     btn.innerText = "Processing...";
     resultBox.style.display = 'block';
-    
+
     try {
         const { bip39, HDKey, btc } = window.BtcMath;
-        
+
         const walletType = document.getElementById('wallet-type').value;
         const scriptType = document.getElementById('script-type').value;
         const isMulti = walletType === 'multi';
         const mReq = isMulti ? parseInt(document.getElementById('m-required').value) : 1;
-        const derivationPath = document.getElementById('derivation-path').value;
-        const networkObj = btc.NETWORK; 
-        
+        const derivationPath = document.getElementById('derivation-path').textContent;
+        const networkObj = btc.NETWORK;
+
         const networkBytes = SLIP132['mainnet']['44'];
         const nTotal = isMulti ? parseInt(document.getElementById('n-total').value) : 1;
         const keyOrigins = [];
         const keystores = [];
-        const accountNodes = []; 
-        let lastWordsHtml = "<ul style='margin-left: 20px; padding-left: 0; list-style-type: none;'>";
+        const accountNodes = [];
+        const cosignerMeta = []; // For print backup reference
 
         for (let i = 0; i < nTotal; i++) {
-            const wordInputs = document.querySelectorAll(`.seed-grid-${i} input.word-input`);
-            const words = [];
-            wordInputs.forEach(inp => words.push(inp.value.trim().toLowerCase()));
-            
-            if (words.some(w => w === '')) throw new Error(`Seed phrase ${i+1} is incomplete.`);
-            
-            const passphrase = document.getElementById(`passphrase-${i}`).value.trim();
-            const passDisplay = passphrase ? `<span style='font-family: var(--mono); color: var(--teal);'>${passphrase}</span>` : `<span style='color: var(--muted);'>None</span>`;
-            
-            const lastWord = words[words.length - 1];
-            lastWordsHtml += `
-                <li style='margin-bottom: 12px; border-left: 2px solid var(--teal); padding-left: 10px;'>
-                    <div style='margin-bottom: 4px;'>
-                        <strong style='color: var(--text);'>Seed Phrase ${i+1} Last Word:</strong> 
-                        <span style='font-family: var(--mono); color: var(--orange);'>${lastWord}</span>
-                    </div>
-                    <div>
-                        <strong style='color: var(--text);'>Passphrase:</strong> 
-                        ${passDisplay}
-                    </div>
-                </li>
-            `;
-            
-            const seedMnemonic = words.join(' ');
-            const cryptoPassphrase = document.getElementById(`passphrase-${i}`).value;
-            const seedBytes = await bip39.mnemonicToSeed(seedMnemonic, cryptoPassphrase);
-            
-            const rootNode = HDKey.fromMasterSeed(seedBytes, { public: 0x0488b21e, private: 0x0488ade4 });
-            const fingerprint = rootNode.fingerprint.toString(16).padStart(8, '0');
-            
-            const accountNode = rootNode.derive(derivationPath);
-            accountNode.versions = networkBytes; 
-            const extPubKey = accountNode.publicExtendedKey;
-            
-            accountNodes.push(accountNode);
+            // Check if using xpub mode
+            const xpubArea = document.getElementById(`xpub-area-${i}`);
+            const isXpubMode = xpubArea && xpubArea.classList.contains('active');
 
-            const cleanPath = derivationPath.replace('m/', '');
-            keyOrigins.push(`[${fingerprint}/${cleanPath}]${extPubKey}`);
-            
-            keystores.push({
-                type: "readonly",
-                source: "bip39",
-                derivation: derivationPath,
-                masterFingerprint: fingerprint.toUpperCase(),
-                xpub: extPubKey
-            });
+            if (isXpubMode) {
+                // xpub mode — directly use the provided extended key
+                const xpubVal = document.getElementById(`xpub-${i}`).value.trim();
+                const fpRaw = document.getElementById(`xpub-fp-${i}`).value.trim().toUpperCase();
+
+                if (!xpubVal) throw new Error(`Cosigner ${i + 1}: please enter an xpub key.`);
+
+                // Fingerprint is optional — default to 00000000 if blank
+                let fpVal = '00000000';
+                if (fpRaw) {
+                    if (!/^[0-9A-F]{8}$/.test(fpRaw)) throw new Error(`Cosigner ${i + 1}: fingerprint must be 8 hex characters (or leave blank).`);
+                    fpVal = fpRaw;
+                }
+
+                const cleanPath = derivationPath.replace('m/', '');
+                keyOrigins.push(`[${fpVal.toLowerCase()}/${cleanPath}]${xpubVal}`);
+
+                // Decode xpub for address derivation
+                const accountNode = HDKey.fromExtendedKey(xpubVal);
+                accountNodes.push(accountNode);
+
+                keystores.push({
+                    type: "readonly",
+                    source: "xpub",
+                    derivation: derivationPath,
+                    masterFingerprint: fpVal,
+                    xpub: xpubVal
+                });
+
+                cosignerMeta.push({ index: i + 1, fingerprint: fpRaw ? fpVal : 'Unknown', lastWord: '(xpub)', passphrase: '' });
+
+            } else {
+                // Seed words mode
+                const grid = document.querySelector(`.skb-seed-grid[data-block-index="${i}"]`);
+                const wordInputs = grid.querySelectorAll('.word-input');
+                const words = [];
+                wordInputs.forEach(inp => words.push(inp.value.trim().toLowerCase()));
+
+                if (words.some(w => w === '')) throw new Error(`Seed phrase ${i + 1} is incomplete.`);
+
+                const passphrase = document.getElementById(`passphrase-${i}`).value.trim();
+                const lastWord = words[words.length - 1];
+
+                const seedMnemonic = words.join(' ');
+                const seedBytes = await bip39.mnemonicToSeed(seedMnemonic, passphrase);
+
+                const rootNode = HDKey.fromMasterSeed(seedBytes, { public: 0x0488b21e, private: 0x0488ade4 });
+                const fingerprint = rootNode.fingerprint.toString(16).padStart(8, '0');
+
+                const accountNode = rootNode.derive(derivationPath);
+                accountNode.versions = networkBytes;
+                const extPubKey = accountNode.publicExtendedKey;
+
+                accountNodes.push(accountNode);
+
+                const cleanPath = derivationPath.replace('m/', '');
+                keyOrigins.push(`[${fingerprint}/${cleanPath}]${extPubKey}`);
+
+                keystores.push({
+                    type: "readonly",
+                    source: "bip39",
+                    derivation: derivationPath,
+                    masterFingerprint: fingerprint.toUpperCase(),
+                    xpub: extPubKey
+                });
+
+                cosignerMeta.push({
+                    index: i + 1,
+                    fingerprint: fingerprint.toUpperCase(),
+                    lastWord: lastWord,
+                    passphrase: passphrase
+                });
+            }
         }
-        lastWordsHtml += "</ul>";
-        
-        lastWordsOutput.innerHTML = `<label style="font-size: 0.85rem; font-weight: bold; color: var(--teal); text-transform: uppercase; margin-bottom: 10px; display: block;">Backup Reference</label>${lastWordsHtml}`;
-        lastWordsOutput.style.display = 'block';
 
+        // Build descriptor body
         let descriptorBody = "";
-        let policyType = isMulti ? "multi" : "single";
         let jsonScriptType = "";
 
         if (isMulti) {
             const keysStr = keyOrigins.map(k => `${k}/<0;1>/*`).join(',');
-            descriptorBody = `sortedmulti(${mReq},${keysStr})`; 
-            
+            descriptorBody = `sortedmulti(${mReq},${keysStr})`;
+
             if (scriptType === '84') {
                 descriptorBody = `wsh(${descriptorBody})`;
                 jsonScriptType = "p2wsh";
-            } else if (scriptType === '86') {
-                descriptorBody = `tr(${keyOrigins[0]}/<0;1>/*,${descriptorBody})`; 
-                jsonScriptType = "p2tr";
             } else if (scriptType === '49') {
                 descriptorBody = `sh(wsh(${descriptorBody}))`;
                 jsonScriptType = "p2sh-p2wsh";
+            } else if (scriptType === '44') {
+                // Legacy multisig
+                descriptorBody = `sh(${descriptorBody})`;
+                jsonScriptType = "p2sh";
             }
         } else {
             const keyStr = `${keyOrigins[0]}/<0;1>/*`;
@@ -804,40 +1003,57 @@ async function generateDescriptor() {
 
         const checksum = descriptorChecksum(descriptorBody);
         const finalDescriptor = `${descriptorBody}#${checksum}`;
-        
-        outputText.innerText = finalDescriptor;
-        outputText.style.color = "var(--success)";
 
-        const qrContainer = document.getElementById('qr-target');
-        qrContainer.innerHTML = '<canvas></canvas>';
-        qrContainer.style.border = 'none';
-        
-        window.QRCode.toCanvas(qrContainer.querySelector('canvas'), finalDescriptor, {
-            width: 500,
-            errorCorrectionLevel: 'L',
-            color: {
-                dark: '#000000',
-                light: '#ffffff'
-            }
-        });
+        outputText.textContent = finalDescriptor;
 
+        // Store wallet data for save
         currentWalletData = {
-            name: isMulti ? `SafeKeep_${mReq}of${nTotal}` : `SafeKeep_Single`,
-            policyType: policyType,
+            name: isMulti ? `SafeKeep ${mReq}-of-${nTotal}` : 'SafeKeep Single',
+            descriptor: finalDescriptor,
+            policyType: isMulti ? 'multi' : 'single',
             scriptType: jsonScriptType,
-            quorum: isMulti ? mReq : 1,
-            keystores: keystores
+            quorum: isMulti ? { m: mReq, n: nTotal } : { m: 1, n: 1 },
+            derivationPath: derivationPath,
+            keystores: keystores,
+            network: 'mainnet',
+            cosignerMeta: cosignerMeta
         };
 
-        // Generate Addresses
-        let addressHTML = "<table class='addr-table' style='width: 100%; border-collapse: collapse;'>";
-        addressHTML += "<tr style='text-align: left;'><th style='padding: 8px; border-bottom: 1px solid var(--border);'>Derivation Path</th><th style='padding: 8px; border-bottom: 1px solid var(--border);'>Receive Address</th></tr>";
+        // Render QR for print (always, so it's ready)
+        const printCanvas = document.getElementById('print-qr-canvas');
+        window.QRCode.toCanvas(printCanvas, finalDescriptor, {
+            width: 400,
+            errorCorrectionLevel: 'L',
+            color: { dark: '#000000', light: '#ffffff' }
+        });
 
+        // Build print backup reference
+        const printRef = document.getElementById('print-backup-ref');
+        let refHtml = '<div style="margin: 16px 0; padding: 12px; border: 1px solid #ccc; border-radius: 6px;">';
+        refHtml += `<div style="font-weight: 700; margin-bottom: 8px; text-transform: uppercase; font-size: 0.85rem;">Backup Reference</div>`;
+        if (isMulti) {
+            refHtml += `<div style="margin-bottom: 8px;"><strong>Quorum:</strong> ${mReq} of ${nTotal}</div>`;
+        }
+        cosignerMeta.forEach(cm => {
+            refHtml += `<div style="margin-bottom: 6px; padding-left: 10px; border-left: 2px solid #999;">`;
+            refHtml += `<strong>${isMulti ? 'Cosigner ' + cm.index : 'Seed'}:</strong> `;
+            refHtml += `Fingerprint <span style="font-family: monospace;">${cm.fingerprint}</span>`;
+            refHtml += ` — Last word: <span style="font-family: monospace; text-transform: uppercase;">${cm.lastWord}</span>`;
+            if (cm.passphrase) {
+                refHtml += `<br><strong>Passphrase:</strong> <span style="font-family: monospace;">${cm.passphrase}</span>`;
+            }
+            refHtml += `</div>`;
+        });
+        refHtml += '</div>';
+        printRef.innerHTML = refHtml;
+
+        // Generate addresses
+        let addressHTML = "";
         for (let i = 0; i < 5; i++) {
             try {
                 let address = "";
                 let childPubkeys = [];
-                
+
                 for (let j = 0; j < accountNodes.length; j++) {
                     const childNode = accountNodes[j].deriveChild(0).deriveChild(i);
                     childPubkeys.push(childNode.publicKey);
@@ -861,14 +1077,6 @@ async function generateDescriptor() {
                     } else if (scriptType === '44') {
                         const ms = btc.p2ms(mReq, childPubkeys);
                         address = btc.p2sh(ms, networkObj).address;
-                    } else if (scriptType === '86') {
-                        if (btc.p2tr_ms) {
-                            const tr_ms = btc.p2tr_ms(mReq, childPubkeys);
-                            const internalPubKey = accountNodes[0].deriveChild(0).deriveChild(i).publicKey.slice(1, 33);
-                            address = btc.p2tr(internalPubKey, tr_ms, networkObj).address;
-                        } else {
-                            address = "Taproot Multisig preview unavailable";
-                        }
                     }
                 } else {
                     const pubkey = childPubkeys[0];
@@ -884,297 +1092,218 @@ async function generateDescriptor() {
                         address = btc.p2pkh(pubkey, networkObj).address;
                     }
                 }
-                
-                addressHTML += `<tr><td style='color: var(--muted); padding: 8px; border-bottom: 1px solid var(--border);'>m/0/${i}</td><td style='padding: 8px; border-bottom: 1px solid var(--border);'>${address}</td></tr>`;
+
+                addressHTML += `<tr><td style="color: var(--skb-text-muted);">m/0/${i}</td><td>${address}</td></tr>`;
             } catch (addrErr) {
                 console.error(addrErr);
-                addressHTML += `<tr><td style='color: var(--muted); padding: 8px; border-bottom: 1px solid var(--border);'>m/0/${i}</td><td style='color: var(--red); padding: 8px; border-bottom: 1px solid var(--border);'>Preview unavailable for this format</td></tr>`;
+                addressHTML += `<tr><td style="color: var(--skb-text-muted);">m/0/${i}</td><td style="color: var(--skb-danger);">Preview unavailable</td></tr>`;
             }
         }
-        addressHTML += "</table>";
         addressOutput.innerHTML = addressHTML;
 
+        // Set active session
+        if (window.SeedSession && !isMulti && cosignerMeta[0] && cosignerMeta[0].lastWord !== '(xpub)') {
+            // For single-sig from seed words, update session
+            const grid = document.querySelector('.skb-seed-grid[data-block-index="0"]');
+            const wordInputs = grid.querySelectorAll('.word-input');
+            const words = Array.from(wordInputs).map(inp => inp.value.trim().toLowerCase());
+            window.SeedSession.set({
+                mnemonic: words.join(' '),
+                fingerprint: cosignerMeta[0].fingerprint,
+                passphrase: document.getElementById('passphrase-0').value.trim(),
+                wordCount: words.length,
+                keyFormat: 'slip132',
+                addressType: scriptType
+            });
+        }
+
     } catch (err) {
-        outputText.innerHTML = `<span style="color:var(--danger)">Error: ${err.message}</span>`;
-        addressOutput.innerHTML = `<span style="color:var(--danger)">Fix errors above to see addresses.</span>`;
-        lastWordsOutput.style.display = 'none';
+        outputText.innerHTML = `<span style="color: var(--skb-danger);">Error: ${err.message}</span>`;
+        addressOutput.innerHTML = `<tr><td colspan="2" style="color: var(--skb-danger);">Fix errors above to see addresses.</td></tr>`;
     } finally {
         btn.disabled = false;
         btn.innerText = "Generate Descriptor";
     }
 }
 
-function downloadDescriptor() {
-    const rawDesc = document.getElementById('descriptor-text').innerText;
-    
-    if (!rawDesc || rawDesc === "Awaiting input..." || rawDesc.includes("Error") || rawDesc === "") {
-        alert("Please generate a valid descriptor first.");
-        return;
-    }
-    
-    const dataStr = "data:text/plain;charset=utf-8," + encodeURIComponent(rawDesc);
-    const downloadAnchorNode = document.createElement('a');
-    downloadAnchorNode.setAttribute("href", dataStr);
-    
-    const walletName = currentWalletData ? currentWalletData.name : "SafeKeep_Wallet";
-    downloadAnchorNode.setAttribute("download", walletName + "_Descriptor.txt");
-    
-    document.body.appendChild(downloadAnchorNode); 
-    downloadAnchorNode.click();
-    downloadAnchorNode.remove();
-}
 
-function copyDescriptor() {
-    const text = document.getElementById('descriptor-text').innerText;
-    if (text === "Awaiting input..." || text.includes("Error") || text === "") return;
-    
+// =========================================================
+// 10. COPY / SAVE / QR / PRINT
+// =========================================================
+window.copyDescriptor = function() {
+    const text = document.getElementById('descriptor-text').textContent;
+    if (!text || text.includes("Error")) return;
+
     navigator.clipboard.writeText(text).then(() => {
         const btn = document.getElementById('btn-copy');
         const orig = btn.innerText;
-        btn.innerText = '📋 COPIED!';
+        btn.innerText = 'Copied!';
         setTimeout(() => btn.innerText = orig, 1800);
     });
-}
-
-function exportToNote(seedIndex) {
-    const walletType = document.getElementById('wallet-type').options[document.getElementById('wallet-type').selectedIndex].text;
-    const scriptType = document.getElementById('script-type').options[document.getElementById('script-type').selectedIndex].text;
-    const isMulti = document.getElementById('wallet-type').value === 'multi';
-    const mReq = isMulti ? document.getElementById('m-required').value : 1;
-    const nTotal = isMulti ? document.getElementById('n-total').value : 1;
-    const mOfN = isMulti ? `${mReq} of ${nTotal}` : `1 of 1`;
-    const derivationPath = document.getElementById('derivation-path').value;
-    
-    const words = [];
-    const inputs = document.querySelectorAll(`.seed-grid-${seedIndex} input[type="text"].word-input`);
-    inputs.forEach(inp => words.push(inp.value.trim()));
-    
-    if (words.some(w => w === '')) {
-        alert("Please fill in the entire seed phrase before exporting.");
-        return;
-    }
-    
-    const pass = document.getElementById(`passphrase-${seedIndex}`).value;
-    
-    const noteHtml = `
-        <h2>Wallet Configuration</h2>
-        <ul>
-            <li><strong>Architecture:</strong> ${walletType}</li>
-            <li><strong>Script Type:</strong> ${scriptType}</li>
-            <li><strong>Quorum:</strong> ${mOfN}</li>
-            <li><strong>Derivation Path:</strong> ${derivationPath}</li>
-            <li><strong>Key Share:</strong> ${seedIndex + 1} of ${nTotal}</li>
-        </ul>
-        <h3>Entropy Details</h3>
-        <p><strong>Seed:</strong> ${words.join(' ')}</p>
-        <p><strong>Passphrase:</strong> ${pass || 'None'}</p>
-        <p><em>Keep this note secure. It contains cryptographic secrets.</em></p>
-    `;
-    
-    const payload = {
-        safekeep_version: "1.0",
-        type: "seed_export",
-        seed: words.join(' '),
-        passphrase: pass,
-        path: derivationPath
-    };
-    
-   const b64Payload = btoa(JSON.stringify(payload));
-            const payloadHtml = `
-                <div class="skb-hidden-payload">
-                    <hr style="margin-top: 30px; border: 0; border-top: 1px solid var(--border-color);">
-                    <p style="font-family: monospace; font-size: 0.75em; color: var(--text-muted); word-break: break-all;">
-                        <strong>⚙️ AUTO-FILL PAYLOAD:</strong><br>
-                        [SKB_PAYLOAD:${b64Payload}]
-                    </p>
-                </div>
-            `;
-
-    const combinedData = noteHtml + payloadHtml;
-
-    sessionStorage.setItem('safeKeepDraftNote', combinedData);
-    localStorage.setItem('safeKeepDraftNote', combinedData);
-    
-    const plainText = noteHtml.replace(/<[^>]+>/g, '\n').replace(/\n\s*\n/g, '\n');
-    navigator.clipboard.writeText(plainText).then(() => {
-        alert(`Seed Phrase ${seedIndex + 1} data copied to clipboard!\n\nOpening Encrypted Note Tool...`);
-        window.open('../secure-note/index.html', '_blank');
-    }).catch(err => {
-        window.open('../secure-note/index.html', '_blank');
-    });
-}
-window.exportDescriptorToNote = function() {
-    const rawDesc = document.getElementById('descriptor-text').innerText;
-    if (!rawDesc || rawDesc === "Awaiting input..." || rawDesc.includes("Error") || rawDesc === "") {
-        return alert("Please generate a valid descriptor first.");
-    }
-
-    const walletTypeSel = document.getElementById('wallet-type');
-    const scriptTypeSel = document.getElementById('script-type');
-    const walletType = walletTypeSel.options[walletTypeSel.selectedIndex].text;
-    const scriptType = scriptTypeSel.options[scriptTypeSel.selectedIndex].text;
-    const isMulti = walletTypeSel.value === 'multi';
-    const mReq = isMulti ? document.getElementById('m-required').value : 1;
-    const nTotal = isMulti ? document.getElementById('n-total').value : 1;
-    const mOfN = isMulti ? `${mReq} of ${nTotal}` : `1 of 1`;
-
-    let referencesHtml = "<ul style='padding-left: 20px;'>";
-    let referencesPayload = [];
-
-    // Loop through however many seeds are on the screen to grab the identifiers
-    for(let i = 0; i < nTotal; i++) {
-        const inputs = document.querySelectorAll(`.seed-grid-${i} .word-input`);
-        let lastWord = "Unknown";
-        if (inputs.length > 0 && inputs[inputs.length - 1].value.trim() !== "") {
-            lastWord = inputs[inputs.length - 1].value.trim();
-        }
-        
-        const passElem = document.getElementById(`passphrase-${i}`);
-        const pass = passElem ? passElem.value.trim() : "";
-        
-        referencesHtml += `
-            <li style='margin-bottom: 12px;'>
-                <strong>Seed ${i+1} Last Word:</strong> <span style="font-family: monospace; text-transform: uppercase; color: var(--orange); padding: 2px 6px; border: 1px solid var(--border); border-radius: 4px; margin-left: 5px;">${lastWord}</span><br>
-                <div style="margin-top: 5px;"><strong>Passphrase:</strong> ${pass ? '<span style="color: var(--teal); font-family: monospace;">' + pass + '</span>' : '<span style="color: var(--muted);">None</span>'}</div>
-            </li>`;
-        
-        referencesPayload.push({ index: i + 1, lastWord: lastWord, passphrase: pass });
-    }
-    referencesHtml += "</ul>";
-
-    // Build the final Encrypted Note Layout
-    const noteHtml = `
-        <h2>Output Descriptor Backup</h2>
-        
-        <h3>Wallet Configuration</h3>
-        <ul>
-            <li><strong>Architecture:</strong> ${walletType}</li>
-            <li><strong>Script Type:</strong> ${scriptType}</li>
-            <li><strong>Quorum:</strong> ${mOfN}</li>
-        </ul>
-
-        <h3>Backup References</h3>
-        ${referencesHtml}
-
-        <h3>Raw Output Descriptor</h3>
-        <p style="font-family: monospace; background: var(--input-bg); padding: 15px; border-radius: 5px; color: var(--teal); word-break: break-all; font-size: 0.9em; border: 1px solid var(--border);">
-            ${rawDesc}
-        </p>
-        <p style="color: var(--muted); font-size: 0.85em;"><em>Note: While a descriptor only contains public keys (watch-only), it reveals your entire transaction history and balance if exposed. Keep it secure.</em></p>
-    `;
-
-    // Construct the invisible machine payload
-    const payload = {
-        safekeep_version: "1.0",
-        type: "descriptor_export",
-        descriptor: rawDesc,
-        walletType: walletTypeSel.value,
-        scriptType: scriptTypeSel.value,
-        m: parseInt(mReq),
-        n: parseInt(nTotal),
-        references: referencesPayload
-    };
-
-    const b64Payload = btoa(JSON.stringify(payload));
-    const payloadHtml = `
-        <div class="skb-hidden-payload">
-            <hr style="margin-top: 30px; border: 0; border-top: 1px dashed var(--border);">
-            <p style="font-family: monospace; font-size: 0.75em; color: var(--text-muted); word-break: break-all;">
-                <strong>⚙️ AUTO-FILL PAYLOAD:</strong><br>
-                [SKB_PAYLOAD:${b64Payload}]
-            </p>
-        </div>
-    `;
-
-    const combinedData = noteHtml + payloadHtml;
-
-    // Send it to the workspace
-    sessionStorage.setItem('safeKeepDraftNote', combinedData);
-    localStorage.setItem('safeKeepDraftNote', combinedData);
-    
-    const plainText = combinedData.replace(/<[^>]+>/g, '\n').replace(/\n\s*\n/g, '\n');
-    navigator.clipboard.writeText(plainText).then(() => {
-        alert("Vault Descriptor prepared!\n\nOpening Encrypted Note Tool...");
-        window.open('../secure-note/index.html', '_blank');
-    }).catch(err => {
-        window.open('../secure-note/index.html', '_blank');
-    });
 };
-function exportToPlanner() {
-    const rawDesc = document.getElementById('descriptor-text').innerText;
-    if (!rawDesc || rawDesc === "Awaiting input..." || rawDesc.includes("Error") || rawDesc === "") {
+
+window.toggleDescriptorQR = function() {
+    const container = document.getElementById('descriptor-qr-container');
+    const btn = document.getElementById('btn-show-qr');
+    const text = document.getElementById('descriptor-text').textContent;
+    if (!text || text.includes("Error")) return;
+
+    if (container.classList.contains('visible')) {
+        container.classList.remove('visible');
+        btn.textContent = 'Show QR';
+    } else {
+        // Render QR
+        const canvas = document.getElementById('descriptor-qr-canvas');
+        window.QRCode.toCanvas(canvas, text, {
+            width: 500,
+            errorCorrectionLevel: 'L',
+            color: { dark: '#000000', light: '#ffffff' }
+        });
+        container.classList.add('visible');
+        btn.textContent = 'Hide QR';
+    }
+};
+
+window.saveDescriptorToFile = async function() {
+    if (!currentWalletData) {
         alert("Please generate a descriptor first.");
         return;
     }
 
-    const walletType = document.getElementById('wallet-type').value;
-    let archType = 'single';
-    
-    const isMulti = walletType === 'multi';
-    const nTotal = isMulti ? parseInt(document.getElementById('n-total').value) : 1;
-    const mReq = isMulti ? parseInt(document.getElementById('m-required').value) : 1;
+    // Build standard Bitcoin Core / Sparrow output descriptor text file
+    // The BIP389 combined descriptor uses <0;1>/* (what we generate)
+    // Bitcoin Core needs separate receive (/0/*) and change (/1/*) descriptors
 
-    if (isMulti) {
-        archType = `multi-${mReq}${nTotal}`;
-        if (archType !== 'multi-23' && archType !== 'multi-35') {
-            archType = 'multi-23'; 
+    // Strip existing checksum to get the body
+    const combinedBody = currentWalletData.descriptor.replace(/#[a-z0-9]+$/, '');
+
+    // Convert to h-notation (Bitcoin Core standard) before computing checksums
+    function toH(s) { return s.replace(/'/g, 'h'); }
+
+    const combinedH = toH(combinedBody);
+    const combinedDesc = `${combinedH}#${descriptorChecksum(combinedH)}`;
+
+    // Receive: replace <0;1>/* with 0/*
+    const receiveH = combinedH.replace(/<0;1>\/\*/g, '0/*');
+    const receiveDesc = `${receiveH}#${descriptorChecksum(receiveH)}`;
+
+    // Change: replace <0;1>/* with 1/*
+    const changeH = combinedH.replace(/<0;1>\/\*/g, '1/*');
+    const changeDesc = `${changeH}#${descriptorChecksum(changeH)}`;
+
+    const fileLines = [
+        `# Receive and change descriptor (BIP389):`,
+        combinedDesc,
+        ``,
+        ``,
+        `# Receive descriptor (Bitcoin Core):`,
+        receiveDesc,
+        ``,
+        `# Change descriptor (Bitcoin Core):`,
+        changeDesc,
+        ``
+    ];
+    const fileContent = fileLines.join('\n');
+    const suggestedName = `${currentWalletData.name.replace(/\s+/g, '-')}_Descriptor.txt`;
+
+    if (window.showSaveFilePicker) {
+        try {
+            const pickerOpts = {
+                suggestedName: suggestedName,
+                types: [{ description: 'Output Descriptor', accept: { 'text/plain': ['.txt'] } }]
+            };
+            const fileHandle = await window.showSaveFilePicker(pickerOpts);
+            const writable = await fileHandle.createWritable();
+            await writable.write(fileContent);
+            await writable.close();
+        } catch (e) {
+            if (e.name === 'AbortError') return;
+            throw e;
         }
+    } else {
+        // Fallback blob download
+        const blob = new Blob([fileContent], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = suggestedName;
+        a.click();
+        URL.revokeObjectURL(url);
     }
+};
 
-    const lastWords = [];
-    const passphrases = [];
-    
-    for(let i = 0; i < nTotal; i++) {
-        const inputs = document.querySelectorAll(`.seed-grid-${i} .word-input`);
-        if (inputs.length > 0) {
-            lastWords.push(inputs[inputs.length - 1].value.trim());
-        } else {
-            lastWords.push("");
-        }
-        
-        const pass = document.getElementById(`passphrase-${i}`).value.trim();
-        passphrases.push(pass);
-    }
+window.printDescriptor = function() {
+    if (!currentWalletData) return;
+    document.title = `${currentWalletData.name} — Output Descriptor`;
+    window.print();
+    document.title = 'Output Descriptor — SafeKeepBitcoin';
+};
 
-    const exportData = {
-        archType: archType,
-        descriptor: rawDesc,
-        lastWords: lastWords,
-        passphrases: passphrases
-    };
 
-    localStorage.setItem('safeKeepArchExport', JSON.stringify(exportData));
-    
-    alert("Data packaged and ready to hand off!\n\nOpening Architecture Planner...");
-    window.open('../architecture/index.html', '_blank');
-}
-
-// --- THEME TOGGLE LOGIC ---
-function toggleTheme() {
+// =========================================================
+// 11. THEME TOGGLE
+// =========================================================
+window.toggleTheme = function() {
     const html = document.documentElement;
     const currentTheme = html.getAttribute('data-theme');
     const btn = document.getElementById('theme-btn');
-    
+
     if (currentTheme === 'light') {
-        html.removeAttribute('data-theme'); 
+        html.removeAttribute('data-theme');
         localStorage.setItem('safekeepTheme', 'dark');
-        btn.innerText = '☀️'; 
+        btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
     } else {
         html.setAttribute('data-theme', 'light');
         localStorage.setItem('safekeepTheme', 'light');
-        btn.innerText = '🌙'; 
+        btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
     }
-}
+};
 
-window.addEventListener('DOMContentLoaded', () => {
+
+// =========================================================
+// 12. INIT
+// =========================================================
+document.addEventListener('DOMContentLoaded', async () => {
+    // Theme icon
     if (localStorage.getItem('safekeepTheme') === 'light') {
-        document.getElementById('theme-btn').innerText = '🌙';
+        document.getElementById('theme-btn').innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+    }
+
+    // Build initial UI
+    updateUIState();
+
+    // Wire generate button
+    document.getElementById('btn-generate').addEventListener('click', generateDescriptor);
+
+    // Try to auto-load session seed into first cosigner
+    if (window.SeedSession) {
+        const sessionSeed = await window.SeedSession.init();
+        if (sessionSeed && sessionSeed.mnemonic) {
+            const words = sessionSeed.mnemonic.trim().split(/\s+/);
+
+            // Auto-adjust seed length
+            const global12 = document.querySelector('input[name="seedLength"][value="12"]');
+            const global24 = document.querySelector('input[name="seedLength"][value="24"]');
+            if (words.length === 24 && global12.checked) {
+                global24.checked = true;
+                updateUIState();
+            } else if (words.length === 12 && global24.checked) {
+                global12.checked = true;
+                updateUIState();
+            }
+
+            // Fill first cosigner with session seed
+            setTimeout(() => {
+                fillPastedWords(words, 0, 0);
+                if (sessionSeed.passphrase) {
+                    const ppInput = document.getElementById('passphrase-0');
+                    if (ppInput) ppInput.value = sessionSeed.passphrase;
+                }
+                updateCosignerFingerprint(0);
+            }, 50);
+        }
     }
 });
-
-document.getElementById('btn-generate').addEventListener('click', generateDescriptor);
-document.getElementById('btn-copy').addEventListener('click', copyDescriptor);
-document.getElementById('btn-download').addEventListener('click', downloadDescriptor);
 </script>
 </body>
 </html>

@@ -9,6 +9,10 @@ import QRCode from 'qrcode';
 import { Html5Qrcode } from "html5-qrcode";
 import { URDecoder } from "@ngraveio/bc-ur";
 
+// Shared modules
+import '../shared/seed-manager.js';
+import '../shared/seed-session.js';
+
 // Expose them to the window so your HTML can use them
 window.BtcMath = {
     btc,

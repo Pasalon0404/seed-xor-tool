@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 500'%3E%3Cpath d='M 250 25 L 75 75 L 75 250 C 75 375 175 450 250 475 C 325 450 425 375 425 250 L 425 75 Z' fill='%23f7931a' /%3E%3Cg transform='translate(250, 250) rotate(14) scale(0.6) translate(-244, -244)' fill='%23ffffff'%3E%3Cpath d='M336.8,240.8c22.4-17.6,36.8-45.6,36.8-76v-3.2c0-52-41.6-95.2-93.6-96.8V21.6c0-12-9.6-21.6-21.6-21.6c-12,0-21.6,9.6-21.6,21.6v43.2h-20V21.6c0-12-9.6-21.6-21.6-21.6s-21.6,9.6-21.6,21.6v43.2h-52.8c-12,0-21.6,9.6-21.6,21.6s9.6,21.6,21.6,21.6h53.6v0.8c-0.8,2.4-1.6,4.8-1.6,7.2v258.4H120c-12,0-21.6,9.6-21.6,21.6s9.6,21.6,21.6,21.6h52.8v48.8c0,12,9.6,21.6,21.6,21.6s21.6-9.6,21.6-21.6v-48.8h20.8v48.8c0,12,9.6,21.6,21.6,21.6c12,0,21.6-9.6,21.6-21.6v-49.6c52-1.6,93.6-44.8,93.6-96.8v-3.2C373.6,286.4,359.2,258.4,336.8,240.8z M330.4,320c0,29.6-24,53.6-53.6,53.6h-59.2V116c0-2.4-0.8-4.8-1.6-7.2V108h60.8c29.6,0,53.6,24,53.6,53.6v3.2c0,29.6-24,53.6-53.6,53.6c-12,0-21.6,9.6-21.6,21.6v0.8v0.8c0,12,9.6,21.6,21.6,21.6c29.6,0,53.6,24,53.6,53.6V320z'/%3E%3C/g%3E%3C/svg%3E">
-<title>Seed & Passphrase Tool</title>
+<title>Dice-to-Seed Generator — SafeKeepBitcoin</title>
 
 <script>
   if (localStorage.getItem('safekeepTheme') === 'light') {
@@ -12,735 +12,990 @@
   }
 </script>
 
+<link rel="stylesheet" href="../shared/design-system.css">
 <script type="module" src="./entropy-tool.js"></script>
 
 <style>
-  /* --- Dark Theme (Default) --- */
-  :root {
-    --bg: #0f0f0f;
-    --card: #161616;
-    --card2: #1c1c1c;
-    --border: #2a2a2a;
-    --orange: #f7931a;
-    --teal: #03dac6;
-    --red: #cf6679;
-    --muted: #888;
-    --text: #e0e0e0;
-    --mono: 'Courier New', Courier, monospace;
-    --input-bg: #2c2c2c;
+  /* Tool-specific overrides only — everything else comes from design-system.css */
+
+  /* Generator panel (passphrase) */
+  #generator-panel {
+    display: none;
+    background: var(--skb-bg-tertiary);
+    border: 1px dashed var(--skb-primary);
+    padding: 1.25rem;
+    border-radius: var(--skb-radius-md);
+    margin-top: 12px;
+    margin-bottom: 12px;
+    width: 100%;
   }
 
-  /* --- Light Theme Overrides --- */
-  [data-theme="light"] {
-    --bg: #f5f5f7;
-    --card: #ffffff;
-    --card2: #f0f0f0;
-    --border: #cccccc;
-    --text: #121212;
-    --muted: #555555;
-    --teal: #018786;
-    --red: #b00020;
-    --orange: #d87c14;
-    --input-bg: #e0e0e0;
+  /* Animated dice display */
+  .dice-animation-display {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px;
+    margin: 10px 0;
+    font-family: var(--skb-mono);
+    font-size: 0.9rem;
+    line-height: 1;
+  }
+  .dice-animation-display .dice-char {
+    width: 1.2em;
+    text-align: center;
+    color: var(--skb-text-dim);
+    transition: color 0.15s;
+  }
+  .dice-animation-display .dice-char.settled {
+    color: var(--skb-primary);
+    font-weight: 600;
+  }
+  .dice-animation-display .dice-char.active {
+    color: var(--skb-secondary);
+    font-weight: 700;
+    font-size: 1em;
   }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  
-  /* Added transitions for smooth theme switching */
-  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, sans-serif; line-height: 1.6; transition: background-color 0.3s ease, color 0.3s ease; }
-  nav { background: var(--card); border-bottom: 1px solid var(--border); padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; transition: background-color 0.3s ease, border-color 0.3s ease;}
-  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.8); transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;}
-  [data-theme="light"] .card { box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-  .controls { display: flex; gap: 15px; flex-wrap: wrap; background: var(--card2); padding: 15px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 20px; transition: background-color 0.3s ease, border-color 0.3s ease;}
-  select, input { background: var(--bg); color: var(--text); border: 1px solid var(--border); padding: 10px; border-radius: 6px; font-size: 1rem; width: 100%; transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;}
-  select:focus, input:focus { outline: none; border-color: var(--teal); }
-  textarea { width: 100%; height: 100px; background: var(--bg); color: var(--orange); border: 2px solid var(--border); border-radius: 8px; padding: 15px; font-size: 1.2rem; font-family: var(--mono); letter-spacing: 2px; resize: none; transition: background-color 0.3s ease, border-color 0.3s ease; }
-  textarea:focus { outline: none; border-color: var(--orange); box-shadow: 0 0 15px rgba(247, 147, 26, 0.2); }
-
-  .nav-brand { font-weight: 800; font-size: 1.15rem; color: var(--text); text-decoration: none; }
-  .nav-brand span { color: var(--orange); }
-  .container { max-width: 850px; margin: 0 auto; padding: 0 1rem 3rem; }
-  h1 { text-align: center; color: var(--text); text-transform: uppercase; letter-spacing: 2px; font-size: 1.5rem; margin-bottom: 5px;}
-  .subtitle { text-align: center; color: var(--muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
-
-  .control-group { flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 5px; }
-  .control-group label { font-size: 0.85rem; font-weight: bold; color: var(--muted); text-transform: uppercase; letter-spacing: 1px;}
-  .dice-area { margin-bottom: 20px; }
-  
-  .progress-container { margin-top: 10px; display: flex; align-items: center; justify-content: space-between; font-size: 0.85rem; font-weight: bold;}
-  .progress-bar-bg { flex: 1; height: 8px; background: var(--card2); border-radius: 4px; margin: 0 15px; overflow: hidden; }
-  .progress-bar-fill { height: 100%; width: 0%; background: var(--orange); transition: width 0.2s ease; }
-
-  .btn { display: block; width: 100%; padding: 15px; font-size: 1.1rem; background: var(--orange); color: #111; border: none; border-radius: 8px; cursor: pointer; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s; opacity: 0.5;}
-  .btn:hover:not([disabled]) { background: #ffaa33; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(247,147,26,0.3); }
-  
-  .btn-secondary { padding: 12px 15px; background: transparent; border: 1px dashed var(--teal); color: var(--teal); border-radius: 6px; cursor: pointer; font-weight: bold; transition: all 0.2s; text-transform: uppercase; font-size: 0.85rem; width: 100%; margin-bottom: 15px;}
-  .btn-secondary:hover { background: rgba(3,218,198,0.1); }
-
-  /* Output Area & Grid */
-  .result-box { margin-top: 2rem; border: 1px solid var(--teal); border-radius: 8px; padding: 20px; background: rgba(3,218,198,0.03); display: none; }
-  .result-box h3 { color: var(--teal); margin-bottom: 15px; border-bottom: 1px solid rgba(3,218,198,0.2); padding-bottom: 10px;}
-  
-  .output-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; text-align: left; margin-bottom: 20px;}
-  @media (max-width: 600px) { .output-grid { grid-template-columns: repeat(3, 1fr); } }
-  @media (max-width: 450px) { .output-grid { grid-template-columns: repeat(2, 1fr); } }
-  .output-word-pill { background: var(--input-bg); border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; display: flex; align-items: center; font-family: var(--mono); font-size: 15px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); }
-  .output-word-pill span.num { color: var(--muted); margin-right: 8px; font-size: 0.85em; user-select: none; }
-  .output-word-pill span.word { color: var(--orange); font-weight: bold; letter-spacing: 0.5px; }
-
-  /* Passphrase Generator specific */
-  .passphrase-input-group { display: flex; gap: 10px; width: 100%; }
-  .btn-toggle-gen { background: var(--card2); border: 1px solid var(--border); color: var(--text); padding: 0 15px; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.2s; white-space: nowrap; }
-  .btn-toggle-gen:hover { border-color: var(--orange); color: var(--orange); }
-  #generator-panel { display: none; background: #111; border: 1px dashed var(--orange); padding: 20px; border-radius: 8px; margin-top: 15px; margin-bottom: 15px; width: 100%; transition: background-color 0.3s ease; }
-  [data-theme="light"] #generator-panel { background: var(--card2); }
-  
-  .entropy-info { font-size: 0.85rem; color: var(--muted); display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
-  .strength-bar { height: 6px; width: 100%; background: #222; border-radius: 3px; margin-top: 5px; overflow: hidden; }
-  .strength-fill { height: 100%; width: 0%; transition: width 0.3s, background 0.3s; }
-  .inline-checkbox { display: flex; align-items: center; gap: 5px; flex-direction: row; color: var(--text); font-size: 0.9rem;}
-
-  /* Buttons & QRs */
-  .action-buttons { margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; }
-  .copy-btn { padding: 8px 16px; font-size: 0.85rem; background: transparent; color: var(--teal); border: 1px solid var(--teal); border-radius: 4px; cursor: pointer; transition: all 0.2s; font-weight: bold; text-transform: uppercase; }
-  .copy-btn:hover:not([disabled]) { background: var(--teal); color: #121212; }
-  .copy-btn:disabled { opacity: 0.3; cursor: not-allowed; border-color: var(--muted); color: var(--muted); }
-
-  .qr-container { margin-top: 15px; margin-bottom: 25px; display: none; background: #ffffff; padding: 15px; border-radius: 8px; width: max-content; border: 3px solid var(--border); margin-left: auto; margin-right: auto;}
-  .qr-code-box { display: flex; justify-content: center; background: white; padding: 10px; border-radius: 4px;}
-
-  /* Address Table */
-  .address-table { width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 20px; }
-  .address-table th, .address-table td { border: 1px solid var(--border); padding: 10px; text-align: left; }
-  .address-table th { background: var(--card2); color: var(--teal); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
-  .address-table td { font-family: var(--mono); font-size: 0.9rem; word-break: break-all; }
-  
   /* Print Styles */
-  .print-only { display: none; }
   @media print {
-      body { background: white; color: black; }
-      nav, .dice-area, .btn, .module-status, .action-buttons, h1, .subtitle, .hybrid-box, #generator-panel, .btn-toggle-gen { display: none !important; }
-      #result > h3:first-child, #seed-output, #passphrase-container { display: none !important; }
-      .controls { display: none !important; }
-      #xpub-container { display: flex !important; background: transparent !important; border: none !important; padding: 0 !important; margin-bottom: 20px !important; }
-      #xpub-output-val { color: black !important; font-size: 1rem !important; }
-      .card { border: none; box-shadow: none; padding: 0; }
-      .result-box { display: block; border: none !important; background: transparent; padding: 0; }
-      .address-table th { background: #eee !important; color: black !important; border: 1px solid #ccc; }
-      .address-table td { border: 1px solid #ccc; color: black; }
-      .qr-container { border: none !important; padding: 0 !important; margin-top: 15px !important; }
-      .print-only { display: block !important; margin-bottom: 20px; font-size: 1.2rem; border: 2px dashed #000; padding: 15px; text-align: center; background: #f9f9f9; color: #000;}
+    /* Hide interactive elements and full seed words */
+    .dice-area, #btn-generate, .skb-hint, #generator-panel,
+    #passphrase-container, .skb-passphrase-section,
+    #seed-output, #seed-selector-inline,
+    .skb-seed-selector, .skb-result-actions,
+    .skb-qr-container:not(#qr-xpub-print), .skb-header, .skb-breadcrumb,
+    .skb-page-subtitle,
+    button[onclick="window.print()"],
+    .skb-print-btn { display: none !important; }
+    #result > .skb-result-header { display: none !important; }
+    #qr-xpub-print { display: block !important; }
+    /* Show verification data cleanly */
+    #xpub-container { display: flex !important; background: transparent !important; border: none !important; padding: 0 !important; }
+    #xpub-output-val { color: black !important; font-size: 0.85rem !important; word-break: break-all; }
+    .skb-result { border: none !important; background: transparent; padding: 0; display: block !important; }
+    .skb-table { font-size: 0.85rem !important; }
+    .skb-table td { color: black !important; word-break: break-all; }
+    /* Show print-only elements (last word, passphrase) */
+    .skb-print-only { display: block !important; font-size: 1.1rem; margin: 0.75rem 0; padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; }
+    .skb-page-title { font-size: 1.3rem !important; color: black !important; }
+    body { color: black !important; }
+    .skb-card-title { color: black !important; }
+    .skb-data-label { color: #333 !important; }
   }
 </style>
 </head>
 <body>
 
-<nav>
-  <a href="../index.html" class="nav-brand">SafeKeep<span>Bitcoin</span></a>
-  <button onclick="toggleTheme()" id="theme-btn" style="background:transparent; border:none; color:var(--text); font-size:1.2rem; cursor:pointer;">
-    ☀️
-  </button>
-</nav>
+<!-- Header -->
+<header class="skb-header">
+  <a href="../index.html" class="skb-brand">SafeKeep<span>Bitcoin</span></a>
+  <div class="skb-header-actions">
+    <button class="skb-theme-btn" onclick="toggleTheme()" id="theme-btn" title="Toggle theme">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+    </button>
+  </div>
+</header>
 
-<div class="container">
-<div class="card">
-  <h1>Dice-to-Seed Generator</h1>
-  <div class="subtitle">Verifiable hardware wallet initialization via physical entropy.</div>
+<div class="skb-container">
 
-  <div class="controls">
-    <div class="control-group">
-      <label>Seed Length</label>
-      <select id="word-count" onchange="updateDiceUI()">
-        <option value="12" selected>12 Words (128-bit / 50 Rolls)</option>
-        <option value="24">24 Words (256-bit / 99 Rolls)</option>
-      </select>
-    </div>
-    <div class="control-group">
-      <label>Extended Key Format</label>
-      <select id="key-format" onchange="if(!document.getElementById('btn-generate').disabled) updateWallet()">
-        <option value="slip132" selected>SLIP-132 (zpub, ypub, xpub)</option>
-        <option value="bip380">BIP-32 Standard (xpub only)</option>
-      </select>
-    </div>
-    <div class="control-group">
-      <label>Address Type (Derivation)</label>
-      <select id="derivation-path" onchange="if(!document.getElementById('btn-generate').disabled) updateWallet()">
-        <option value="84" selected>Native SegWit (BIP84) - bc1q</option>
-        <option value="86">Taproot (BIP86) - bc1p</option>
-        <option value="49">Nested SegWit (BIP49) - 3...</option>
-        <option value="44">Legacy (BIP44) - 1...</option>
-      </select>
-    </div>
+  <h1 class="skb-page-title">Dice-to-Seed Generator</h1>
+  <p class="skb-page-subtitle">Generate a verifiable BIP-39 seed phrase using physical dice entropy</p>
+
+  <!-- Quick load link for users with existing seeds -->
+  <div style="text-align: center; margin-bottom: 0.75rem;">
+    <span style="font-size: 0.85rem; color: var(--skb-text-dim);">Already have a seed?</span>
+    <a href="#" onclick="loadExistingSeed(); return false;" style="font-size: 0.85rem; color: var(--skb-primary); margin-left: 6px; text-decoration: none; font-weight: 600;">Load from file</a>
   </div>
 
-  <div class="dice-area">
-    <div class="hybrid-box" style="background: rgba(3, 218, 198, 0.05); padding: 15px; border-radius: 6px; border: 1px solid rgba(3, 218, 198, 0.2); margin-bottom: 20px;">
-        <p style="font-size: 0.85rem; color: var(--text); margin-top: 0; margin-bottom: 10px; line-height: 1.5;">
-            <strong>Hybrid Security (Recommended):</strong> For maximum security against loaded dice or boot-time entropy starvation, move your mouse wildly for 5 seconds to generate cryptographic noise, then click the button below. Finish the remaining rolls with physical dice.
-        </p>
-        <button class="btn-secondary" id="btn-browser-entropy" onclick="generateBrowserEntropy()">Generate 50 Computer Rolls</button>
+  <!-- Configuration -->
+  <div class="skb-card">
+    <div class="skb-card-title">Configuration</div>
+
+    <div class="skb-controls">
+      <div class="skb-control-group">
+        <label class="skb-label">Seed Length</label>
+        <select class="skb-select" id="word-count" onchange="updateDiceUI()">
+          <option value="12" selected>12 Words (128-bit / 50 Rolls)</option>
+          <option value="24">24 Words (256-bit / 99 Rolls)</option>
+        </select>
+      </div>
+      <div class="skb-control-group">
+        <label class="skb-label">Extended Key Format</label>
+        <select class="skb-select" id="key-format" onchange="if(!document.getElementById('btn-generate').disabled) updateWallet()">
+          <option value="slip132" selected>SLIP-132 (zpub, ypub, xpub)</option>
+          <option value="bip380">BIP-32 Standard (xpub only)</option>
+        </select>
+      </div>
+      <div class="skb-control-group">
+        <label class="skb-label">Address Type (Derivation)</label>
+        <select class="skb-select" id="derivation-path" onchange="if(!document.getElementById('btn-generate').disabled) updateWallet()">
+          <option value="84" selected>Native SegWit (BIP84) - bc1q</option>
+          <option value="86">Taproot (BIP86) - bc1p</option>
+          <option value="49">Nested SegWit (BIP49) - 3...</option>
+          <option value="44">Legacy (BIP44) - 1...</option>
+        </select>
+      </div>
     </div>
 
-    <textarea id="dice-input" placeholder="Start rolling dice and type the numbers here (1-6)..." oninput="updateDiceUI()"></textarea>
-    
-    <div class="entropy-info" style="margin-top: 15px; margin-bottom: 5px; display: flex; justify-content: space-between; font-size: 0.85rem;">
-      <span>Estimated Entropy: <span id="dice-entropy-bits" style="color: var(--text); font-weight: bold;">0 bits</span></span>
-      <span id="dice-strength-label" style="color: var(--muted); font-weight: bold;">Waiting for rolls...</span>
+    <div class="skb-card-title">Dice Entropy</div>
+
+    <div class="dice-area">
+      <div class="skb-hint">
+        <span class="skb-hint-text">
+          <strong>Hybrid entropy:</strong> Move your mouse to generate cryptographic noise, then finish with physical dice.
+        </span>
+        <button class="skb-btn-sm" id="btn-browser-entropy" onclick="generateBrowserEntropy()">Generate 50 Computer Rolls</button>
+      </div>
+
+      <!-- Animated dice display (hidden until animation starts) -->
+      <div id="dice-animation" class="dice-animation-display" style="display: none;"></div>
+
+      <textarea class="skb-textarea" id="dice-input" placeholder="Start rolling dice and type each result (1–6)..." oninput="updateDiceUI()"></textarea>
+
+      <div style="font-size: 0.82rem; color: var(--skb-text-muted); margin-top: 10px; display: flex; justify-content: space-between;">
+        <span>Entropy: <span id="dice-entropy-bits" style="color: var(--skb-text); font-weight: 600;">0 bits</span></span>
+        <span id="dice-strength-label" style="font-weight: 600;">Waiting for rolls...</span>
+      </div>
+
+      <div class="skb-progress-row" style="margin-top: 6px;">
+        <span id="roll-count-label" style="min-width: 80px;">0 / 50</span>
+        <div class="skb-progress-track">
+          <div class="skb-progress-fill" id="progress-fill"></div>
+        </div>
+        <span id="roll-count" style="color: var(--skb-primary); min-width: 50px; text-align: right;">Rolls</span>
+      </div>
     </div>
-    
-    <div class="progress-container" style="margin-top: 0;">
-      <span style="color: var(--muted); min-width: 90px;">Roll Progress:</span>
-      <div class="progress-bar-bg" style="margin-left: 10px; margin-right: 10px;"><div class="progress-bar-fill" id="progress-fill"></div></div>
-      <span id="roll-count" style="color: var(--orange); min-width: 90px; text-align: right;">0 / 50 Rolls</span>
-    </div>
+
+    <button class="skb-btn-primary" id="btn-generate" onclick="processDiceAndGenerate()" disabled>Generate Seed Phrase</button>
   </div>
 
-  <button class="btn" id="btn-generate" onclick="processDiceAndGenerate()" disabled>Generate Seed & Addresses</button>
+  <!-- Result Area (hidden until seed is generated) -->
+  <div id="result" class="skb-result" style="display: none;">
 
-  <div id="result" class="result-box">
-    <h3>Generated Seed Phrase</h3>
-    
+    <!-- Seed Selector (moved here, inside generated seed phrase section) -->
+    <div id="seed-selector-inline"></div>
+
+    <!-- Seed Output -->
+    <div class="skb-result-header">
+      <div class="skb-result-title">Generated Seed Phrase</div>
+      <div class="skb-result-actions">
+        <button class="skb-btn-sm" onclick="copySeedText(this)">Copy Seed Phrase</button>
+        <button class="skb-btn-sm" id="seed-qr-btn" onclick="toggleSeedQR(this)">Show Seed Phrase QR</button>
+      </div>
+    </div>
+
     <div id="seed-output"></div>
 
-    <div class="action-buttons" style="justify-content: center;">
-        <button class="copy-btn" onclick="copySeedText(this)">📋 Copy Seed</button>
-        <button class="copy-btn qr-btn" id="seed-qr-btn" onclick="toggleSeedQR(this)">📱 Show Seed QR</button>
-        <button class="copy-btn" style="border-color: var(--teal); color: var(--teal);" onclick="exportSeedToNote()">🔐 Export Seed to Note</button>
+    <div id="qr-seed" class="skb-qr-container">
+      <div class="qr-code-box"></div>
     </div>
 
-    <div id="qr-seed" class="qr-container">
+    <!-- Passphrase Section -->
+    <div id="passphrase-container" class="skb-passphrase-section" style="margin-top: 1.25rem;">
+      <div class="skb-passphrase-label" id="passphrase-label">Optional Passphrase (BIP-39 25th Word)</div>
+      <div class="skb-passphrase-row">
+        <input type="text" class="skb-passphrase-input" id="passphrase-input" placeholder="Type passphrase to preview hidden wallet..." oninput="updateWallet()" autocomplete="off">
+        <button class="skb-btn-sm" onclick="toggleGenerator()">Generator</button>
+        <button class="skb-btn-sm" onclick="clearPassphrase()">Clear</button>
+      </div>
+      <div style="font-size: 0.78rem; color: var(--skb-text-dim); margin-top: 4px;">Wallets below update instantly as you type.</div>
+
+      <div id="generator-panel">
+        <div style="font-size: 0.82rem; font-weight: 700; color: var(--skb-primary); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.04em;">Secure Passphrase Generator</div>
+        <div class="skb-controls" style="background: transparent; border: none; padding: 0; margin-bottom: 10px;">
+          <div class="skb-control-group">
+            <label class="skb-label">Length</label>
+            <select class="skb-select" id="gen-word-count" onchange="runPassphraseGenerator()">
+              <option value="4">4 Words</option>
+              <option value="6" selected>6 Words</option>
+              <option value="8">8 Words</option>
+            </select>
+          </div>
+          <div class="skb-control-group" style="justify-content: center; gap: 10px;">
+            <label class="skb-checkbox-group"><input type="checkbox" id="add-numbers" onchange="runPassphraseGenerator()"> Add a Number</label>
+            <label class="skb-checkbox-group"><input type="checkbox" id="add-symbols" onchange="runPassphraseGenerator()"> Add a Symbol</label>
+          </div>
+        </div>
+
+        <div style="font-size: 0.82rem; color: var(--skb-text-muted); display: flex; justify-content: space-between; align-items: center;">
+          <span>Entropy: <span id="entropy-bits" style="color: var(--skb-text); font-weight: 600;">0 bits</span></span>
+          <span id="strength-label" style="color: var(--skb-primary); font-weight: 600;">Waiting</span>
+        </div>
+        <div class="skb-strength-bar"><div class="skb-strength-fill" id="strength-fill"></div></div>
+
+        <button class="skb-btn-secondary" style="margin-top: 12px; width: 100%; border-color: var(--skb-primary); color: var(--skb-primary);" onclick="runPassphraseGenerator()">Generate New Passphrase</button>
+      </div>
+
+      <div class="skb-result-actions" style="margin-top: 12px;">
+        <button class="skb-btn-sm" onclick="copyPassphrase(this)">Copy Passphrase</button>
+        <button class="skb-btn-sm" id="passphrase-qr-btn" onclick="togglePassphraseQR(this)">Show Passphrase QR</button>
+        <button class="skb-btn-sm" onclick="savePassphraseToFile()">Save Passphrase</button>
+        <button class="skb-btn-sm" onclick="loadPassphraseFromFile()">Load Passphrase</button>
+      </div>
+
+      <div id="qr-passphrase" class="skb-qr-container">
         <div class="qr-code-box"></div>
+      </div>
+
+      <div class="skb-alert skb-alert--error" style="margin-top: 10px; font-size: 0.82rem;">
+        A passphrase creates a completely separate wallet. If you lose it, those funds are unrecoverable.
+      </div>
     </div>
-    
-    <div id="passphrase-container" class="controls" style="margin-top: 25px; margin-bottom: 25px; background: rgba(247, 147, 26, 0.05); border: 1px dashed var(--orange);">
-        <div class="control-group" style="width: 100%;">
-            <label style="color: var(--orange);">Optional Passphrase (BIP39 25th Word)</label>
-            <div class="passphrase-input-group">
-              <input type="text" id="passphrase-input" placeholder="Type passphrase to preview hidden wallet..." oninput="updateWallet()" autocomplete="off">
-              <button class="btn-toggle-gen" onclick="toggleGenerator()">Generator</button>
-            </div>
-            <div style="font-size: 0.8rem; color: var(--muted); margin-top: 0px; margin-bottom: 10px;">Wallets below update instantly as you type.</div>
-            
-            <div id="generator-panel">
-              <h4 style="margin-bottom: 15px; color: var(--orange);">Secure Passphrase Generator</h4>
-              <div class="controls" style="background: transparent; border: none; padding: 0; margin-bottom: 10px;">
-                <div class="control-group">
-                  <label for="gen-word-count">Length</label>
-                  <select id="gen-word-count" onchange="runPassphraseGenerator()">
-                    <option value="4">4 Words</option>
-                    <option value="6" selected>6 Words</option>
-                    <option value="8">8 Words</option>
-                  </select>
-                </div>
-                <div class="control-group" style="justify-content: center;">
-                  <label class="inline-checkbox"><input type="checkbox" id="add-numbers" onchange="runPassphraseGenerator()"> Add a Number</label>
-                  <label class="inline-checkbox"><input type="checkbox" id="add-symbols" onchange="runPassphraseGenerator()"> Add a Symbol</label>
-                </div>
-              </div>
 
-              <div class="entropy-info">
-                <span>Estimated Entropy: <span id="entropy-bits" style="color: var(--text); font-weight: bold;">0 bits</span></span>
-                <span id="strength-label" style="color: var(--orange);">Waiting</span>
-              </div>
-              <div class="strength-bar"><div class="strength-fill" id="strength-fill"></div></div>
+    <!-- Wallet Verification Data -->
+    <div style="margin-top: 1.5rem;">
+      <div class="skb-card-title">Wallet Verification Data</div>
 
-              <button class="btn-secondary" style="margin-top: 15px; margin-bottom: 0; border-color: var(--orange); color: var(--orange);" onclick="runPassphraseGenerator()">Generate NewPassphrase</button>
-            </div>
-
-            <div class="action-buttons" style="margin-bottom: 0; justify-content: center;">
-                <button class="copy-btn" onclick="copyPassphrase(this)">📋 Copy Passphrase</button>
-                <button class="copy-btn qr-btn" id="passphrase-qr-btn" onclick="togglePassphraseQR(this)">📱 Show Passphrase QR</button>
-                <button class="copy-btn" style="border-color: var(--orange); color: var(--orange);" onclick="exportPassphraseToNote()">🔐 Export Passphrase to Note</button>
-            </div>
-
-            <div id="qr-passphrase" class="qr-container">
-                <div class="qr-code-box"></div>
-            </div>
+      <div id="xpub-container">
+        <div class="skb-data-label">Master Public Key (xpub)</div>
+        <div class="skb-data-row">
+          <div class="skb-data-value" id="xpub-output-val" style="color: var(--skb-primary);">Calculating...</div>
+          <div style="display: flex; gap: 6px;">
+            <button class="skb-btn-sm" onclick="copyXpub(this)">Copy xpub</button>
+            <button class="skb-btn-sm" id="xpub-qr-btn" onclick="toggleXpubQR(this)" disabled>Show xpub QR</button>
+          </div>
         </div>
-    </div>
-    
-    <h3>Wallet Verification Data</h3>
-    <div id="xpub-container" class="controls" style="margin-bottom: 10px; padding: 15px;">
-        <div class="control-group">
-            <label>Master Public Key (xpub)</label>
-            <div style="font-family: var(--mono); font-size: 0.9rem; word-break: break-all; margin-bottom: 10px; color: var(--orange);" id="xpub-output-val">Calculating...</div>
-            <div class="action-buttons" style="margin-bottom: 0; justify-content: center;">
-                <button class="copy-btn" onclick="copyXpub(this)">📋 Copy Xpub</button>
-                <button class="copy-btn qr-btn" id="xpub-qr-btn" onclick="toggleXpubQR(this)" disabled>📱 Show Xpub QR</button>
-                <button class="copy-btn" style="color: var(--text); border-color: var(--text);" onclick="exportWalletToNote()">📝 Export Full Wallet to Note</button>
-            </div>
-            <div id="qr-xpub" class="qr-container" tabindex="0" style="margin-top: 10px; margin-bottom: 0;">
-                <div class="qr-code-box"></div>
-            </div>
+        <div id="qr-xpub" class="skb-qr-container" tabindex="0">
+          <div class="qr-code-box"></div>
         </div>
+        <!-- Print-only xpub QR (always rendered when xpub is available) -->
+        <div id="qr-xpub-print" class="skb-print-only" style="display: none; text-align: center; margin-top: 8px;">
+          <div class="qr-code-box-print"></div>
+        </div>
+      </div>
     </div>
-    
-    <div id="print-last-word" class="print-only"></div>
-    
-    <h3 style="margin-top: 30px;">Address Verification</h3>
-    <table class="address-table">
+
+    <!-- Print verification placeholders (hidden on screen, shown on print) -->
+    <div id="print-last-word" class="skb-print-only"></div>
+    <div id="print-passphrase" class="skb-print-only"></div>
+
+    <!-- Address Table -->
+    <div style="margin-top: 1.5rem;">
+      <div class="skb-card-title">Address Verification</div>
+      <table class="skb-table">
         <thead>
-            <tr><th style="width: 50px;">Index</th><th>Receiving Address</th></tr>
+          <tr><th style="width: 60px;">Index</th><th>Receiving Address</th></tr>
         </thead>
-        <tbody id="address-table-body">
-            </tbody>
-    </table>
-    
-    <button class="btn" style="opacity: 1; background: var(--card2); color: var(--text); border: 1px solid var(--border);" onclick="window.print()">🖨️ Print Verification Backup</button>
+        <tbody id="address-table-body"></tbody>
+      </table>
+    </div>
+
+    <button class="skb-btn-sm skb-print-btn" style="margin-top: 1rem; width: 100%;" onclick="printVerification()">Print Verification Backup</button>
   </div>
 
-</div>
+  <div class="skb-breadcrumb">
+    <a href="../index.html">&larr; SafeKeepBitcoin Home</a>
+  </div>
+
 </div>
 
 <script>
 // =========================================================
-// 🚨 PASTE 2048 WORDLIST ARRAY EXACTLY BELOW THIS LINE 🚨
+// BIP-39 WORDLIST
 // =========================================================
 const WORDLIST = ["abandon","ability","able","about","above","absent","absorb","abstract","absurd","abuse","access","accident","account","accuse","achieve","acid","acoustic","acquire","across","act","action","actor","actress","actual","adapt","add","addict","address","adjust","admit","adult","advance","advice","aerobic","affair","afford","afraid","again","age","agent","agree","ahead","aim","air","airport","aisle","alarm","album","alcohol","alert","alien","all","alley","allow","almost","alone","alpha","already","also","alter","always","amateur","amazing","among","amount","amused","analyst","anchor","ancient","anger","angle","angry","animal","ankle","announce","annual","another","answer","antenna","antique","anxiety","any","apart","apology","appear","apple","approve","april","arch","arctic","area","arena","argue","arm","armed","armor","army","around","arrange","arrest","arrive","arrow","art","artefact","artist","artwork","ask","aspect","assault","asset","assist","assume","asthma","athlete","atom","attack","attend","attitude","attract","auction","audit","august","aunt","author","auto","autumn","average","avocado","avoid","awake","aware","away","awesome","awful","awkward","axis","baby","bachelor","bacon","badge","bag","balance","balcony","ball","bamboo","banana","banner","bar","barely","bargain","barrel","base","basic","basket","battle","beach","bean","beauty","because","become","beef","before","begin","behave","behind","believe","below","belt","bench","benefit","best","betray","better","between","beyond","bicycle","bid","bike","bind","biology","bird","birth","bitter","black","blade","blame","blanket","blast","bleak","bless","blind","blood","blossom","blouse","blue","blur","blush","board","boat","body","boil","bomb","bone","bonus","book","boost","border","boring","borrow","boss","bottom","bounce","box","boy","bracket","brain","brand","brass","brave","bread","breeze","brick","bridge","brief","bright","bring","brisk","broccoli","broken","bronze","broom","brother","brown","brush","bubble","buddy","budget","buffalo","build","bulb","bulk","bullet","bundle","bunker","burden","burger","burst","bus","business","busy","butter","buyer","buzz","cabbage","cabin","cable","cactus","cage","cake","call","calm","camera","camp","can","canal","cancel","candy","cannon","canoe","canvas","canyon","capable","capital","captain","car","carbon","card","cargo","carpet","carry","cart","case","cash","casino","castle","casual","cat","catalog","catch","category","cattle","caught","cause","caution","cave","ceiling","celery","cement","census","century","cereal","certain","chair","chalk","champion","change","chaos","chapter","charge","chase","chat","cheap","check","cheese","chef","cherry","chest","chicken","chief","child","chimney","choice","choose","chronic","chuckle","chunk","churn","cigar","cinnamon","circle","citizen","city","civil","claim","clap","clarify","claw","clay","clean","clerk","clever","click","client","cliff","climb","clinic","clip","clock","clog","close","cloth","cloud","clown","club","clump","cluster","clutch","coach","coast","coconut","code","coffee","coil","coin","collect","color","column","combine","come","comfort","comic","common","company","concert","conduct","confirm","congress","connect","consider","control","convince","cook","cool","copper","copy","coral","core","corn","correct","cost","cotton","couch","country","couple","course","cousin","cover","coyote","crack","cradle","craft","cram","crane","crash","crater","crawl","crazy","cream","credit","creek","crew","cricket","crime","crisp","critic","crop","cross","crouch","crowd","crucial","cruel","cruise","crumble","crunch","crush","cry","crystal","cube","culture","cup","cupboard","curious","current","curtain","curve","cushion","custom","cute","cycle","dad","damage","damp","dance","danger","daring","dash","daughter","dawn","day","deal","debate","debris","decade","december","decide","decline","decorate","decrease","deer","defense","define","defy","degree","delay","deliver","demand","demise","denial","dentist","deny","depart","depend","deposit","depth","deputy","derive","describe","desert","design","desk","despair","destroy","detail","detect","develop","device","devote","diagram","dial","diamond","diary","dice","diesel","diet","differ","digital","dignity","dilemma","dinner","dinosaur","direct","dirt","disagree","discover","disease","dish","dismiss","disorder","display","distance","divert","divide","divorce","dizzy","doctor","document","dog","doll","dolphin","domain","donate","donkey","donor","door","dose","double","dove","draft","dragon","drama","drastic","draw","dream","dress","drift","drill","drink","drip","drive","drop","drum","dry","duck","dumb","dune","during","dust","dutch","duty","dwarf","dynamic","eager","eagle","early","earn","earth","easily","east","easy","echo","ecology","economy","edge","edit","educate","effort","egg","eight","either","elbow","elder","electric","elegant","element","elephant","elevator","elite","else","embark","embody","embrace","emerge","emotion","employ","empower","empty","enable","enact","end","endless","endorse","enemy","energy","enforce","engage","engine","enhance","enjoy","enlist","enough","enrich","enroll","ensure","enter","entire","entry","envelope","episode","equal","equip","era","erase","erode","erosion","error","erupt","escape","essay","essence","estate","eternal","ethics","evidence","evil","evoke","evolve","exact","example","excess","exchange","excite","exclude","excuse","execute","exercise","exhaust","exhibit","exile","exist","exit","exotic","expand","expect","expire","explain","expose","express","extend","extra","eye","eyebrow","fabric","face","faculty","fade","faint","faith","fall","false","fame","family","famous","fan","fancy","fantasy","farm","fashion","fat","fatal","father","fatigue","fault","favorite","feature","february","federal","fee","feed","feel","female","fence","festival","fetch","fever","few","fiber","fiction","field","figure","file","film","filter","final","find","fine","finger","finish","fire","firm","first","fiscal","fish","fit","fitness","fix","flag","flame","flash","flat","flavor","flee","flight","flip","float","flock","floor","flower","fluid","flush","fly","foam","focus","fog","foil","fold","follow","food","foot","force","forest","forget","fork","fortune","forum","forward","fossil","foster","found","fox","fragile","frame","frequent","fresh","friend","fringe","frog","front","frost","frown","frozen","fruit","fuel","fun","funny","furnace","fury","future","gadget","gain","galaxy","gallery","game","gap","garage","garbage","garden","garlic","garment","gas","gasp","gate","gather","gauge","gaze","general","genius","genre","gentle","genuine","gesture","ghost","giant","gift","giggle","ginger","giraffe","girl","give","glad","glance","glare","glass","glide","glimpse","globe","gloom","glory","glove","glow","glue","goat","goddess","gold","good","goose","gorilla","gospel","gossip","govern","gown","grab","grace","grain","grant","grape","grass","gravity","great","green","grid","grief","grit","grocery","group","grow","grunt","guard","guess","guide","guilt","guitar","gun","gym","habit","hair","half","hammer","hamster","hand","happy","harbor","hard","harsh","harvest","hat","have","hawk","hazard","head","health","heart","heavy","hedgehog","height","hello","helmet","help","hen","hero","hidden","high","hill","hint","hip","hire","history","hobby","hockey","hold","hole","holiday","hollow","home","honey","hood","hope","horn","horror","horse","hospital","host","hotel","hour","hover","hub","huge","human","humble","humor","hundred","hungry","hunt","hurdle","hurry","hurt","husband","hybrid","ice","icon","idea","identify","idle","ignore","ill","illegal","illness","image","imitate","immense","immune","impact","impose","improve","impulse","inch","include","income","increase","index","indicate","indoor","industry","infant","inflict","inform","inhale","inherit","initial","inject","injury","inmate","inner","innocent","input","inquiry","insane","insect","inside","inspire","install","intact","interest","into","invest","invite","involve","iron","island","isolate","issue","item","ivory","jacket","jaguar","jar","jazz","jealous","jeans","jelly","jewel","job","join","joke","journey","joy","judge","juice","jump","jungle","junior","junk","just","kangaroo","keen","keep","ketchup","key","kick","kid","kidney","kind","kingdom","kiss","kit","kitchen","kite","kitten","kiwi","knee","knife","knock","know","lab","label","labor","ladder","lady","lake","lamp","language","laptop","large","later","latin","laugh","laundry","lava","law","lawn","lawsuit","layer","lazy","leader","leaf","learn","leave","lecture","left","leg","legal","legend","leisure","lemon","lend","length","lens","leopard","lesson","letter","level","liar","liberty","library","license","life","lift","light","like","limb","limit","link","lion","liquid","list","little","live","lizard","load","loan","lobster","local","lock","logic","lonely","long","loop","lottery","loud","lounge","love","loyal","lucky","luggage","lumber","lunar","lunch","luxury","lyrics","machine","mad","magic","magnet","maid","mail","main","major","make","mammal","man","manage","mandate","mango","mansion","manual","maple","marble","march","margin","marine","market","marriage","mask","mass","master","match","material","math","matrix","matter","maximum","maze","meadow","mean","measure","meat","mechanic","medal","media","melody","melt","member","memory","mention","menu","mercy","merge","merit","merry","mesh","message","metal","method","middle","midnight","milk","million","mimic","mind","minimum","minor","minute","miracle","mirror","misery","miss","mistake","mix","mixed","mixture","mobile","model","modify","mom","moment","monitor","monkey","monster","month","moon","moral","more","morning","mosquito","mother","motion","motor","mountain","mouse","move","movie","much","muffin","mule","multiply","muscle","museum","mushroom","music","must","mutual","myself","mystery","myth","naive","name","napkin","narrow","nasty","nation","nature","near","neck","need","negative","neglect","neither","nephew","nerve","nest","net","network","neutral","never","news","next","nice","night","noble","noise","nominee","noodle","normal","north","nose","notable","note","nothing","notice","novel","now","nuclear","number","nurse","nut","oak","obey","object","oblige","obscure","observe","obtain","obvious","occur","ocean","october","odor","off","offer","office","often","oil","okay","old","olive","olympic","omit","once","one","onion","online","only","open","opera","opinion","oppose","option","orange","orbit","orchard","order","ordinary","organ","orient","original","orphan","ostrich","other","outdoor","outer","output","outside","oval","oven","over","own","owner","oxygen","oyster","ozone","pact","paddle","page","pair","palace","palm","panda","panel","panic","panther","paper","parade","parent","park","parrot","party","pass","patch","path","patient","patrol","pattern","pause","pave","payment","peace","peanut","pear","peasant","pelican","pen","penalty","pencil","people","pepper","perfect","permit","person","pet","phone","photo","phrase","physical","piano","picnic","picture","piece","pig","pigeon","pill","pilot","pink","pioneer","pipe","pistol","pitch","pizza","place","planet","plastic","plate","play","please","pledge","pluck","plug","plunge","poem","poet","point","polar","pole","police","pond","pony","pool","popular","portion","position","possible","post","potato","pottery","poverty","powder","power","practice","praise","predict","prefer","prepare","present","pretty","prevent","price","pride","primary","print","priority","prison","private","prize","problem","process","produce","profit","program","project","promote","proof","property","prosper","protect","proud","provide","public","pudding","pull","pulp","pulse","pumpkin","punch","pupil","puppy","purchase","purity","purpose","purse","push","put","puzzle","pyramid","quality","quantum","quarter","question","quick","quit","quiz","quote","rabbit","raccoon","race","rack","radar","radio","rail","rain","raise","rally","ramp","ranch","random","range","rapid","rare","rate","rather","raven","raw","razor","ready","real","reason","rebel","rebuild","recall","receive","recipe","record","recycle","reduce","reflect","reform","refuse","region","regret","regular","reject","relax","release","relief","rely","remain","remember","remind","remove","render","renew","rent","reopen","repair","repeat","replace","report","require","rescue","resemble","resist","resource","response","result","retire","retreat","return","reunion","reveal","review","reward","rhythm","rib","ribbon","rice","rich","ride","ridge","rifle","right","rigid","ring","riot","ripple","risk","ritual","rival","river","road","roast","robot","robust","rocket","romance","roof","rookie","room","rose","rotate","rough","round","route","royal","rubber","rude","rug","rule","run","runway","rural","sad","saddle","sadness","safe","sail","salad","salmon","salon","salt","salute","same","sample","sand","satisfy","satoshi","sauce","sausage","save","say","scale","scan","scare","scatter","scene","scheme","school","science","scissors","scorpion","scout","scrap","screen","script","scrub","sea","search","season","seat","second","secret","section","security","seed","seek","segment","select","sell","seminar","senior","sense","sentence","series","service","session","settle","setup","seven","shadow","shaft","shallow","share","shed","shell","sheriff","shield","shift","shine","ship","shiver","shock","shoe","shoot","shop","short","shoulder","shove","shrimp","shrug","shuffle","shy","sibling","sick","side","siege","sight","sign","silent","silk","silly","silver","similar","simple","since","sing","siren","sister","situate","six","size","skate","sketch","ski","skill","skin","skirt","skull","slab","slam","sleep","slender","slice","slide","slight","slim","slogan","slot","slow","slush","small","smart","smile","smoke","smooth","snack","snake","snap","sniff","snow","soap","soccer","social","sock","soda","soft","solar","soldier","solid","solution","solve","someone","song","soon","sorry","sort","soul","sound","soup","source","south","space","spare","spatial","spawn","speak","special","speed","spell","spend","sphere","spice","spider","spike","spin","spirit","split","spoil","sponsor","spoon","sport","spot","spray","spread","spring","spy","square","squeeze","squirrel","stable","stadium","staff","stage","stairs","stamp","stand","start","state","stay","steak","steel","stem","step","stereo","stick","still","sting","stock","stomach","stone","stool","story","stove","strategy","street","strike","strong","struggle","student","stuff","stumble","style","subject","submit","subway","success","such","sudden","suffer","sugar","suggest","suit","summer","sun","sunny","sunset","super","supply","supreme","sure","surface","surge","surprise","surround","survey","suspect","sustain","swallow","swamp","swap","swarm","swear","sweet","swift","swim","swing","switch","sword","symbol","symptom","syrup","system","table","tackle","tag","tail","talent","talk","tank","tape","target","task","taste","tattoo","taxi","teach","team","tell","ten","tenant","tennis","tent","term","test","text","thank","that","theme","then","theory","there","they","thing","this","thought","three","thrive","throw","thumb","thunder","ticket","tide","tiger","tilt","timber","time","tiny","tip","tired","tissue","title","toast","tobacco","today","toddler","toe","together","toilet","token","tomato","tomorrow","tone","tongue","tonight","tool","tooth","top","topic","topple","torch","tornado","tortoise","toss","total","tourist","toward","tower","town","toy","track","trade","traffic","tragic","train","transfer","trap","trash","travel","tray","treat","tree","trend","trial","tribe","trick","trigger","trim","trip","trophy","trouble","truck","true","truly","trumpet","trust","truth","try","tube","tuition","tumble","tuna","tunnel","turkey","turn","turtle","twelve","twenty","twice","twin","twist","two","type","typical","ugly","umbrella","unable","unaware","uncle","uncover","under","undo","unfair","unfold","unhappy","uniform","unique","unit","universe","unknown","unlock","until","unusual","unveil","update","upgrade","uphold","upon","upper","upset","urban","urge","usage","use","used","useful","useless","usual","utility","vacant","vacuum","vague","valid","valley","valve","van","vanish","vapor","various","vast","vault","vehicle","velvet","vendor","venture","venue","verb","verify","version","very","vessel","veteran","viable","vibrant","vicious","victory","video","view","village","vintage","violin","virtual","virus","visa","visit","visual","vital","vivid","vocal","voice","void","volcano","volume","vote","voyage","wage","wagon","wait","walk","wall","walnut","want","warfare","warm","warrior","wash","wasp","waste","water","wave","way","wealth","weapon","wear","weasel","weather","web","wedding","weekend","weird","welcome","west","wet","whale","what","wheat","wheel","when","where","whip","whisper","wide","width","wife","wild","will","win","window","wine","wing","wink","winner","winter","wire","wisdom","wise","wish","witness","wolf","woman","wonder","wood","wool","word","work","world","worry","worth","wrap","wreck","wrestle","wrist","write","wrong","yard","year","yellow","you","young","youth","zebra","zero","zone","zoo"];
-    // ... PASTE THE 2048 WORDS HERE ...
 
-
-// Passphrase specific constants
+// Passphrase constants
 const NUMBERS = "0123456789";
 const SYMBOLS = "!@#$%^&*";
 
-let currentMnemonic = ""; // Store the generated mnemonic globally
+let currentMnemonic = "";
+let seedSelector = null;
+
+// --- SEED SELECTOR INTEGRATION ---
+window.addEventListener('DOMContentLoaded', () => {
+  // Initialize seed selector (now inside the result section)
+  if (window.SeedSelector) {
+    seedSelector = new window.SeedSelector({
+      container: document.getElementById('seed-selector-inline'),
+      showSaveButton: true,
+      getPassphrase: () => document.getElementById('passphrase-input').value || '',
+      getConfig: () => ({
+        keyFormat: document.getElementById('key-format').value,
+        addressType: document.getElementById('derivation-path').value
+      }),
+      onSeedLoaded: (seed) => {
+        currentMnemonic = seed.mnemonic;
+        renderSeedOutput(currentMnemonic);
+        document.getElementById('result').style.display = 'block';
+
+        // Restore passphrase if one was saved with this seed
+        if (seed.passphrase) {
+          document.getElementById('passphrase-input').value = seed.passphrase;
+        } else {
+          document.getElementById('passphrase-input').value = '';
+        }
+
+        // Restore configuration settings from saved file
+        if (seed.keyFormat) {
+          const keyFmtSelect = document.getElementById('key-format');
+          for (let i = 0; i < keyFmtSelect.options.length; i++) {
+            if (keyFmtSelect.options[i].value === seed.keyFormat) {
+              keyFmtSelect.selectedIndex = i;
+              break;
+            }
+          }
+        }
+        if (seed.addressType) {
+          const addrSelect = document.getElementById('derivation-path');
+          for (let i = 0; i < addrSelect.options.length; i++) {
+            if (addrSelect.options[i].value === seed.addressType) {
+              addrSelect.selectedIndex = i;
+              break;
+            }
+          }
+        }
+        if (seed.wordCount) {
+          const wcSelect = document.getElementById('word-count');
+          wcSelect.value = String(seed.wordCount);
+          updateDiceUI();
+        }
+
+        updatePassphraseLabel();
+        updateWallet();
+
+        // Write to session so other tools pick it up
+        if (window.SeedSession) {
+          window.SeedSession.set(seed);
+          if (seed.passphrase) window.SeedSession.setPassphrase(seed.passphrase);
+        }
+      },
+      onSeedCleared: () => {
+        currentMnemonic = "";
+        document.getElementById('passphrase-input').value = '';
+        document.getElementById('result').style.display = 'none';
+
+        // Clear from session
+        if (window.SeedSession) {
+          window.SeedSession.clear();
+          window.SeedSession.clearPassphrase();
+        }
+      }
+    });
+  }
+
+  // Theme button
+  if (localStorage.getItem('safekeepTheme') === 'light') {
+    document.getElementById('theme-btn').innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+  }
+
+  // --- SESSION WIRING: auto-load seed from session or vault ---
+  if (window.SeedSession) {
+    window.SeedSession.init().then(sessionSeed => {
+      if (sessionSeed && sessionSeed.mnemonic && seedSelector) {
+        // A seed was found in sessionStorage (or vault fallback).
+        // Load it into the UI via the seed selector.
+        seedSelector.setActiveSeed(sessionSeed.mnemonic, sessionSeed.fingerprint, {
+          wordCount: sessionSeed.wordCount,
+          label: sessionSeed.label || '',
+          passphrase: sessionSeed.passphrase || '',
+          keyFormat: sessionSeed.keyFormat || 'slip132',
+          addressType: sessionSeed.addressType || '84'
+        });
+      }
+    });
+  }
+});
+
+window.saveCurrentSeed = async function() {
+  if (seedSelector && currentMnemonic) {
+    await seedSelector.saveCurrent();
+  }
+};
+
+// --- RENDER HELPERS ---
+function renderSeedOutput(mnemonic) {
+  const wordsArray = mnemonic.split(' ');
+  let gridHtml = '<div class="skb-word-grid">';
+  wordsArray.forEach((word, idx) => {
+    gridHtml += `
+      <div class="skb-word-pill">
+        <span class="skb-word-num">${idx + 1}.</span>
+        <span class="skb-word-text">${word}</span>
+      </div>
+    `;
+  });
+  gridHtml += '</div>';
+  document.getElementById('seed-output').innerHTML = gridHtml;
+}
 
 // --- DICE & ENTROPY LOGIC ---
 function toBinStr(num, length) { return num.toString(2).padStart(length, '0'); }
 
 async function getEntropyAndMnemonic(diceStr, wordCount) {
-    const buffer = new TextEncoder().encode(diceStr);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
-    const hashArray = new Uint8Array(hashBuffer);
-    
-    const entropy = wordCount === '12' ? hashArray.slice(0, 16) : hashArray.slice(0, 32);
-    
-    const checksumLen = entropy.length === 16 ? 4 : 8;
-    const chkHash = new Uint8Array(await crypto.subtle.digest('SHA-256', entropy));
-    
-    let hashBits = '';
-    for (const b of chkHash) hashBits += toBinStr(b, 8);
-    const checksumBits = hashBits.slice(0, checksumLen);
+  const buffer = new TextEncoder().encode(diceStr);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
+  const hashArray = new Uint8Array(hashBuffer);
 
-    let entropyBits = '';
-    for (const b of entropy) entropyBits += toBinStr(b, 8);
+  const entropy = wordCount === '12' ? hashArray.slice(0, 16) : hashArray.slice(0, 32);
 
-    const totalBits = entropyBits + checksumBits;
-    const words = [];
-    for (let i = 0; i < totalBits.length; i += 11) {
-        if(WORDLIST.length < 2048) {
-            words.push(`[WordIndex:${parseInt(totalBits.slice(i, i + 11), 2)}]`);
-        } else {
-            words.push(WORDLIST[parseInt(totalBits.slice(i, i + 11), 2)]);
-        }
-    }
-    
-    return words.join(' ');
+  const checksumLen = entropy.length === 16 ? 4 : 8;
+  const chkHash = new Uint8Array(await crypto.subtle.digest('SHA-256', entropy));
+
+  let hashBits = '';
+  for (const b of chkHash) hashBits += toBinStr(b, 8);
+  const checksumBits = hashBits.slice(0, checksumLen);
+
+  let entropyBits = '';
+  for (const b of entropy) entropyBits += toBinStr(b, 8);
+
+  const totalBits = entropyBits + checksumBits;
+  const words = [];
+  for (let i = 0; i < totalBits.length; i += 11) {
+    words.push(WORDLIST[parseInt(totalBits.slice(i, i + 11), 2)]);
+  }
+
+  return words.join(' ');
 }
 
+// --- ANIMATED DICE ROLL ---
 window.generateBrowserEntropy = function() {
-    const inputField = document.getElementById('dice-input');
-    const btn = document.getElementById('btn-browser-entropy');
-    
-    let newRolls = "";
-    const temp = new Uint8Array(1);
-    
-    while (newRolls.length < 50) {
-        window.crypto.getRandomValues(temp);
-        let r = temp[0];
-        if (r < 252) { newRolls += (r % 6 + 1).toString(); }
+  const inputField = document.getElementById('dice-input');
+  const btn = document.getElementById('btn-browser-entropy');
+  const animContainer = document.getElementById('dice-animation');
+
+  // Generate the actual rolls first
+  let finalRolls = "";
+  const temp = new Uint8Array(1);
+  while (finalRolls.length < 50) {
+    window.crypto.getRandomValues(temp);
+    let r = temp[0];
+    if (r < 252) { finalRolls += (r % 6 + 1).toString(); }
+  }
+
+  // Disable the button during animation
+  btn.disabled = true;
+  btn.textContent = 'Generating...';
+
+  // Build animation display with 50 character slots
+  animContainer.style.display = 'flex';
+  animContainer.innerHTML = '';
+  for (let i = 0; i < 50; i++) {
+    const span = document.createElement('span');
+    span.className = 'dice-char';
+    span.textContent = '-';
+    animContainer.appendChild(span);
+  }
+
+  const chars = animContainer.querySelectorAll('.dice-char');
+  const totalDuration = 2000; // 2 seconds total
+  const perChar = totalDuration / 50; // ~40ms each
+
+  let settled = 0;
+
+  function animateChar(index) {
+    if (index >= 50) {
+      // Animation complete — append to input field
+      inputField.value += finalRolls;
+      updateDiceUI();
+
+      // Clean up animation display after a brief pause
+      setTimeout(() => {
+        animContainer.style.display = 'none';
+      }, 600);
+
+      btn.disabled = false;
+      btn.textContent = '50 Rolls Added';
+      btn.style.color = '#fff';
+      btn.style.background = 'var(--skb-secondary)';
+      btn.style.borderColor = 'var(--skb-secondary)';
+
+      setTimeout(() => {
+        btn.textContent = 'Generate 50 Computer Rolls';
+        btn.style.color = '';
+        btn.style.background = '';
+        btn.style.borderColor = '';
+      }, 2000);
+
+      inputField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      inputField.focus();
+      return;
     }
 
-    inputField.value += newRolls;
-    updateDiceUI();
-    
-    const origText = btn.innerHTML;
-    btn.innerHTML = '✅ 50 Rolls Added!';
-    btn.style.color = '#fff';
-    btn.style.background = 'var(--teal)';
-    btn.style.borderColor = 'var(--teal)';
-    
-    setTimeout(() => {
-        btn.innerHTML = origText;
-        btn.style.color = 'var(--teal)';
-        btn.style.background = 'transparent';
-    }, 2000);
-    
-    inputField.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    inputField.focus();
+    // Flicker this character through random values
+    const flickerCount = 4;
+    const flickerInterval = perChar / (flickerCount + 1);
+    let flickers = 0;
+
+    chars[index].classList.add('active');
+
+    const flickerTimer = setInterval(() => {
+      if (flickers < flickerCount) {
+        chars[index].textContent = String(Math.floor(Math.random() * 6) + 1);
+        flickers++;
+      } else {
+        clearInterval(flickerTimer);
+        // Settle on the final value
+        chars[index].textContent = finalRolls[index];
+        chars[index].classList.remove('active');
+        chars[index].classList.add('settled');
+        settled++;
+
+        // Update entropy display in real time
+        updateDiceAnimationStats(settled);
+
+        // Next character
+        animateChar(index + 1);
+      }
+    }, flickerInterval);
+  }
+
+  // Start the cascade
+  animateChar(0);
 };
 
+function updateDiceAnimationStats(rollCount) {
+  const wordCount = document.getElementById('word-count').value;
+  const targetRolls = wordCount === '12' ? 50 : 99;
+  const currentInput = document.getElementById('dice-input').value.length;
+  const totalRolls = currentInput + rollCount;
+  const entropyBits = Math.round(totalRolls * 2.58496);
+  const targetEntropy = wordCount === '12' ? 128 : 256;
+
+  document.getElementById('roll-count-label').innerText = `${totalRolls} / ${targetRolls}`;
+  document.getElementById('dice-entropy-bits').innerText = `${entropyBits} bits`;
+
+  let percent = (entropyBits / targetEntropy) * 100;
+  if (percent > 100) percent = 100;
+
+  const fill = document.getElementById('progress-fill');
+  const label = document.getElementById('dice-strength-label');
+  fill.style.width = `${percent}%`;
+
+  if (entropyBits === 0) {
+    label.textContent = "Waiting for rolls...";
+    label.style.color = 'var(--skb-text-muted)';
+  } else if (entropyBits < 50) {
+    label.textContent = "Weak";
+    label.style.color = 'var(--skb-danger)';
+  } else if (entropyBits < 90) {
+    label.textContent = "Good";
+    label.style.color = 'var(--skb-primary)';
+  } else if (entropyBits < 128) {
+    label.textContent = "Strong";
+    label.style.color = 'var(--skb-secondary)';
+  } else if (entropyBits < 256) {
+    label.textContent = "Excellent";
+    label.style.color = 'var(--skb-secondary)';
+  } else {
+    label.textContent = "Maximum";
+    label.style.color = 'var(--skb-secondary)';
+  }
+}
+
 function updateDiceUI() {
-    const input = document.getElementById('dice-input');
-    input.value = input.value.replace(/[^1-6]/g, ''); 
-    
-    const wordCount = document.getElementById('word-count').value;
-    const targetRolls = wordCount === '12' ? 50 : 99;
-    const currentRolls = input.value.length;
-    
-    const entropyBits = Math.round(currentRolls * 2.58496);
-    const targetEntropy = wordCount === '12' ? 128 : 256;
-    
-    document.getElementById('roll-count').innerText = `${currentRolls} / ${targetRolls} Rolls`;
-    document.getElementById('dice-entropy-bits').innerText = `${entropyBits} bits`;
-    
-    let percent = (entropyBits / targetEntropy) * 100;
-    if (percent > 100) percent = 100;
-    
-    const fill = document.getElementById('progress-fill');
-    const label = document.getElementById('dice-strength-label');
-    fill.style.width = `${percent}%`;
-    
-    if (entropyBits === 0) {
-        fill.style.background = 'var(--muted)';
-        label.textContent = "Waiting for rolls...";
-        label.style.color = 'var(--muted)';
-    } else if (entropyBits < 50) {
-        fill.style.background = 'var(--red)';
-        label.textContent = "Weak";
-        label.style.color = 'var(--red)';
-    } else if (entropyBits < 90) {
-        fill.style.background = 'var(--orange)';
-        label.textContent = "Good";
-        label.style.color = 'var(--orange)';
-    } else if (entropyBits < 128) {
-        fill.style.background = 'var(--teal)';
-        label.textContent = "Fort Knox";
-        label.style.color = 'var(--teal)';
-    } else if (entropyBits < 256) {
-        fill.style.background = '#00ffcc'; 
-        label.textContent = "Unbreakable";
-        label.style.color = '#00ffcc';
-    } else {
-        fill.style.background = '#b829ff'; 
-        label.textContent = "Absolute Overkill";
-        label.style.color = '#b829ff';
-    }
-    
-    const btn = document.getElementById('btn-generate');
-    if (currentRolls >= targetRolls) {
-        btn.disabled = false;
-        btn.style.opacity = 1;
-    } else {
-        btn.disabled = true;
-        btn.style.opacity = 0.5;
-    }
+  const input = document.getElementById('dice-input');
+  input.value = input.value.replace(/[^1-6]/g, '');
+
+  const wordCount = document.getElementById('word-count').value;
+  const targetRolls = wordCount === '12' ? 50 : 99;
+  const currentRolls = input.value.length;
+
+  const entropyBits = Math.round(currentRolls * 2.58496);
+  const targetEntropy = wordCount === '12' ? 128 : 256;
+
+  document.getElementById('roll-count-label').innerText = `${currentRolls} / ${targetRolls}`;
+  document.getElementById('dice-entropy-bits').innerText = `${entropyBits} bits`;
+
+  let percent = (entropyBits / targetEntropy) * 100;
+  if (percent > 100) percent = 100;
+
+  const fill = document.getElementById('progress-fill');
+  const label = document.getElementById('dice-strength-label');
+  fill.style.width = `${percent}%`;
+
+  if (entropyBits === 0) {
+    label.textContent = "Waiting for rolls...";
+    label.style.color = 'var(--skb-text-muted)';
+  } else if (entropyBits < 50) {
+    label.textContent = "Weak";
+    label.style.color = 'var(--skb-danger)';
+  } else if (entropyBits < 90) {
+    label.textContent = "Good";
+    label.style.color = 'var(--skb-primary)';
+  } else if (entropyBits < 128) {
+    label.textContent = "Strong";
+    label.style.color = 'var(--skb-secondary)';
+  } else if (entropyBits < 256) {
+    label.textContent = "Excellent";
+    label.style.color = 'var(--skb-secondary)';
+  } else {
+    label.textContent = "Maximum";
+    label.style.color = 'var(--skb-secondary)';
+  }
+
+  const btn = document.getElementById('btn-generate');
+  if (currentRolls >= targetRolls) {
+    btn.disabled = false;
+  } else {
+    btn.disabled = true;
+  }
+
+  updatePassphraseLabel();
+}
+
+// --- DYNAMIC PASSPHRASE LABEL ---
+function updatePassphraseLabel() {
+  const wordCount = document.getElementById('word-count').value;
+  const extraWord = wordCount === '12' ? '13th' : '25th';
+  const label = document.getElementById('passphrase-label');
+  if (label) {
+    label.textContent = `Optional Passphrase (BIP-39 ${extraWord} Word)`;
+  }
 }
 
 // --- PASSPHRASE GENERATOR LOGIC ---
 function toggleGenerator() {
-    const panel = document.getElementById('generator-panel');
-    if (panel.style.display === "block") {
-        panel.style.display = "none";
-    } else {
-        panel.style.display = "block";
-        runPassphraseGenerator(); 
-    }
+  const panel = document.getElementById('generator-panel');
+  if (panel.style.display === "block") {
+    panel.style.display = "none";
+  } else {
+    panel.style.display = "block";
+    runPassphraseGenerator();
+  }
 }
 
 function getCryptoRandomInt(max) {
-    const arr = new Uint32Array(1);
-    window.crypto.getRandomValues(arr);
-    return arr[0] % max;
+  const arr = new Uint32Array(1);
+  window.crypto.getRandomValues(arr);
+  return arr[0] % max;
 }
 
 function runPassphraseGenerator() {
-    if(WORDLIST.length < 2048) {
-        document.getElementById('passphrase-input').value = "Paste 2048 wordlist into code first.";
-        return;
-    }
+  const wordCount = parseInt(document.getElementById('gen-word-count').value);
+  const addNum = document.getElementById('add-numbers').checked;
+  const addSym = document.getElementById('add-symbols').checked;
 
-    const wordCount = parseInt(document.getElementById('gen-word-count').value);
-    const addNum = document.getElementById('add-numbers').checked;
-    const addSym = document.getElementById('add-symbols').checked;
-    
-    let words = [];
-    for(let i=0; i < wordCount; i++) {
-        words.push(WORDLIST[getCryptoRandomInt(WORDLIST.length)]);
-    }
+  let words = [];
+  for (let i = 0; i < wordCount; i++) {
+    words.push(WORDLIST[getCryptoRandomInt(WORDLIST.length)]);
+  }
 
-    if(addNum) {
-        const randIndex = getCryptoRandomInt(words.length);
-        words[randIndex] += NUMBERS[getCryptoRandomInt(NUMBERS.length)];
-    }
-    if(addSym) {
-        const randIndex = getCryptoRandomInt(words.length);
-        words[randIndex] += SYMBOLS[getCryptoRandomInt(SYMBOLS.length)];
-    }
+  if (addNum) {
+    const randIndex = getCryptoRandomInt(words.length);
+    words[randIndex] += NUMBERS[getCryptoRandomInt(NUMBERS.length)];
+  }
+  if (addSym) {
+    const randIndex = getCryptoRandomInt(words.length);
+    words[randIndex] += SYMBOLS[getCryptoRandomInt(SYMBOLS.length)];
+  }
 
-    const passphrase = words.join(' ');
-    document.getElementById('passphrase-input').value = passphrase;
-    calculateEntropy(wordCount, addNum, addSym);
-    
-    if(currentMnemonic) updateWallet();
+  const passphrase = words.join(' ');
+  document.getElementById('passphrase-input').value = passphrase;
+  calculateEntropy(wordCount, addNum, addSym);
+
+  if (currentMnemonic) updateWallet();
 }
 
 function calculateEntropy(wordCount, addNum, addSym) {
-    let entropy = wordCount * 11; 
-    if(addNum) entropy += Math.log2(10);
-    if(addSym) entropy += Math.log2(8);
+  let entropy = wordCount * 11;
+  if (addNum) entropy += Math.log2(10);
+  if (addSym) entropy += Math.log2(8);
 
-    entropy = Math.round(entropy);
-    document.getElementById('entropy-bits').textContent = `${entropy} bits`;
+  entropy = Math.round(entropy);
+  document.getElementById('entropy-bits').textContent = `${entropy} bits`;
 
-    const fill = document.getElementById('strength-fill');
-    const label = document.getElementById('strength-label');
+  const fill = document.getElementById('strength-fill');
+  const label = document.getElementById('strength-label');
 
-    let percent = (entropy / 94) * 100;
-    if(percent > 100) percent = 100;
-    fill.style.width = `${percent}%`;
+  let percent = (entropy / 94) * 100;
+  if (percent > 100) percent = 100;
+  fill.style.width = `${percent}%`;
 
-    if (entropy < 50) { fill.style.background = 'var(--red)'; label.textContent = "Weak"; label.style.color = 'var(--red)'; }
-    else if (entropy < 70) { fill.style.background = 'var(--orange)'; label.textContent = "Good"; label.style.color = 'var(--orange)'; }
-    else { fill.style.background = 'var(--teal)'; label.textContent = "Fort Knox"; label.style.color = 'var(--teal)'; }
+  if (entropy < 50) { fill.style.background = 'var(--skb-danger)'; label.textContent = "Weak"; label.style.color = 'var(--skb-danger)'; }
+  else if (entropy < 70) { fill.style.background = 'var(--skb-primary)'; label.textContent = "Good"; label.style.color = 'var(--skb-primary)'; }
+  else { fill.style.background = 'var(--skb-secondary)'; label.textContent = "Strong"; label.style.color = 'var(--skb-secondary)'; }
 }
+
+// --- PASSPHRASE: CLEAR / SAVE / LOAD ---
+window.clearPassphrase = function() {
+  document.getElementById('passphrase-input').value = '';
+  if (currentMnemonic) updateWallet();
+};
+
+window.savePassphraseToFile = async function() {
+  const passphrase = document.getElementById('passphrase-input').value;
+  if (!passphrase) {
+    alert('No passphrase to save.');
+    return;
+  }
+  if (!window.SeedManager) return;
+
+  try {
+    await window.SeedManager.savePassphrase(passphrase, { label: '' });
+  } catch (e) {
+    console.error('Save passphrase failed:', e);
+    alert('Save failed: ' + e.message);
+  }
+};
+
+window.loadPassphraseFromFile = async function() {
+  if (!window.SeedManager) return;
+
+  try {
+    const result = await window.SeedManager.loadPassphrase();
+    if (result) {
+      document.getElementById('passphrase-input').value = result.passphrase;
+      if (currentMnemonic) updateWallet();
+    }
+  } catch (e) {
+    console.error('Load passphrase failed:', e);
+    alert('Load failed: ' + e.message);
+  }
+};
+
+// --- LOAD EXISTING SEED (top-of-page shortcut) ---
+window.loadExistingSeed = async function() {
+  if (!window.SeedManager) return;
+  try {
+    const result = await window.SeedManager.loadSeed();
+    if (result && seedSelector) {
+      await seedSelector.setActiveSeed(result.mnemonic, result.fingerprint, {
+        wordCount: result.wordCount,
+        label: result.label || '',
+        passphrase: result.passphrase || '',
+        keyFormat: result.keyFormat || 'slip132',
+        addressType: result.addressType || '84'
+      });
+    }
+  } catch (e) {
+    console.error('Failed to load seed:', e);
+    alert('Could not load seed: ' + e.message);
+  }
+};
 
 // --- MASTER CONTROLLERS ---
 async function processDiceAndGenerate() {
-    const diceStr = document.getElementById('dice-input').value;
-    const wordCount = document.getElementById('word-count').value;
-    
-    currentMnemonic = await getEntropyAndMnemonic(diceStr, wordCount);
-    
-    // Render Seed as a Pill-Box Grid
-    const wordsArray = currentMnemonic.split(' ');
-    let gridHtml = '<div class="output-grid">';
-    wordsArray.forEach((word, idx) => {
-        gridHtml += `
-            <div class="output-word-pill">
-                <span class="num">${idx + 1}.</span>
-                <span class="word">${word}</span>
-            </div>
-        `;
-    });
-    gridHtml += '</div>';
+  const diceStr = document.getElementById('dice-input').value;
+  const wordCount = document.getElementById('word-count').value;
 
-    document.getElementById('seed-output').innerHTML = gridHtml;
-    document.getElementById('result').style.display = 'block';
-    
-    const lastWord = wordsArray[wordsArray.length - 1];
-    document.getElementById('print-last-word').innerHTML = `<strong>Seed Verification (Last Word):</strong> <span style="font-family: var(--mono); font-size: 1.5em; text-transform: uppercase;">${lastWord}</span>`;
-    
-    await updateWallet();
+  currentMnemonic = await getEntropyAndMnemonic(diceStr, wordCount);
+  renderSeedOutput(currentMnemonic);
+
+  document.getElementById('result').style.display = 'block';
+
+  const wordsArray = currentMnemonic.split(' ');
+  const lastWord = wordsArray[wordsArray.length - 1];
+  document.getElementById('print-last-word').innerHTML = `<strong>Seed Verification (Last Word):</strong> <span style="font-family: var(--skb-mono); font-size: 1.5em; text-transform: uppercase;">${lastWord}</span>`;
+
+  // Update seed selector with new seed (but don't save yet).
+  // silent=true prevents onSeedLoaded from firing (we already rendered above).
+  if (seedSelector) {
+    await seedSelector.setActiveSeed(currentMnemonic, null, {}, { silent: true });
+  }
+
+  // Write to session so other tools pick it up
+  if (window.SeedSession && window.SeedManager) {
+    const fp = await window.SeedManager.computeFingerprint(currentMnemonic);
+    window.SeedSession.set({
+      mnemonic: currentMnemonic,
+      fingerprint: fp,
+      wordCount: currentMnemonic.split(' ').length,
+      keyFormat: document.getElementById('key-format').value,
+      addressType: document.getElementById('derivation-path').value
+    });
+  }
+
+  await updateWallet();
 }
 
 async function updateWallet() {
-    if (!currentMnemonic) return; 
-    
-    clearQRs();
-    const tbody = document.getElementById('address-table-body');
-    tbody.innerHTML = '';
-    document.getElementById('xpub-output-val').innerText = "Calculating...";
-    document.getElementById('xpub-qr-btn').disabled = true;
+  if (!currentMnemonic) return;
 
-    try {
-        if (!window.BtcMath) throw new Error("window.BtcMath is not defined. Ensure Vite bundle is loaded.");
-        
-        const { bip39, HDKey, btc } = window.BtcMath;
-        const passphrase = document.getElementById('passphrase-input').value;
-        const seedBytes = await bip39.mnemonicToSeed(currentMnemonic, passphrase);
-        
-        const pathType = document.getElementById('derivation-path').value;
-        const keyFormat = document.getElementById('key-format').value;
-        
-        const slip132 = {
-            '84': { private: 0x04b2430c, public: 0x04b24746 }, 
-            '49': { private: 0x049d7878, public: 0x049d7cb2 }, 
-            '44': { private: 0x0488ade4, public: 0x0488b21e }, 
-            '86': { private: 0x0488ade4, public: 0x0488b21e }  
-        };
-        
-        const standardBip380 = { private: 0x0488ade4, public: 0x0488b21e };
-        const versionBytes = keyFormat === 'slip132' ? slip132[pathType] : standardBip380;
-        
-        const hdkey = HDKey.fromMasterSeed(seedBytes, versionBytes);
-        const basePath = `m/${pathType}'/0'/0'`;
-        const accountNode = hdkey.derive(basePath);
-        
-        document.getElementById('xpub-output-val').innerText = accountNode.publicExtendedKey;
-        document.getElementById('xpub-output-val').style.color = "var(--orange)";
-        document.getElementById('xpub-qr-btn').disabled = false;
-        
-        for(let i=0; i < 5; i++) {
-            const childNode = hdkey.derive(`${basePath}/0/${i}`);
-            let address = "";
-            if (pathType === '84') { address = btc.p2wpkh(childNode.publicKey).address; } 
-            else if (pathType === '86') { address = btc.p2tr(childNode.publicKey.slice(1, 33)).address; } 
-            else if (pathType === '49') { address = btc.p2sh(btc.p2wpkh(childNode.publicKey)).address; } 
-            else if (pathType === '44') { address = btc.p2pkh(childNode.publicKey).address; }
-            tbody.innerHTML += `<tr><td>${i}</td><td>${address}</td></tr>`;
-        }
-    } catch (err) {
-        console.error(err);
-        document.getElementById('xpub-output-val').innerText = "Math Module Error";
-        document.getElementById('xpub-output-val').style.color = "var(--red)";
+  clearQRs();
+  const tbody = document.getElementById('address-table-body');
+  tbody.innerHTML = '';
+  document.getElementById('xpub-output-val').innerText = "Calculating...";
+  document.getElementById('xpub-qr-btn').disabled = true;
+
+  try {
+    if (!window.BtcMath) throw new Error("BtcMath not loaded.");
+
+    const { bip39, HDKey, btc } = window.BtcMath;
+    const passphrase = document.getElementById('passphrase-input').value;
+    const seedBytes = await bip39.mnemonicToSeed(currentMnemonic, passphrase);
+
+    const pathType = document.getElementById('derivation-path').value;
+    const keyFormat = document.getElementById('key-format').value;
+
+    const slip132 = {
+      '84': { private: 0x04b2430c, public: 0x04b24746 },
+      '49': { private: 0x049d7878, public: 0x049d7cb2 },
+      '44': { private: 0x0488ade4, public: 0x0488b21e },
+      '86': { private: 0x0488ade4, public: 0x0488b21e }
+    };
+
+    const standardBip380 = { private: 0x0488ade4, public: 0x0488b21e };
+    const versionBytes = keyFormat === 'slip132' ? slip132[pathType] : standardBip380;
+
+    const hdkey = HDKey.fromMasterSeed(seedBytes, versionBytes);
+    const basePath = `m/${pathType}'/0'/0'`;
+    const accountNode = hdkey.derive(basePath);
+
+    const xpubValue = accountNode.publicExtendedKey;
+    document.getElementById('xpub-output-val').innerText = xpubValue;
+    document.getElementById('xpub-output-val').style.color = "var(--skb-primary)";
+    document.getElementById('xpub-qr-btn').disabled = false;
+
+    // Generate print-only xpub QR
+    const printQrBox = document.querySelector('#qr-xpub-print .qr-code-box-print');
+    if (printQrBox && window.QRCode) {
+      printQrBox.innerHTML = '';
+      try {
+        window.QRCode.toCanvas(document.createElement('canvas'), xpubValue, { width: 200, margin: 2, color: { dark: "#000000ff", light: "#ffffffff" } }, function(err, canvas) {
+          if (!err) printQrBox.appendChild(canvas);
+        });
+      } catch (e) { /* silent */ }
     }
+
+    // Sync passphrase to session
+    if (window.SeedSession) {
+      window.SeedSession.setPassphrase(passphrase);
+    }
+
+    // Update print-passphrase (visible only when printing)
+    const printPP = document.getElementById('print-passphrase');
+    if (printPP) {
+      if (passphrase) {
+        printPP.innerHTML = `<strong>Passphrase:</strong> <span style="font-family: var(--skb-mono); font-size: 1.1em;">${passphrase}</span>`;
+      } else {
+        printPP.innerHTML = '';
+      }
+    }
+
+    for (let i = 0; i < 5; i++) {
+      const childNode = hdkey.derive(`${basePath}/0/${i}`);
+      let address = "";
+      if (pathType === '84') { address = btc.p2wpkh(childNode.publicKey).address; }
+      else if (pathType === '86') { address = btc.p2tr(childNode.publicKey.slice(1, 33)).address; }
+      else if (pathType === '49') { address = btc.p2sh(btc.p2wpkh(childNode.publicKey)).address; }
+      else if (pathType === '44') { address = btc.p2pkh(childNode.publicKey).address; }
+      tbody.innerHTML += `<tr><td>${i}</td><td>${address}</td></tr>`;
+    }
+  } catch (err) {
+    console.error(err);
+    document.getElementById('xpub-output-val').innerText = "Derivation Error";
+    document.getElementById('xpub-output-val').style.color = "var(--skb-danger)";
+  }
 }
 
-// --- UTILITIES (Copy, QR, Export) ---
+// --- PRINT WITH CUSTOM FILENAME ---
+window.printVerification = function() {
+  // Set the document title to the desired filename before printing
+  const origTitle = document.title;
+  let printName = '';
+
+  if (seedSelector) {
+    const seed = seedSelector.getActiveSeed();
+    if (seed) {
+      const fp = seed.fingerprint || '';
+      const label = seed.label || '';
+      if (label && fp) {
+        printName = `${fp} - ${label} - Verification`;
+      } else if (fp) {
+        printName = `${fp} - Verification`;
+      }
+    }
+  }
+
+  if (printName) {
+    document.title = printName;
+  }
+
+  window.print();
+
+  // Restore original title after print dialog
+  setTimeout(() => { document.title = origTitle; }, 500);
+};
+
+// --- UTILITIES (Copy, QR) ---
 function triggerCopyAlert(btn) {
-    const orig = btn.textContent;
-    btn.textContent = '\u2713 COPIED!';
-    setTimeout(() => btn.textContent = orig, 1800);
+  const orig = btn.textContent;
+  btn.textContent = 'Copied';
+  setTimeout(() => btn.textContent = orig, 1800);
 }
 
 window.copySeedText = function(btn) {
-    if (!currentMnemonic) return;
-    navigator.clipboard.writeText(currentMnemonic).then(() => triggerCopyAlert(btn)).catch(() => alert('Copy failed.'));
+  if (!currentMnemonic) return;
+  navigator.clipboard.writeText(currentMnemonic).then(() => triggerCopyAlert(btn)).catch(() => alert('Copy failed.'));
 };
 
 window.copyPassphrase = function(btn) {
-    const text = document.getElementById('passphrase-input').value;
-    if (!text) return;
-    navigator.clipboard.writeText(text).then(() => triggerCopyAlert(btn)).catch(() => alert('Copy failed.'));
+  const text = document.getElementById('passphrase-input').value;
+  if (!text) return;
+  navigator.clipboard.writeText(text).then(() => triggerCopyAlert(btn)).catch(() => alert('Copy failed.'));
 };
 
 window.copyXpub = function(btn) {
-    const text = document.getElementById('xpub-output-val').innerText;
-    if (!text || text === "Calculating...") return;
-    navigator.clipboard.writeText(text).then(() => triggerCopyAlert(btn)).catch(() => alert('Copy failed.'));
+  const text = document.getElementById('xpub-output-val').innerText;
+  if (!text || text === "Calculating...") return;
+  navigator.clipboard.writeText(text).then(() => triggerCopyAlert(btn)).catch(() => alert('Copy failed.'));
 };
 
 function clearQRs() {
-    document.querySelectorAll('.qr-container').forEach(c => {
-        c.style.display = 'none';
-        const box = c.querySelector('.qr-code-box');
-        if(box) box.innerHTML = '';
-    });
-    document.getElementById('seed-qr-btn').textContent = '📱 Show Seed QR';
-    document.getElementById('passphrase-qr-btn').textContent = '📱 Show Passphrase QR';
-    document.getElementById('xpub-qr-btn').textContent = '📱 Show Xpub QR';
+  document.querySelectorAll('.skb-qr-container').forEach(c => {
+    c.style.display = 'none';
+    const box = c.querySelector('.qr-code-box');
+    if (box) box.innerHTML = '';
+  });
+  document.getElementById('seed-qr-btn').textContent = 'Show Seed Phrase QR';
+  document.getElementById('passphrase-qr-btn').textContent = 'Show Passphrase QR';
+  document.getElementById('xpub-qr-btn').textContent = 'Show xpub QR';
 }
 
-function internalToggleQR(containerId, textToEncode, btn, btnLabelStr) {
-    if (!window.QRCode) return alert("QR library not loaded!");
-    const container = document.getElementById(containerId);
-    const qrBox = container.querySelector('.qr-code-box');
-    
-    if (container.style.display === 'block') {
-        container.style.display = 'none';
-        btn.textContent = `📱 Show ${btnLabelStr} QR`;
-    } else {
-        if (qrBox.innerHTML === '') {
-            try {
-                window.QRCode.toCanvas(document.createElement('canvas'), textToEncode, { width: 250, margin: 2, color: { dark: "#000000ff", light: "#ffffffff" } }, function (err, canvas) {
-                    if (err) throw err;
-                    qrBox.appendChild(canvas);
-                });
-            } catch (err) { console.error("QR Error:", err); }
-        }
-        container.style.display = 'block';
-        btn.textContent = `📱 Hide ${btnLabelStr} QR`;
+function internalToggleQR(containerId, textToEncode, btn, btnShowLabel, btnHideLabel) {
+  if (!window.QRCode) return alert("QR library not loaded.");
+  const container = document.getElementById(containerId);
+  const qrBox = container.querySelector('.qr-code-box');
+
+  if (container.style.display === 'block') {
+    container.style.display = 'none';
+    btn.textContent = btnShowLabel;
+  } else {
+    if (qrBox.innerHTML === '') {
+      try {
+        window.QRCode.toCanvas(document.createElement('canvas'), textToEncode, { width: 250, margin: 2, color: { dark: "#000000ff", light: "#ffffffff" } }, function(err, canvas) {
+          if (err) throw err;
+          qrBox.appendChild(canvas);
+        });
+      } catch (err) { console.error("QR Error:", err); }
     }
+    container.style.display = 'block';
+    btn.textContent = btnHideLabel;
+  }
 }
 
 window.toggleSeedQR = function(btn) {
-    if (!currentMnemonic) return;
-    internalToggleQR('qr-seed', currentMnemonic, btn, 'Seed');
+  if (!currentMnemonic) return;
+  internalToggleQR('qr-seed', currentMnemonic, btn, 'Show Seed Phrase QR', 'Hide Seed Phrase QR');
 };
 
 window.togglePassphraseQR = function(btn) {
-    const pass = document.getElementById('passphrase-input').value;
-    if (!pass) return alert("No passphrase to display.");
-    internalToggleQR('qr-passphrase', pass, btn, 'Passphrase');
+  const pass = document.getElementById('passphrase-input').value;
+  if (!pass) return alert("No passphrase to display.");
+  internalToggleQR('qr-passphrase', pass, btn, 'Show Passphrase QR', 'Hide Passphrase QR');
 };
 
 window.toggleXpubQR = function(btn) {
-    const xpub = document.getElementById('xpub-output-val').innerText;
-    if (!xpub || xpub === "Calculating...") return;
-    internalToggleQR('qr-xpub', xpub, btn, 'Xpub');
+  const xpub = document.getElementById('xpub-output-val').innerText;
+  if (!xpub || xpub === "Calculating...") return;
+  internalToggleQR('qr-xpub', xpub, btn, 'Show xpub QR', 'Hide xpub QR');
 };
 
-function executeExport(noteHtml, payloadData) {
-    const b64Payload = btoa(JSON.stringify(payloadData));
-    const payloadHtml = `
-        <div class="skb-hidden-payload">
-            <hr style="margin-top: 30px; border: 0; border-top: 1px solid #ccc;">
-            <p style="font-family: monospace; font-size: 0.75em; color: #888; word-break: break-all;">
-                <strong>⚙️ AUTO-FILL PAYLOAD:</strong><br>
-                [SKB_PAYLOAD:${b64Payload}]
-            </p>
-        </div>
-    `;
-    const combinedData = noteHtml + payloadHtml;
-    sessionStorage.setItem('safeKeepDraftNote', combinedData);
-    localStorage.setItem('safeKeepDraftNote', combinedData);
-    
-    const plainText = combinedData.replace(/<[^>]+>/g, '\n').replace(/\n\s*\n/g, '\n');
-    navigator.clipboard.writeText(plainText).then(() => {
-        alert("Data prepared!\n\nOpening Encrypted Note Tool...");
-        window.open('../secure-note/index.html', '_blank');
-    }).catch(err => { window.open('../secure-note/index.html', '_blank'); });
-}
-
-window.exportSeedToNote = function() {
-    if (!currentMnemonic) return alert("Generate a seed first.");
-    const noteHtml = `
-        <h2>Seed Phrase Backup</h2>
-        <p style="font-family: monospace; font-size: 1.5rem; background: #2c2c2c; padding: 15px; border-radius: 5px; color: var(--teal); text-align: center;">
-            ${currentMnemonic}
-        </p>
-        <p><em>Keep this note highly secure.</em></p>
-    `;
-    const payload = { safekeep_version: "1.0", type: "seed_export", seed: currentMnemonic, passphrase: "", path: "" };
-    executeExport(noteHtml, payload);
-};
-
-window.exportPassphraseToNote = function() {
-    const pass = document.getElementById('passphrase-input').value;
-    if (!pass) return alert("Generate or type a passphrase first.");
-    const noteHtml = `
-        <h2>Passphrase Backup</h2>
-        <p style="font-family: monospace; font-size: 1.5rem; background: #2c2c2c; padding: 15px; border-radius: 5px; color: var(--orange); text-align: center;">
-            ${pass}
-        </p>
-        <p><em>This acts as the 25th word for your hidden wallet. It is useless without the seed, but critical to save.</em></p>
-    `;
-    const payload = { safekeep_version: "1.0", type: "passphrase_export", passphrase: pass };
-    executeExport(noteHtml, payload);
-};
-
-window.exportWalletToNote = function() {
-    if (!currentMnemonic) return alert("Generate a seed first.");
-    const wordCountText = document.getElementById('word-count').options[document.getElementById('word-count').selectedIndex].text;
-    const derivationText = document.getElementById('derivation-path').options[document.getElementById('derivation-path').selectedIndex].text;
-    const xpub = document.getElementById('xpub-output-val').innerText;
-    const pass = document.getElementById('passphrase-input').value;
-
-    let noteHtml = `
-        <h2>Full Wallet Backup</h2>
-        <p style="font-family: monospace; font-size: 1.5rem; background: #2c2c2c; padding: 15px; border-radius: 5px; color: var(--orange); text-align: center;">
-            ${currentMnemonic}
-        </p>
-        <ul>
-            <li><strong>Format:</strong> ${wordCountText}</li>
-            <li><strong>Derivation Path:</strong> ${derivationText}</li>
-            <li><strong>Master Public Key (xpub):</strong> <span style="font-family: monospace; word-break: break-all;">${xpub}</span></li>
-        </ul>
-    `;
-    if (pass) noteHtml += `<p style="color: #ffaa33; font-size: 0.9em;"><em>Note: A passphrase was applied: <strong>${pass}</strong></em></p>`;
-    
-    const payload = { safekeep_version: "1.0", type: "seed_export", seed: currentMnemonic, passphrase: pass, path: `m/${document.getElementById('derivation-path').value}'/0'/0'` };
-    executeExport(noteHtml, payload);
-};
-
-// --- THEME TOGGLE LOGIC ---
+// --- THEME TOGGLE ---
 function toggleTheme() {
-    const html = document.documentElement;
-    if (html.getAttribute('data-theme') === 'light') {
-        html.removeAttribute('data-theme');
-        localStorage.setItem('safekeepTheme', 'dark');
-        document.getElementById('theme-btn').innerText = '☀️';
-    } else {
-        html.setAttribute('data-theme', 'light');
-        localStorage.setItem('safekeepTheme', 'light');
-        document.getElementById('theme-btn').innerText = '🌙';
-    }
+  const html = document.documentElement;
+  const btn = document.getElementById('theme-btn');
+  if (html.getAttribute('data-theme') === 'light') {
+    html.removeAttribute('data-theme');
+    localStorage.setItem('safekeepTheme', 'dark');
+    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
+  } else {
+    html.setAttribute('data-theme', 'light');
+    localStorage.setItem('safekeepTheme', 'light');
+    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+  }
 }
-window.addEventListener('DOMContentLoaded', () => {
-    if (localStorage.getItem('safekeepTheme') === 'light') document.getElementById('theme-btn').innerText = '🌙';
-});
 </script>
 </body>
 </html>
