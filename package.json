@@ -8,14 +8,16 @@
     "deploy": "npm run build && gh-pages -d dist"
   },
   "dependencies": {
+    "@bitcoinerlab/miniscript": "^2.0.0",
     "@ngraveio/bc-ur": "^1.1.13",
     "@scure/bip32": "^2.0.1",
     "@scure/bip39": "^2.0.1",
     "@scure/btc-signer": "^2.0.1",
     "bip39": "^3.1.0",
     "bip85": "^0.0.3",
-    "html5-qrcode": "^2.3.8",
-    "qrcode": "^1.5.4"
+    "jsqr": "^1.4.0",
+    "qrcode": "^1.5.4",
+    "shamir-mnemonic-ts": "^1.0.6"
   },
   "devDependencies": {
     "@vitejs/plugin-basic-ssl": "^2.2.0",

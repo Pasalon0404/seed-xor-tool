@@ -1,5 +1,4 @@
 import QRCode from 'qrcode';
-import { Html5Qrcode } from 'html5-qrcode';
 
 // ==========================================
 // 1. BIP-39 WORDLIST
@@ -474,13 +473,27 @@ document.getElementById('btn-start-verify').addEventListener('click', (e) => {
             
             const resBox = document.getElementById('verify-result');
             resBox.style.background = 'var(--card2)';
-            if (scannedText === currentNumericSeed) {
+
+            let normalizedScan = scannedText.trim();
+
+            // If the scanned text contains letters, it's a standard text seed.
+            // We need to encode it to numeric format to match the Compact SeedQR standard.
+            if (/[a-zA-Z]/.test(normalizedScan)) {
+                try {
+                    normalizedScan = encodeSeedToNumeric(normalizedScan);
+                } catch (err) {
+                    console.warn("Could not encode scanned text to numeric format:", err);
+                }
+            }
+
+            // Now compare apples to apples (Numeric to Numeric)
+            if (normalizedScan === currentNumericSeed) {
                 resBox.style.color = "var(--teal)";
                 resBox.innerText = "✅ SUCCESS! Perfect match.";
                 resBox.style.border = "1px solid var(--teal)";
             } else {
                 resBox.style.color = "var(--red)";
-                resBox.innerText = `❌ FAILED. Scanned: ${scannedText.substring(0, 20)}...`;
+                resBox.innerText = `❌ FAILED. Codes do not match.`;
                 resBox.style.border = "1px solid var(--red)";
             }
         },

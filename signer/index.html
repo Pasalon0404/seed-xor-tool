@@ -440,6 +440,7 @@ let parsedSecurityModel = null;
 let psbtQrCode = null;
 let seedQrCode = null;
 let activeUrDecoder = null;
+let psbtScanProcessing = false;  // Guard against duplicate callbacks
 
 
 // =========================================================
@@ -511,6 +512,7 @@ window.togglePsbtScanner = function() {
         loadLibraries();
         if (!Html5Qrcode) return showStatus('QR Scanner library not loaded.', 'error');
 
+        psbtScanProcessing = false;  // Reset guard for new scan session
         container.classList.add('visible');
         document.getElementById('psbt-scan-progress').innerText = 'Awaiting QR Code...';
 
@@ -529,41 +531,96 @@ window.togglePsbtScanner = function() {
     }
 };
 
-window.onPsbtScanSuccess = function(decodedText) {
+window.onPsbtScanSuccess = async function(decodedText) {
+    // Guard: if we're already processing a completed scan, ignore further callbacks
+    // (camera can fire extra frames before async stop() completes)
+    if (psbtScanProcessing) return;
+
     try {
         if (decodedText.toLowerCase().startsWith('ur:')) {
-            if (!activeUrDecoder) throw new Error('UR Decoder library not loaded.');
+            if (!activeUrDecoder) return; // Scanner closing, ignore stale callbacks
+
             activeUrDecoder.receivePart(decodedText);
             const progress = Math.round(activeUrDecoder.estimatedPercentComplete() * 100);
             document.getElementById('psbt-scan-progress').innerText = `Scanning Animated QR... ${progress}%`;
 
             if (activeUrDecoder.isComplete()) {
                 if (activeUrDecoder.isSuccess()) {
+                    psbtScanProcessing = true;
                     const ur = activeUrDecoder.resultUR();
                     const decodedBytes = ur.decodeCBOR();
                     window.togglePsbtScanner();
                     window.loadedPsbtFilename = 'scanned-ur-transaction.psbt';
+                    document.getElementById('loaded-file-name').textContent = 'Animated QR Scanned';
                     parseAndDisplayPSBTBuffer(new Uint8Array(decodedBytes));
                 } else {
                     throw new Error('UR decoding failed. Please try again.');
                 }
             }
         } else {
+            psbtScanProcessing = true;
             window.togglePsbtScanner();
             window.loadedPsbtFilename = 'scanned-static-transaction.psbt';
+            document.getElementById('loaded-file-name').textContent = 'Static QR Scanned';
 
             let bytes;
-            if (/^[0-9a-fA-F]+$/.test(decodedText)) {
-                bytes = new Uint8Array(decodedText.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+            let data = decodedText.trim();
+
+            // Strip common URI prefixes (e.g. "bitcoin:psbt=..." or "psbt:")
+            if (data.toLowerCase().startsWith('psbt:')) {
+                data = data.substring(5);
+            }
+            // Strip whitespace/newlines that some encoders add
+            data = data.replace(/\s+/g, '');
+
+            if (data.startsWith('B$')) {
+                // BBQr (Better Bitcoin QR) format
+                // Header: B$(2) + encoding(1) + filetype(1) + total_parts(2) + part_num(2) = 8 chars
+                if (data.length < 8) throw new Error('BBQr header too short');
+                const encoding = data[2]; // 'H'=hex, 'Z'=zlib+base32, '2'=base32
+                const fileType = data[3]; // 'P'=PSBT, 'T'=TXN, etc.
+                const payload = data.substring(8);
+                if (fileType !== 'P') throw new Error(`BBQr file type '${fileType}' is not a PSBT`);
+                if (encoding === 'Z') {
+                    // Base32 decode, then zlib decompress
+                    const compressed = decodeBase32(payload);
+                    bytes = await zlibDecompress(compressed);
+                } else if (encoding === 'H') {
+                    bytes = new Uint8Array(payload.match(/.{1,2}/g).map(b => parseInt(b, 16)));
+                } else if (encoding === '2') {
+                    bytes = decodeBase32(payload);
+                } else {
+                    throw new Error(`Unknown BBQr encoding: '${encoding}'`);
+                }
+            } else if (/^[0-9a-fA-F]+$/.test(data)) {
+                // Raw hex
+                bytes = new Uint8Array(data.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+            } else if (/^[0-9A-Z$*+\-./:]+$/.test(data)) {
+                // Base43 — used by Electrum for static QR codes
+                const raw = decodeBase43(data);
+                // Try zlib decompression in case data is compressed
+                bytes = await zlibDecompress(raw);
             } else {
-                bytes = new Uint8Array(atob(decodedText).split('').map(c => c.charCodeAt(0)));
+                // Base64 — handle standard and URL-safe variants
+                let b64 = data.replace(/-/g, '+').replace(/_/g, '/');
+                while (b64.length % 4 !== 0) b64 += '=';
+                bytes = new Uint8Array(atob(b64).split('').map(c => c.charCodeAt(0)));
             }
             parseAndDisplayPSBTBuffer(bytes);
         }
     } catch (err) {
-        console.error(err);
-        document.getElementById('psbt-scan-progress').innerText = `Error: ${err.message}`;
+        console.error('PSBT scan error:', err);
+        console.log('Raw QR content (first 200 chars):', decodedText.substring(0, 200));
+        psbtScanProcessing = false;
+        // Show error via status bar — include raw content preview for debugging
+        const preview = decodedText.substring(0, 80);
+        showStatus(`QR scan error: ${err.message}<br><br><span style="font-family: var(--skb-mono); font-size: 0.78rem; color: var(--skb-text-dim); word-break: break-all;">Raw content: ${preview}${decodedText.length > 80 ? '...' : ''} (${decodedText.length} chars)</span>`, 'error');
+        // Reset UR decoder for retry
         if (activeUrDecoder) activeUrDecoder = new URDecoder();
+        // Close scanner so user can see the error
+        if (document.getElementById('psbt-scanner-container').classList.contains('visible')) {
+            window.togglePsbtScanner();
+        }
     }
 };
 
@@ -801,6 +858,84 @@ function bytesToBase64(bytes) {
     let binary = '';
     for (let i = 0; i < (bytes.byteLength || bytes.length); i++) binary += String.fromCharCode(bytes[i]);
     return window.btoa(binary);
+}
+
+// Base43 decoder — used by Sparrow and Electrum for static PSBT QR codes.
+// Base43 maps to QR alphanumeric mode for maximum density.
+// Charset: 0-9 A-Z $ * + - . / :
+function decodeBase43(input) {
+    const CHARSET = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ$*+-./:';
+    // Decode as big-endian arbitrary-precision integer, then convert to bytes
+    let n = 0n;
+    for (let i = 0; i < input.length; i++) {
+        const idx = CHARSET.indexOf(input[i]);
+        if (idx === -1) throw new Error(`Invalid Base43 character: '${input[i]}'`);
+        n = n * 43n + BigInt(idx);
+    }
+    if (n === 0n) return new Uint8Array([0]);
+    const result = [];
+    while (n > 0n) {
+        result.push(Number(n % 256n));
+        n = n / 256n;
+    }
+    result.reverse();
+    return new Uint8Array(result);
+}
+
+// Base32 decoder (RFC 4648) — used by BBQr format. Handles missing padding.
+function decodeBase32(input) {
+    const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+    let bits = '';
+    for (const c of input) {
+        if (c === '=') break; // stop at padding
+        const val = ALPHABET.indexOf(c);
+        if (val === -1) throw new Error(`Invalid Base32 character: '${c}'`);
+        bits += val.toString(2).padStart(5, '0');
+    }
+    const byteLen = Math.floor(bits.length / 8);
+    const result = new Uint8Array(byteLen);
+    for (let i = 0; i < byteLen; i++) {
+        result[i] = parseInt(bits.substring(i * 8, i * 8 + 8), 2);
+    }
+    return result;
+}
+
+// Zlib decompression using the browser's built-in DecompressionStream API.
+// BBQr uses zlib compression (wbits=10). Also handles Electrum Base43+zlib.
+// Tries 'deflate' (zlib-wrapped) first, then 'deflate-raw' as fallback.
+async function zlibDecompress(compressedBytes) {
+    for (const fmt of ['deflate', 'deflate-raw']) {
+        try {
+            const ds = new DecompressionStream(fmt);
+            const writer = ds.writable.getWriter();
+            const reader = ds.readable.getReader();
+            writer.write(compressedBytes);
+            writer.close();
+            const chunks = [];
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                chunks.push(value);
+            }
+            const totalLen = chunks.reduce((sum, c) => sum + c.length, 0);
+            const result = new Uint8Array(totalLen);
+            let offset = 0;
+            for (const chunk of chunks) {
+                result.set(chunk, offset);
+                offset += chunk.length;
+            }
+            // Verify it starts with PSBT magic "psbt\xff"
+            if (result.length >= 5 && result[0] === 0x70 && result[1] === 0x73 &&
+                result[2] === 0x62 && result[3] === 0x74 && result[4] === 0xFF) {
+                return result;
+            }
+            // Decompressed but not PSBT — try next format
+        } catch (e) {
+            // Decompression failed with this format — try next
+        }
+    }
+    // If neither format produced valid PSBT, return raw bytes and let parser give its own error
+    return compressedBytes;
 }
 
 function zeroFillArray(arr) { if (arr && arr.fill) arr.fill(0); }
@@ -1058,10 +1193,12 @@ async function parseAndDisplayPSBTBuffer(uint8Array) {
         updateActionButton(model);
 
         setStep(2);
+        psbtScanProcessing = false;  // Reset for potential re-scan
         showStatus('PSBT loaded successfully!', 'success');
         setTimeout(() => showStatus(''), 3000);
     } catch (error) {
         console.error("PSBT Parsing Error:", error);
+        psbtScanProcessing = false;
         showStatus(`Error decoding PSBT: ${error.message || 'Check console for details.'}`, 'error');
     }
 }
@@ -1102,6 +1239,7 @@ window.loadNewPsbt = function() {
     document.getElementById('handoff-section').style.display = 'none';
     document.getElementById('qrDisplay').style.display = 'none';
     loadedPsbtBytes = null;
+    psbtScanProcessing = false;
     setStep(1);
     showStatus('');
 };
@@ -1305,7 +1443,7 @@ window.toggleHandoffQR = async function() {
     try {
         const canvas = document.createElement('canvas');
         await QRCode.toCanvas(canvas, bytesToBase64(window._signedPsbtBytes), {
-            width: 400, margin: 2, color: { dark: '#000000', light: '#FFFFFF' }
+            width: 600, margin: 2, color: { dark: '#000000', light: '#FFFFFF' }
         });
         document.getElementById('qrContainer').appendChild(canvas);
     } catch (error) {
@@ -1318,7 +1456,7 @@ window.toggleHandoffQR = async function() {
             const tx = btc.Transaction.fromPSBT(window._signedPsbtBytes, { network: NETWORK });
             const canvas2 = document.createElement('canvas');
             await QRCode.toCanvas(canvas2, tx.hex, {
-                width: 400, margin: 2, color: { dark: '#000000', light: '#FFFFFF' }
+                width: 600, margin: 2, color: { dark: '#000000', light: '#FFFFFF' }
             });
             const wrapper = document.createElement('div');
             wrapper.style.cssText = 'margin-top: 16px; text-align: center;';
@@ -1358,6 +1496,7 @@ function resetAll() {
     clearSensitiveData();
     window.loadedPsbtFilename = 'transaction.psbt';
     window._signedPsbtBytes = null;
+    psbtScanProcessing = false;
     setStep(1);
     showStatus('Cleared all data.', 'success');
     setTimeout(() => showStatus(''), 2000);

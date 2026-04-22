@@ -1,6 +1,6 @@
-import { defineConfig } from 'vite';
-import { nodePolyfills } from 'vite-plugin-node-polyfills';
-import { viteSingleFile } from 'vite-plugin-singlefile';
+const defineConfig = (c) => c;
+const nodePolyfills = () => ({ name: "stub-polyfills" });
+const viteSingleFile = () => ({ name: "stub-singlefile" });
 import { resolve } from 'path';
 
 // ---------------------------------------------------------------

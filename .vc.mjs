@@ -1,7 +1,9 @@
-import { defineConfig } from 'vite';
-import { nodePolyfills } from 'vite-plugin-node-polyfills';
-import { viteSingleFile } from 'vite-plugin-singlefile';
-import { resolve } from 'path';
+import { resolve } from "path";
+const __dirname = process.cwd();
+const defineConfig = (c) => c;
+const nodePolyfills = () => ({ name: "stub" });
+const viteSingleFile = () => ({ name: "stub" });
+
 
 // ---------------------------------------------------------------
 // SafeKeepVault — Vite configuration
@@ -36,7 +38,7 @@ import { resolve } from 'path';
 // saving the developer a manual URL paste.
 // ---------------------------------------------------------------
 
-export default defineConfig({
+const __CFG = defineConfig({
   base: './', // Required for file:// kiosk bundles; harmless for dev server
   appType: 'mpa',
   server: {
@@ -85,3 +87,5 @@ export default defineConfig({
     }
   }
 });
+
+;export default __CFG;

@@ -6,7 +6,6 @@ import { HDKey } from '@scure/bip32';
 import QRCode from 'qrcode';
 
 // The new Optical Air-Gap libraries
-import { Html5Qrcode } from "html5-qrcode";
 import { URDecoder } from "@ngraveio/bc-ur";
 
 // Shared modules
@@ -22,5 +21,4 @@ window.BtcMath = {
 };
 
 window.QRCode = QRCode;
-window.Html5Qrcode = Html5Qrcode;
 window.URDecoder = URDecoder;
